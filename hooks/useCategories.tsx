@@ -11,19 +11,6 @@ function migrateCategory(c: Category, index: number): Category {
   return { ...c, color: COLOR_CYCLE[index % COLOR_CYCLE.length] }
 }
 
-function initCategories(): Category[] {
-  if (typeof window === "undefined") return DEFAULT_CATEGORIES
-  const stored = localStorage.getItem(STORAGE_KEY)
-  if (stored) {
-    try {
-      return JSON.parse(stored).map((c: Category, i: number) => migrateCategory(c, i))
-    } catch {
-      return DEFAULT_CATEGORIES
-    }
-  }
-  return DEFAULT_CATEGORIES
-}
-
 type CategoriesContextType = {
   categories: Category[]
   addCategory: (name: string) => Category
@@ -34,7 +21,19 @@ type CategoriesContextType = {
 const CategoriesContext = createContext<CategoriesContextType | null>(null)
 
 export function CategoriesProvider({ children }: { children: ReactNode }) {
-  const [categories, setCategories] = useState<Category[]>(initCategories)
+  const [categories, setCategories] = useState<Category[]>(DEFAULT_CATEGORIES)
+
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored) {
+      try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setCategories(JSON.parse(stored).map((c: Category, i: number) => migrateCategory(c, i)))
+      } catch {
+        // fallback: DEFAULT_CATEGORIESのまま
+      }
+    }
+  }, [])
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(categories))
@@ -66,7 +65,7 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
   )
 }
 
-export function useCategoriesContext() {
+export function useCategories() {
   const ctx = useContext(CategoriesContext)
   if (!ctx) throw new Error("CategoriesProvider未設定")
   return ctx

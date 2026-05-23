@@ -6,21 +6,22 @@ import { generateDummyTasks } from "../lib/dummyData"
 
 const STORAGE_KEY = "task-board-tasks"
 
-function initTasks(): Task[] {
-  if (typeof window === "undefined") return []
-  const stored = localStorage.getItem(STORAGE_KEY)
-  if (stored) {
-    try {
-      return JSON.parse(stored)
-    } catch {
-      return generateDummyTasks()
-    }
-  }
-  return generateDummyTasks()
-}
-
 export function useTasks() {
-  const [tasks, setTasks] = useState<Task[]>(initTasks)
+  const [tasks, setTasks] = useState<Task[]>([])
+
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY)
+    if (stored) {
+      try {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setTasks(JSON.parse(stored))
+      } catch {
+        setTasks(generateDummyTasks())
+      }
+    } else {
+      setTasks(generateDummyTasks())
+    }
+  }, [])
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))

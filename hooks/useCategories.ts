@@ -1,1 +1,0 @@
-export { useCategoriesContext as useCategories } from "@/context/CategoriesContext"

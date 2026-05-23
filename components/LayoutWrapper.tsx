@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation"
 import { Sidebar } from "./Sidebar"
 import { BottomNav } from "./BottomNav"
-import { CategoriesProvider } from "@/context/CategoriesContext"
+import { CategoriesProvider } from "@/hooks/useCategories"
 
 export function LayoutWrapper({
   children,
