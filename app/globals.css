@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-noto-sans-jp), var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-noto-sans-jp), Arial, Helvetica, sans-serif;
+}
+
+/* Typography utilities */
+h1 {
+  @apply text-xl font-bold;
+  font-size: 24px;
+}
+
+h2 {
+  @apply text-base font-semibold;
+  font-size: 16px;
+}
+
+p {
+  @apply text-sm font-normal;
+  font-size: 14px;
+}
+
+.text-caption {
+  @apply text-xs font-normal;
+  font-size: 12px;
+}
+
+.text-badge {
+  @apply text-xs font-medium;
+  font-size: 12px;
+}
