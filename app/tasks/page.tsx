@@ -1,13 +1,15 @@
 "use client"
 
-import { useState, useMemo, Suspense, useEffect } from "react"
+import { useState, useMemo, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import { TaskCard } from "../../components/TaskCard"
+import { Search, X, ChevronDown } from "lucide-react"
+import { PageSize } from "../../types"
 import { useTasks } from "../../hooks/useTasks"
 import { useCategories } from "../../hooks/useCategories"
-import { Search, X, ChevronDown } from "lucide-react"
-import { Category, CATEGORY_DOT_CLASSES, PageSize } from "../../types"
+import { TaskCard } from "../../components/TaskCard"
 import { Pagination } from "../../components/Pagination"
+import { CheckboxGroup } from "../../components/CheckboxGroup"
+import { CategoryModal } from "../../components/CategoryModal"
 
 // ─── 型 ────────────────────────────────────────────────
 type Priority = "high" | "medium" | "low"
@@ -42,107 +44,16 @@ const SORT_OPTIONS: { label: string; key: SortKey; order: SortOrder }[] = [
   { label: "完了済を先に", key: "status", order: "desc" },
 ]
 
-// ─── チェックボックスグループ ───────────────────────────
-function CheckboxGroup<T extends string>({
-  label,
-  options,
-  selected,
-  onToggle,
-}: {
-  label: string
-  options: { label: string; value: T }[]
-  selected: T[]
-  onToggle: (value: T) => void
-}) {
-  return (
-    <div className="flex items-center gap-3 flex-wrap">
-      <span className="text-xs font-medium text-gray-400 whitespace-nowrap">{label}</span>
-      {options.map(opt => {
-        const checked = selected.includes(opt.value)
-        return (
-          <label key={opt.value} className="flex items-center gap-1.5 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={checked}
-              onChange={() => onToggle(opt.value)}
-              className="w-4 h-4 accent-[#FA6218] cursor-pointer"
-            />
-            <span className={`text-sm ${checked ? "text-gray-800 font-medium" : "text-gray-500"}`}>
-              {opt.label}
-            </span>
-          </label>
-        )
-      })}
-    </div>
-  )
-}
-
-// ─── カテゴリモーダル ────────────────────────────────────
-function CategoryModal({
-  categories,
-  selected,
-  onToggle,
-  onClose,
-}: {
-  categories: Category[]
-  selected: string[]
-  onToggle: (id: string) => void
-  onClose: () => void
-}) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" onClick={onClose}>
-      <div className="absolute inset-0 bg-black/20" />
-      <div
-        className="relative bg-white rounded-xl shadow-xl w-72 p-5"
-        onClick={e => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-gray-700">カテゴリを選択</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <X size={16} />
-          </button>
-        </div>
-        <div className="space-y-2 max-h-60 overflow-y-auto">
-          {categories.map(cat => {
-            const checked = selected.includes(cat.id)
-            return (
-              <label key={cat.id} className="flex items-center gap-2.5 cursor-pointer py-1">
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={() => onToggle(cat.id)}
-                  className="w-4 h-4 accent-[#FA6218] cursor-pointer"
-                />
-                <div className={`w-2 h-2 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[cat.color]}`} />
-                <span className={`text-sm ${checked ? "text-gray-800 font-medium" : "text-gray-500"}`}>
-                  {cat.name}
-                </span>
-              </label>
-            )
-          })}
-        </div>
-        {selected.length > 0 && (
-          <button
-            onClick={() => selected.forEach(id => onToggle(id))}
-            className="mt-4 text-xs text-gray-400 hover:text-gray-600 underline"
-          >
-            選択をリセット
-          </button>
-        )}
-      </div>
-    </div>
-  )
-}
-
 // ─── メイン ─────────────────────────────────────────────
 function TasksPageContent() {
   const searchParams = useSearchParams()
   const { tasks, toggleCompleted } = useTasks()
   const { categories } = useCategories()
 
-  const urlPriority = searchParams.get("priority") as Priority | null
   const urlCategory = searchParams.get("category") || ""
+  const urlPriority = searchParams.get("priority") as Priority | null
 
+  // ─── state ───────────────────────────────────────────
   const [searchText, setSearchText] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
     urlCategory ? [urlCategory] : []
@@ -150,14 +61,6 @@ function TasksPageContent() {
   const [selectedPriorities, setSelectedPriorities] = useState<Priority[]>(
     urlPriority ? [urlPriority] : []
   )
-  // URLパラメータが変わったら状態を同期
-  useEffect(() => {
-    setSelectedCategories(urlCategory ? [urlCategory] : [])
-  }, [urlCategory])
-
-  useEffect(() => {
-    setSelectedPriorities(urlPriority ? [urlPriority] : [])
-  }, [urlPriority])
   const [selectedStatuses, setSelectedStatuses] = useState<Status[]>([])
   const [categoryModalOpen, setCategoryModalOpen] = useState(false)
   const [sortKey, setSortKey] = useState<SortKey | null>(null)
@@ -165,6 +68,20 @@ function TasksPageContent() {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState<PageSize>(10)
 
+  // ─── effect ──────────────────────────────────────────
+  useEffect(() => {
+    setSelectedCategories(urlCategory ? [urlCategory] : [])
+  }, [urlCategory])
+
+  useEffect(() => {
+    setSelectedPriorities(urlPriority ? [urlPriority] : [])
+  }, [urlPriority])
+
+  useEffect(() => {
+    setCategoryModalOpen(false)
+  }, [searchParams])
+
+  // ─── ハンドラ ─────────────────────────────────────────
   const resetPage = () => setCurrentPage(1)
 
   const toggleItem =
@@ -200,6 +117,7 @@ function TasksPageContent() {
     setCurrentPage(1)
   }
 
+  // ─── フィルタ・ソート ──────────────────────────────────
   const filteredAndSortedTasks = useMemo(() => {
     const filtered = tasks.filter(task => {
       const matchesSearch = task.title.toLowerCase().includes(searchText.toLowerCase())
@@ -231,6 +149,7 @@ function TasksPageContent() {
     })
   }, [searchText, selectedCategories, selectedPriorities, selectedStatuses, sortKey, sortOrder, tasks, categories])
 
+  // ─── ページネーション ──────────────────────────────────
   const totalPages = Math.max(1, Math.ceil(filteredAndSortedTasks.length / pageSize))
   const safePage = Math.min(currentPage, totalPages)
   const pagedTasks = filteredAndSortedTasks.slice(
@@ -239,8 +158,7 @@ function TasksPageContent() {
   )
 
   const getCategory = (categoryId: string) => categories.find(c => c.id === categoryId)
-  const categoryLabel =
-    selectedCategories.length === 0 ? "すべて" : `${selectedCategories.length}件選択中`
+  const categoryLabel = selectedCategories.length === 0 ? "すべて" : `${selectedCategories.length}件選択中`
   const currentSortValue = sortKey ? `${sortKey}_${sortOrder}` : ""
 
   return (
@@ -275,7 +193,7 @@ function TasksPageContent() {
         </div>
 
         <div className="flex flex-wrap gap-x-6 gap-y-2 items-center">
-          <div className="flex items-center gap-3">
+          <div className="relative flex items-center gap-3">
             <span className="text-xs font-medium text-gray-400 whitespace-nowrap">カテゴリ</span>
             <button
               onClick={() => setCategoryModalOpen(true)}
@@ -291,6 +209,14 @@ function TasksPageContent() {
               >
                 <X size={14} />
               </button>
+            )}
+            {categoryModalOpen && (
+              <CategoryModal
+                categories={categories}
+                selected={selectedCategories}
+                onToggle={toggleItem(setSelectedCategories)}
+                onClose={() => setCategoryModalOpen(false)}
+              />
             )}
           </div>
           <CheckboxGroup
@@ -342,15 +268,6 @@ function TasksPageContent() {
         <div className="text-center py-12">
           <p className="text-gray-500 text-body">タスクがありません</p>
         </div>
-      )}
-
-      {categoryModalOpen && (
-        <CategoryModal
-          categories={categories}
-          selected={selectedCategories}
-          onToggle={toggleItem(setSelectedCategories)}
-          onClose={() => setCategoryModalOpen(false)}
-        />
       )}
     </div>
   )
