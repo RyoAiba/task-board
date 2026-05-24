@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, Suspense } from "react"
+import { useState, useMemo, Suspense, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 import { TaskCard } from "../../components/TaskCard"
 import { useTasks } from "../../hooks/useTasks"
@@ -150,6 +150,14 @@ function TasksPageContent() {
   const [selectedPriorities, setSelectedPriorities] = useState<Priority[]>(
     urlPriority ? [urlPriority] : []
   )
+  // URLパラメータが変わったら状態を同期
+  useEffect(() => {
+    setSelectedCategories(urlCategory ? [urlCategory] : [])
+  }, [urlCategory])
+
+  useEffect(() => {
+    setSelectedPriorities(urlPriority ? [urlPriority] : [])
+  }, [urlPriority])
   const [selectedStatuses, setSelectedStatuses] = useState<Status[]>([])
   const [categoryModalOpen, setCategoryModalOpen] = useState(false)
   const [sortKey, setSortKey] = useState<SortKey | null>(null)

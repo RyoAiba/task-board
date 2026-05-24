@@ -13,7 +13,6 @@ export function useTasks() {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
       try {
-        // eslint-disable-next-line react-hooks/set-state-in-effect
         setTasks(JSON.parse(stored))
       } catch {
         setTasks(generateDummyTasks())
