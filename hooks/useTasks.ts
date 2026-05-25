@@ -1,24 +1,53 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useReducer, useEffect } from "react"
 import { Task, Priority } from "../types"
 import { generateDummyTasks } from "../lib/dummyData"
 
 const STORAGE_KEY = "task-board-tasks"
 
+// ─── アクション定義 ───────────────────────────────────────
+type TaskAction =
+  | { type: "INIT"; payload: Task[] }
+  | { type: "ADD_TASK"; payload: Task }
+  | { type: "UPDATE_TASK"; payload: { id: string; updates: Partial<Omit<Task, "id" | "createdAt">> } }
+  | { type: "DELETE_TASK"; payload: string }
+  | { type: "TOGGLE_COMPLETED"; payload: string }
+
+// ─── reducer ─────────────────────────────────────────────
+function taskReducer(state: Task[], action: TaskAction): Task[] {
+  switch (action.type) {
+    case "INIT":
+      return action.payload
+    case "ADD_TASK":
+      return [...state, action.payload]
+    case "UPDATE_TASK":
+      return state.map(t =>
+        t.id === action.payload.id ? { ...t, ...action.payload.updates } : t
+      )
+    case "DELETE_TASK":
+      return state.filter(t => t.id !== action.payload)
+    case "TOGGLE_COMPLETED":
+      return state.map(t =>
+        t.id === action.payload ? { ...t, completed: !t.completed } : t
+      )
+  }
+}
+
+// ─── フック ───────────────────────────────────────────────
 export function useTasks() {
-  const [tasks, setTasks] = useState<Task[]>([])
+  const [tasks, dispatch] = useReducer(taskReducer, [])
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
       try {
-        setTasks(JSON.parse(stored))
+        dispatch({ type: "INIT", payload: JSON.parse(stored) })
       } catch {
-        setTasks(generateDummyTasks())
+        dispatch({ type: "INIT", payload: generateDummyTasks() })
       }
     } else {
-      setTasks(generateDummyTasks())
+      dispatch({ type: "INIT", payload: generateDummyTasks() })
     }
   }, [])
 
@@ -35,20 +64,20 @@ export function useTasks() {
       completed: false,
       createdAt: new Date().toISOString(),
     }
-    setTasks(prev => [...prev, newTask])
+    dispatch({ type: "ADD_TASK", payload: newTask })
     return newTask
   }
 
   const updateTask = (id: string, updates: Partial<Omit<Task, "id" | "createdAt">>): void => {
-    setTasks(prev => prev.map(t => (t.id === id ? { ...t, ...updates } : t)))
+    dispatch({ type: "UPDATE_TASK", payload: { id, updates } })
   }
 
   const deleteTask = (id: string): void => {
-    setTasks(prev => prev.filter(t => t.id !== id))
+    dispatch({ type: "DELETE_TASK", payload: id })
   }
 
   const toggleCompleted = (id: string): void => {
-    setTasks(prev => prev.map(t => t.id === id ? { ...t, completed: !t.completed } : t))
+    dispatch({ type: "TOGGLE_COMPLETED", payload: id })
   }
 
   const getTaskById = (id: string): Task | undefined => {
