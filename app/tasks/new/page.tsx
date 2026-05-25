@@ -5,7 +5,11 @@ import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useTasks } from "../../../hooks/useTasks"
 import { useCategories } from "../../../hooks/useCategories"
-import { Priority, PRIORITY_LABELS } from "../../../types"
+import { Priority } from "../../../types"
+import { CategorySelector } from "../../../components/CategorySelector"
+import { PrioritySelector } from "../../../components/PrioritySelector"
+
+const TITLE_MAX_LENGTH = 50
 
 export default function NewTaskPage() {
   const router = useRouter()
@@ -38,13 +42,19 @@ export default function NewTaskPage() {
       <div className="space-y-6">
         {/* タスク名 */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            タスク名 <span className="text-red-500">*</span>
-          </label>
+          <div className="flex justify-between mb-2">
+            <label className="text-sm font-semibold text-gray-700">
+              タスク名 <span className="text-red-500">*</span>
+            </label>
+            <span className={`text-xs ${title.length >= TITLE_MAX_LENGTH ? "text-red-500" : "text-gray-400"}`}>
+              {title.length} / {TITLE_MAX_LENGTH}
+            </span>
+          </div>
           <input
             type="text"
             value={title}
             onChange={e => setTitle(e.target.value)}
+            maxLength={TITLE_MAX_LENGTH}
             placeholder="タスク名を入力..."
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FA6218]"
           />
@@ -58,27 +68,7 @@ export default function NewTaskPage() {
           <label className="block text-sm font-semibold text-gray-700 mb-2">
             優先度
           </label>
-          <div className="flex gap-2">
-            {(Object.keys(PRIORITY_LABELS) as Priority[]).map(p => (
-              <button
-                key={p}
-                type="button"
-                onClick={() => setPriority(p)}
-                className={`flex-1 py-2 px-3 rounded-lg border-2 text-sm font-semibold transition-colors ${priority === p
-                  ? p === "high"
-                    ? "border-red-500 bg-red-50 text-red-600"
-                    : p === "medium"
-                      ? "border-amber-500 bg-amber-50 text-amber-600"
-                      : "border-green-500 bg-green-50 text-green-600"
-                  : "border-gray-200 bg-white text-gray-500 hover:border-gray-300"
-                  }`}
-              >
-                <span className={`inline-block w-2 h-2 rounded-full mr-2 ${p === "high" ? "bg-red-500" : p === "medium" ? "bg-amber-500" : "bg-green-500"
-                  }`} />
-                {PRIORITY_LABELS[p]}
-              </button>
-            ))}
-          </div>
+          <PrioritySelector value={priority} onChange={setPriority} />
         </div>
 
         {/* カテゴリ */}
@@ -86,18 +76,11 @@ export default function NewTaskPage() {
           <label className="block text-sm font-semibold text-gray-700 mb-2">
             カテゴリ
           </label>
-          <select
+          <CategorySelector
+            categories={categories}
             value={categoryId}
-            onChange={e => setCategoryId(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FA6218]"
-          >
-            <option value="">カテゴリを選択...</option>
-            {categories.map(cat => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
+            onChange={setCategoryId}
+          />
           {errors.categoryId && (
             <p className="text-red-500 text-xs mt-1">{errors.categoryId}</p>
           )}
