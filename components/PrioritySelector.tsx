@@ -5,6 +5,18 @@ type Props = {
   onChange: (priority: Priority) => void
 }
 
+const PRIORITY_ACTIVE_CLASSES: Record<Priority, string> = {
+  high: "border-red-500 bg-red-50 text-red-600",
+  medium: "border-amber-500 bg-amber-50 text-amber-600",
+  low: "border-green-500 bg-green-50 text-green-600",
+}
+
+const PRIORITY_DOT_CLASSES: Record<Priority, string> = {
+  high: "bg-red-500",
+  medium: "bg-amber-500",
+  low: "bg-green-500",
+}
+
 export function PrioritySelector({ value, onChange }: Props) {
   return (
     <div className="flex gap-2">
@@ -14,16 +26,11 @@ export function PrioritySelector({ value, onChange }: Props) {
           type="button"
           onClick={() => onChange(p)}
           className={`flex-1 py-2 px-3 rounded-lg border-2 text-sm font-semibold transition-colors ${value === p
-              ? p === "high"
-                ? "border-red-500 bg-red-50 text-red-600"
-                : p === "medium"
-                  ? "border-amber-500 bg-amber-50 text-amber-600"
-                  : "border-green-500 bg-green-50 text-green-600"
+              ? PRIORITY_ACTIVE_CLASSES[p]
               : "border-gray-200 bg-white text-gray-500 hover:border-gray-300"
             }`}
         >
-          <span className={`inline-block w-2 h-2 rounded-full mr-2 ${p === "high" ? "bg-red-500" : p === "medium" ? "bg-amber-500" : "bg-green-500"
-            }`} />
+          <span className={`inline-block w-2 h-2 rounded-full mr-2 ${PRIORITY_DOT_CLASSES[p]}`} />
           {PRIORITY_LABELS[p]}
         </button>
       ))}
