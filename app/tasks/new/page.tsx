@@ -6,8 +6,8 @@ import Link from "next/link"
 import { useTasks } from "../../../hooks/useTasks"
 import { useCategories } from "../../../hooks/useCategories"
 import { Priority } from "../../../types"
-import { CategorySelector } from "../../../components/CategorySelector"
 import { PrioritySelector } from "../../../components/PrioritySelector"
+import { CategorySelector } from "../../../components/CategorySelector"
 
 const TITLE_MAX_LENGTH = 50
 
@@ -32,7 +32,7 @@ export default function NewTaskPage() {
   const handleSubmit = () => {
     if (!validate()) return
     addTask(title.trim(), priority, categoryId)
-    router.push("/tasks")
+    router.push("/tasks?toast=created")
   }
 
   return (
@@ -40,7 +40,6 @@ export default function NewTaskPage() {
       <h1 className="text-page-title mb-8">タスクを作成</h1>
 
       <div className="space-y-6">
-        {/* タスク名 */}
         <div>
           <div className="flex justify-between mb-2">
             <label className="text-sm font-semibold text-gray-700">
@@ -63,30 +62,19 @@ export default function NewTaskPage() {
           )}
         </div>
 
-        {/* 優先度 */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            優先度
-          </label>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">優先度</label>
           <PrioritySelector value={priority} onChange={setPriority} />
         </div>
 
-        {/* カテゴリ */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            カテゴリ
-          </label>
-          <CategorySelector
-            categories={categories}
-            value={categoryId}
-            onChange={setCategoryId}
-          />
+          <label className="block text-sm font-semibold text-gray-700 mb-2">カテゴリ</label>
+          <CategorySelector categories={categories} value={categoryId} onChange={setCategoryId} />
           {errors.categoryId && (
             <p className="text-red-500 text-xs mt-1">{errors.categoryId}</p>
           )}
         </div>
 
-        {/* ボタン */}
         <div className="flex gap-3 pt-2">
           <Link
             href="/tasks"
@@ -96,7 +84,7 @@ export default function NewTaskPage() {
           </Link>
           <button
             onClick={handleSubmit}
-            className="flex-1 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+            className="flex-1 py-2 bg-primary text-white font-semibold rounded-lg hover:opacity-90 transition-opacity"
           >
             作成する
           </button>

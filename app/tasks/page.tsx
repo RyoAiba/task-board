@@ -1,15 +1,18 @@
 "use client"
 
 import { useState, useMemo, useEffect, Suspense } from "react"
+import { useRouter } from "next/navigation"
 import { useSearchParams } from "next/navigation"
 import { Search, X, ChevronDown } from "lucide-react"
 import { PageSize, Priority, PRIORITY_LABELS, PRIORITY_ORDER } from "../../types"
 import { useTasks } from "../../hooks/useTasks"
 import { useCategories } from "../../hooks/useCategories"
+import { useToast } from "../../hooks/useToast"
 import { TaskCard } from "../../components/TaskCard"
 import { Pagination } from "../../components/Pagination"
 import { CheckboxGroup } from "../../components/CheckboxGroup"
 import { CategoryModal } from "../../components/CategoryModal"
+import { Toast } from "../../components/Toast"
 
 // ─── 型 ────────────────────────────────────────────────
 type Status = "incomplete" | "completed"
@@ -35,11 +38,19 @@ const SORT_OPTIONS: { label: string; key: SortKey; order: SortOrder }[] = [
   { label: "完了済を先に", key: "status", order: "desc" },
 ]
 
+const TOAST_MESSAGES: Record<string, string> = {
+  created: "タスクを作成しました",
+  saved: "タスクを保存しました",
+  deleted: "タスクを削除しました",
+}
+
 // ─── メイン ─────────────────────────────────────────────
 function TasksPageContent() {
+  const router = useRouter()
   const searchParams = useSearchParams()
   const { tasks, toggleCompleted } = useTasks()
   const { categories } = useCategories()
+  const { toast, showToast } = useToast()
 
   const urlCategory = searchParams.get("category") || ""
   const urlPriority = searchParams.get("priority") as Priority | null
@@ -71,6 +82,17 @@ function TasksPageContent() {
   useEffect(() => {
     setCategoryModalOpen(false)
   }, [searchParams])
+
+  useEffect(() => {
+    const toastParam = searchParams.get("toast")
+    if (toastParam && TOAST_MESSAGES[toastParam]) {
+      showToast(TOAST_MESSAGES[toastParam])
+      const params = new URLSearchParams(searchParams.toString())
+      params.delete("toast")
+      const newUrl = params.toString() ? `/tasks?${params.toString()}` : "/tasks"
+      router.replace(newUrl)
+    }
+  }, [])
 
   // ─── ハンドラ ─────────────────────────────────────────
   const resetPage = () => setCurrentPage(1)
@@ -260,6 +282,8 @@ function TasksPageContent() {
           <p className="text-gray-500 text-body">タスクがありません</p>
         </div>
       )}
+
+      <Toast message={toast.message} visible={toast.visible} />
     </div>
   )
 }

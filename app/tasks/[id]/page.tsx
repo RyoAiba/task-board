@@ -29,7 +29,6 @@ export default function TaskDetailPage() {
 
   const initialized = useRef(false)
 
-  // tasksの非同期読み込み後にフォームを初期化する
   useEffect(() => {
     if (task && !initialized.current) {
       setTitle(task.title)
@@ -50,6 +49,11 @@ export default function TaskDetailPage() {
     )
   }
 
+  const hasChanges =
+    title !== task.title ||
+    priority !== task.priority ||
+    categoryId !== task.categoryId
+
   const validate = () => {
     const newErrors: { title?: string; categoryId?: string } = {}
     if (!title.trim()) newErrors.title = "タスク名を入力してください"
@@ -61,12 +65,12 @@ export default function TaskDetailPage() {
   const handleSave = () => {
     if (!validate()) return
     updateTask(id, { title: title.trim(), priority, categoryId })
-    router.back()
+    router.push("/tasks?toast=saved")
   }
 
   const handleDelete = () => {
     deleteTask(id)
-    router.back()
+    router.push("/tasks?toast=deleted")
   }
 
   return (
@@ -74,7 +78,6 @@ export default function TaskDetailPage() {
       <h1 className="text-page-title mb-8">タスクを編集</h1>
 
       <div className="space-y-6">
-        {/* タスク名 */}
         <div>
           <div className="flex justify-between mb-2">
             <label className="text-sm font-semibold text-gray-700">
@@ -96,30 +99,19 @@ export default function TaskDetailPage() {
           )}
         </div>
 
-        {/* 優先度 */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            優先度
-          </label>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">優先度</label>
           <PrioritySelector value={priority} onChange={setPriority} />
         </div>
 
-        {/* カテゴリ */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">
-            カテゴリ
-          </label>
-          <CategorySelector
-            categories={categories}
-            value={categoryId}
-            onChange={setCategoryId}
-          />
+          <label className="block text-sm font-semibold text-gray-700 mb-2">カテゴリ</label>
+          <CategorySelector categories={categories} value={categoryId} onChange={setCategoryId} />
           {errors.categoryId && (
             <p className="text-red-500 text-xs mt-1">{errors.categoryId}</p>
           )}
         </div>
 
-        {/* ボタン */}
         <div className="flex gap-3 pt-2">
           <button
             onClick={() => router.back()}
@@ -129,13 +121,16 @@ export default function TaskDetailPage() {
           </button>
           <button
             onClick={handleSave}
-            className="flex-1 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+            disabled={!hasChanges}
+            className={`flex-1 py-2 font-semibold rounded-lg transition-colors ${hasChanges
+                ? "bg-primary text-white hover:opacity-90"
+                : "bg-gray-100 text-gray-400 cursor-not-allowed"
+              }`}
           >
             保存する
           </button>
         </div>
 
-        {/* 削除ボタン */}
         <div className="pt-4 border-t border-gray-200">
           <button
             onClick={() => setShowDeleteDialog(true)}
@@ -146,7 +141,6 @@ export default function TaskDetailPage() {
         </div>
       </div>
 
-      {/* 削除確認ダイアログ */}
       {showDeleteDialog && (
         <div
           className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
