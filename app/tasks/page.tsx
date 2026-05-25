@@ -97,6 +97,20 @@ function TasksPageContent() {
   // ─── ハンドラ ─────────────────────────────────────────
   const resetPage = () => setCurrentPage(1)
 
+  const hasActiveFilters =
+    searchText !== "" ||
+    selectedCategories.length > 0 ||
+    selectedPriorities.length > 0 ||
+    selectedStatuses.length > 0
+
+  const resetAllFilters = () => {
+    setSearchText("")
+    setSelectedCategories([])
+    setSelectedPriorities([])
+    setSelectedStatuses([])
+    resetPage()
+  }
+
   const toggleItem =
     <T extends string>(setter: React.Dispatch<React.SetStateAction<T[]>>) =>
       (value: T) => {
@@ -244,6 +258,14 @@ function TasksPageContent() {
             selected={selectedStatuses}
             onToggle={toggleItem(setSelectedStatuses)}
           />
+          {hasActiveFilters && (
+            <button
+              onClick={resetAllFilters}
+              className="text-xs text-gray-400 hover:text-gray-600 underline whitespace-nowrap"
+            >
+              リセット
+            </button>
+          )}
         </div>
       </div>
 

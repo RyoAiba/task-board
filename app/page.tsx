@@ -7,7 +7,6 @@ import { Priority, PRIORITY_LABELS, PRIORITY_ORDER, CATEGORY_BADGE_CLASSES, CATE
 import { PieChart, Pie, Cell, Label } from "recharts"
 import { getPriorityBadgeClass } from "../utils/priority"
 
-// ─── 定数 ──────────────────────────────────────────────
 const PRIMARY_COLOR = "#FA6218"
 
 const PRIORITY_ITEMS = (Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(
@@ -53,7 +52,14 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* 未完了のタスク */}
         <section>
-          <h2 className="text-section-title mb-4">未完了のタスク</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-section-title">未完了のタスク</h2>
+            {incompleteTasks.length > 5 && (
+              <Link href="/tasks" className="text-xs text-primary hover:underline">
+                全て見る →
+              </Link>
+            )}
+          </div>
           {sortedIncompleteTasks.length > 0 ? (
             <div className="space-y-2">
               {sortedIncompleteTasks.map(task => {
@@ -72,9 +78,11 @@ export default function Dashboard() {
                         {task.title}
                       </span>
                       <div className="flex items-center gap-2 mt-2">
-                        <span className={`text-badge px-2 py-1 rounded ${categoryBadgeClass}`}>
-                          {category?.name ?? ""}
-                        </span>
+                        {category && (
+                          <span className={`text-badge px-2 py-1 rounded ${categoryBadgeClass}`}>
+                            {category.name}
+                          </span>
+                        )}
                         <span className={`text-badge px-2 py-1 rounded ${getPriorityBadgeClass(task.priority)}`}>
                           {PRIORITY_LABELS[task.priority]}
                         </span>
