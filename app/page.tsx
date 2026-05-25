@@ -3,16 +3,16 @@
 import Link from "next/link"
 import { useTasks } from "../hooks/useTasks"
 import { useCategories } from "../hooks/useCategories"
-import { PRIORITY_LABELS, CATEGORY_BADGE_CLASSES, CATEGORY_BORDER_CLASSES, PRIORITY_BORDER_CLASSES } from "../types"
+import { Priority, PRIORITY_LABELS, PRIORITY_ORDER, CATEGORY_BADGE_CLASSES, CATEGORY_BORDER_CLASSES, PRIORITY_BORDER_CLASSES } from "../types"
 import { PieChart, Pie, Cell, Label } from "recharts"
 import { getPriorityBadgeClass } from "../utils/priority"
 
 // ─── 定数 ──────────────────────────────────────────────
-const PRIORITY_ITEMS = [
-  { href: "/tasks?priority=high", label: "高", key: "high" },
-  { href: "/tasks?priority=medium", label: "中", key: "medium" },
-  { href: "/tasks?priority=low", label: "低", key: "low" },
-] as const
+const PRIMARY_COLOR = "#FA6218"
+
+const PRIORITY_ITEMS = (Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(
+  ([key, label]) => ({ href: `/tasks?priority=${key}`, label, key })
+)
 
 export default function Dashboard() {
   const { tasks } = useTasks()
@@ -24,10 +24,7 @@ export default function Dashboard() {
     tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0
 
   const sortedIncompleteTasks = [...incompleteTasks]
-    .sort((a, b) => {
-      const priorityOrder = { high: 0, medium: 1, low: 2 }
-      return priorityOrder[a.priority] - priorityOrder[b.priority]
-    })
+    .sort((a, b) => PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority])
     .slice(0, 5)
 
   const categoryTaskCounts = categories.map(cat => ({
@@ -108,13 +105,13 @@ export default function Dashboard() {
                 startAngle={90}
                 endAngle={-270}
               >
-                <Cell fill="#FA6218" />
+                <Cell fill={PRIMARY_COLOR} />
                 <Cell fill="#E5E7EB" />
                 <Label
                   value={`${completionRate}%`}
                   position="center"
                   fontSize={24}
-                  fill="#FA6218"
+                  fill={PRIMARY_COLOR}
                   fontWeight="bold"
                 />
               </Pie>
