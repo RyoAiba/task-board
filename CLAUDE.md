@@ -55,12 +55,14 @@
 - 優先度: チェックボックスで複数選択（未選択時は全件表示）
 - ステータス: チェックボックスで複数選択（未選択時は全件表示）
 - フィルタバーはスクロール時に上部固定（sticky）、横幅いっぱいに表示しボーダーで境界を表現
+- いずれかのフィルタが有効なとき「リセット」ボタンで一括解除
 
 ### ソート
 - 並び替えドロップダウン（単一軸・複合ソートなし）
 - カテゴリ昇順/降順（Category.order 基準）
 - 優先度 高い順/低い順
 - 未完了を先に/完了済を先に
+- 期限：古い順/新しい順（期限なしは常に最後）
 
 ### ページネーション
 - 上下両方に表示
@@ -68,15 +70,25 @@
 - フィルタ・ソート・検索変更時はページ1にリセット
 
 ## タスク作成（/tasks/new）・タスク詳細・編集（/tasks/[id]）共通
-- タスク名は必須（空文字不可）、最大50文字
-- カテゴリは必須
+- フォームUIはTaskFormコンポーネントで共通化
+- タスク名は必須（空文字不可）、最大50文字・文字数カウンター表示
+- 優先度は必須（デフォルト: 中）
+- カテゴリは任意・ドロップダウン形式（CategorySelector）・選択後にXで解除可能
+- 期限は任意・日付入力・設定後に「期限を削除」で解除可能
 - バリデーションエラーはフィールド直下に赤文字で表示
-- タスク名入力欄には文字数カウンター表示（現在文字数 / 50）
-- カテゴリはドロップダウン形式のセレクター（CategorySelector）で選択
+- タスク名入力欄はページ表示時にautoFocus
+- 作成・保存・削除後は /tasks?toast=xxx にリダイレクト
 
 ## タスク詳細・編集（/tasks/[id]）
-- キャンセルボタン押下で router.back()（遷移元に戻る）
-- 保存後も router.back()
+- 編集画面では元データとの差分がない場合、保存ボタンを非活性にする
+- キャンセルボタン押下で router.back()
+
+## 期限バッジ仕様
+- 完了済みタスクにはバッジを表示しない
+- 期限切れ（過去）: 「期限切れ」赤バッジ
+- 当日: 「今日まで」オレンジバッジ
+- 1〜3日以内: 「あとN日」黄バッジ
+- 4日以上先・期限なし: バッジ非表示
 
 ## データ設計
 型定義の詳細は `types/index.ts` を参照。
@@ -93,6 +105,7 @@
 - 型定義は types/index.ts に集約
 - カスタムフックは hooks/ に配置
 - コンポーネントは components/ に配置
+- ユーティリティ関数は utils/ に配置
 - eslint-disable コメントを使わない（ESLintルール自体を eslint.config.mjs で調整する）
 
 ## やってはいけないこと
@@ -103,7 +116,7 @@
 - `<a>` タグを使わない（Next.js の Link コンポーネントを使う）
 
 ## デザイン
-- テーマカラー: #FA6218
+- テーマカラー: #FA6218（Tailwindカスタムカラー: primary）
 - 白ベースのモダンなUI
 - レスポンシブ対応必須（モバイルファースト）
 - フォント: Noto Sans JP（Google Fonts）
@@ -139,10 +152,17 @@
 - components/PrioritySelector.tsx
 - components/Sidebar.tsx
 - components/TaskCard.tsx
+- components/TaskForm.tsx
+- components/Toast.tsx
 
 ## カスタムフック構成
-- hooks/useTasks.ts        タスクのCRUD・localStorage管理
-- hooks/useCategories.tsx  カテゴリのCRUD・localStorage管理・Contextプロバイダー
+- hooks/useTasks.ts        タスクのCRUD・localStorage管理・useReducer
+- hooks/useCategories.tsx  カテゴリのCRUD・localStorage管理・Contextプロバイダー・useReducer
+- hooks/useToast.ts        トースト通知の表示管理
+
+## ユーティリティ構成
+- utils/priority.ts   優先度バッジクラスの取得
+- utils/dueDate.ts    期限バッジの状態・ラベル・クラスの取得
 
 ## 実装後に必ず行うこと
 - TypeScript の型エラーがないか確認（npx tsc --noEmit）
