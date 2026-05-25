@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useCallback } from "react"
 
 type Toast = {
   message: string
@@ -8,10 +8,10 @@ type Toast = {
 export function useToast() {
   const [toast, setToast] = useState<Toast>({ message: "", visible: false })
 
-  const showToast = (message: string) => {
+  const showToast = useCallback((message: string) => {
     setToast({ message, visible: true })
     setTimeout(() => setToast(prev => ({ ...prev, visible: false })), 2500)
-  }
+  }, [])
 
   return { toast, showToast }
 }

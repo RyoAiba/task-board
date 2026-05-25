@@ -92,7 +92,7 @@ function TasksPageContent() {
       const newUrl = params.toString() ? `/tasks?${params.toString()}` : "/tasks"
       router.replace(newUrl)
     }
-  }, [])
+  }, [searchParams, router, showToast])
 
   // ─── ハンドラ ─────────────────────────────────────────
   const resetPage = () => setCurrentPage(1)
