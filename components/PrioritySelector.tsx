@@ -1,4 +1,4 @@
-import { Priority, PRIORITY_LABELS } from "../types"
+import { Priority, PRIORITY_LABELS, PRIORITY_DOT_CLASSES } from "../types"
 
 type Props = {
   value: Priority
@@ -9,12 +9,6 @@ const PRIORITY_ACTIVE_CLASSES: Record<Priority, string> = {
   high: "border-red-500 bg-red-50 text-red-600",
   medium: "border-amber-500 bg-amber-50 text-amber-600",
   low: "border-green-500 bg-green-50 text-green-600",
-}
-
-const PRIORITY_DOT_CLASSES: Record<Priority, string> = {
-  high: "bg-red-500",
-  medium: "bg-amber-500",
-  low: "bg-green-500",
 }
 
 export function PrioritySelector({ value, onChange }: Props) {

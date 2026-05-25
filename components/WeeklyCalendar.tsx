@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { X } from "lucide-react"
-import { Task, PRIORITY_ORDER } from "../types"
+import { Task, PRIORITY_ORDER, PRIORITY_DOT_CLASSES } from "../types"
 import { useSettings } from "../hooks/useSettings"
 
 type Props = {
@@ -11,12 +11,6 @@ type Props = {
 }
 
 const DAY_NAMES = ["日", "月", "火", "水", "木", "金", "土"]
-
-const PRIORITY_DOT_CLASSES: Record<string, string> = {
-  high: "bg-red-500",
-  medium: "bg-amber-500",
-  low: "bg-green-500",
-}
 
 function formatDate(date: Date): string {
   const y = date.getFullYear()
@@ -84,12 +78,11 @@ export function WeeklyCalendar({ tasks }: Props) {
                 key={dateStr}
                 className="flex-shrink-0 w-32 sm:w-36 rounded-xl border border-gray-200 bg-white overflow-hidden"
               >
-                {/* 日付ヘッダー */}
                 <div className={`px-3 py-2 text-center ${isToday ? "bg-primary" : "bg-gray-50 border-b border-gray-200"}`}>
                   <div className={`text-xs font-medium ${isToday ? "text-white" :
-                    dayOfWeek === 0 ? "text-red-500" :
-                      dayOfWeek === 6 ? "text-blue-500" :
-                        "text-gray-500"
+                      dayOfWeek === 0 ? "text-red-500" :
+                        dayOfWeek === 6 ? "text-blue-500" :
+                          "text-gray-500"
                     }`}>
                     {DAY_NAMES[dayOfWeek]}
                   </div>
@@ -98,7 +91,6 @@ export function WeeklyCalendar({ tasks }: Props) {
                   </div>
                 </div>
 
-                {/* タスク一覧 */}
                 <div className="p-2 space-y-1 min-h-16">
                   {visibleTasks.length > 0 ? (
                     <>
@@ -131,7 +123,6 @@ export function WeeklyCalendar({ tasks }: Props) {
         </div>
       </div>
 
-      {/* もっと見るボタン */}
       <div className="mt-1 flex justify-end">
         <button
           onClick={() => setDisplayDays(prev => prev + LOAD_MORE_DAYS)}
@@ -141,7 +132,6 @@ export function WeeklyCalendar({ tasks }: Props) {
         </button>
       </div>
 
-      {/* 日付詳細ポップアップ */}
       {popupDate && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setPopupDate(null)} />

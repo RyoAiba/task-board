@@ -46,6 +46,12 @@ export const PRIORITY_ORDER: Record<Priority, number> = {
   low: 2,
 }
 
+export const PRIORITY_DOT_CLASSES: Record<Priority, string> = {
+  high: "bg-red-500",
+  medium: "bg-amber-500",
+  low: "bg-green-500",
+}
+
 export const CATEGORY_DOT_CLASSES: Record<CategoryColor, string> = {
   blue: "bg-blue-400",
   violet: "bg-violet-400",
