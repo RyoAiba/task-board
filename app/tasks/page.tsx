@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Search, X, ChevronDown } from "lucide-react"
-import { PageSize, Priority, PRIORITY_LABELS } from "../../types"
+import { PageSize, Priority, PRIORITY_LABELS, PRIORITY_ORDER } from "../../types"
 import { useTasks } from "../../hooks/useTasks"
 import { useCategories } from "../../hooks/useCategories"
 import { TaskCard } from "../../components/TaskCard"
@@ -25,12 +25,6 @@ const STATUS_OPTIONS: { label: string; value: Status }[] = [
 const PRIORITY_OPTIONS = (Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(
   ([value, label]) => ({ label, value })
 )
-
-const PRIORITY_ORDER: Record<Priority, number> = {
-  high: 0,
-  medium: 1,
-  low: 2,
-}
 
 const SORT_OPTIONS: { label: string; key: SortKey; order: SortOrder }[] = [
   { label: "カテゴリ：昇順", key: "category", order: "asc" },

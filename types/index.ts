@@ -39,6 +39,12 @@ export const PRIORITY_LABELS: Record<Priority, string> = {
   low: "低",
 }
 
+export const PRIORITY_ORDER: Record<Priority, number> = {
+  high: 0,
+  medium: 1,
+  low: 2,
+}
+
 export const CATEGORY_DOT_CLASSES: Record<CategoryColor, string> = {
   blue: "bg-blue-400",
   violet: "bg-violet-400",
