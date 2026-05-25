@@ -12,7 +12,7 @@ const CATEGORY_ITEM_CLASS = "block py-3 pr-3 text-sm text-gray-600 hover:text-pr
 
 export function Sidebar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false)
-  const { categories } = useCategories()
+  const { categories, isLoaded } = useCategories()
 
   return (
     <>
@@ -32,7 +32,7 @@ export function Sidebar() {
               <span>タスク一覧</span>
             </Link>
             <div>
-              {categories.map(cat => (
+              {isLoaded && categories.map(cat => (
                 <Link
                   key={cat.id}
                   href={`/tasks?category=${cat.id}`}

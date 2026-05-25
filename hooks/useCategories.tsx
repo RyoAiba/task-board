@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useReducer, useEffect, useRef, ReactNode } from "react"
+import { createContext, useContext, useReducer, useEffect, useRef, useState, ReactNode } from "react"
 import { Category, CategoryColor, DEFAULT_CATEGORIES } from "../types"
 
 const STORAGE_KEY = "task-board-categories"
@@ -37,6 +37,7 @@ function categoryReducer(state: Category[], action: CategoryAction): Category[] 
 // ─── Context ─────────────────────────────────────────────
 type CategoriesContextType = {
   categories: Category[]
+  isLoaded: boolean
   addCategory: (name: string) => Category
   updateCategory: (id: string, name: string) => void
   deleteCategory: (id: string) => void
@@ -47,6 +48,7 @@ const CategoriesContext = createContext<CategoriesContextType | null>(null)
 export function CategoriesProvider({ children }: { children: ReactNode }) {
   const [categories, dispatch] = useReducer(categoryReducer, DEFAULT_CATEGORIES)
   const isInitialized = useRef(false)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
@@ -59,6 +61,7 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
     } else {
       dispatch({ type: "INIT", payload: DEFAULT_CATEGORIES })
     }
+    setIsLoaded(true)
   }, [])
 
   useEffect(() => {
@@ -89,7 +92,7 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <CategoriesContext.Provider value={{ categories, addCategory, updateCategory, deleteCategory }}>
+    <CategoriesContext.Provider value={{ categories, isLoaded, addCategory, updateCategory, deleteCategory }}>
       {children}
     </CategoriesContext.Provider>
   )
