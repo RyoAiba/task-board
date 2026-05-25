@@ -3,15 +3,14 @@
 import { useState, useMemo, useEffect, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import { useSearchParams } from "next/navigation"
-import { Search, X, ChevronDown } from "lucide-react"
+import { Search, X, SlidersHorizontal } from "lucide-react"
 import { PageSize, Priority, PRIORITY_LABELS, PRIORITY_ORDER } from "../../types"
 import { useTasks } from "../../hooks/useTasks"
 import { useCategories } from "../../hooks/useCategories"
 import { useToast } from "../../hooks/useToast"
 import { TaskCard } from "../../components/TaskCard"
 import { Pagination } from "../../components/Pagination"
-import { CheckboxGroup } from "../../components/CheckboxGroup"
-import { CategoryModal } from "../../components/CategoryModal"
+import { TaskFilterPopup } from "../../components/TaskFilterPopup"
 import { Toast } from "../../components/Toast"
 
 // ─── 型 ────────────────────────────────────────────────
@@ -20,14 +19,10 @@ type SortKey = "category" | "priority" | "status" | "dueDate"
 type SortOrder = "asc" | "desc"
 
 // ─── 定数 ──────────────────────────────────────────────
-const STATUS_OPTIONS: { label: string; value: Status }[] = [
-  { label: "未完了", value: "incomplete" },
-  { label: "完了済", value: "completed" },
-]
-
-const PRIORITY_OPTIONS = (Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(
-  ([value, label]) => ({ label, value })
-)
+const STATUS_LABELS: Record<Status, string> = {
+  incomplete: "未完了",
+  completed: "完了済",
+}
 
 const SORT_OPTIONS: { label: string; key: SortKey; order: SortOrder }[] = [
   { label: "カテゴリ：昇順", key: "category", order: "asc" },
@@ -44,6 +39,10 @@ const TOAST_MESSAGES: Record<string, string> = {
   created: "タスクを作成しました",
   saved: "タスクを保存しました",
   deleted: "タスクを削除しました",
+}
+
+function truncate(str: string, max: number): string {
+  return str.length > max ? str.slice(0, max) + "…" : str
 }
 
 // ─── メイン ─────────────────────────────────────────────
@@ -69,7 +68,7 @@ function TasksPageContent() {
   const [selectedStatuses, setSelectedStatuses] = useState<Status[]>(
     urlStatus ? [urlStatus] : []
   )
-  const [categoryModalOpen, setCategoryModalOpen] = useState(false)
+  const [filterPopupOpen, setFilterPopupOpen] = useState(false)
   const [sortKey, setSortKey] = useState<SortKey | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc")
   const [currentPage, setCurrentPage] = useState(1)
@@ -89,7 +88,7 @@ function TasksPageContent() {
   }, [urlStatus])
 
   useEffect(() => {
-    setCategoryModalOpen(false)
+    setFilterPopupOpen(false)
   }, [searchParams])
 
   useEffect(() => {
@@ -106,28 +105,18 @@ function TasksPageContent() {
   // ─── ハンドラ ─────────────────────────────────────────
   const resetPage = () => setCurrentPage(1)
 
-  const hasActiveFilters =
-    searchText !== "" ||
-    selectedCategories.length > 0 ||
-    selectedPriorities.length > 0 ||
-    selectedStatuses.length > 0
+  const activeFilterCount =
+    selectedCategories.length + selectedPriorities.length + selectedStatuses.length
+
+  const hasActiveFilters = searchText !== "" || activeFilterCount > 0
 
   const resetAllFilters = () => {
-    setSearchText("")
     setSelectedCategories([])
     setSelectedPriorities([])
     setSelectedStatuses([])
+    setSearchText("")
     resetPage()
   }
-
-  const toggleItem =
-    <T extends string>(setter: React.Dispatch<React.SetStateAction<T[]>>) =>
-      (value: T) => {
-        setter(prev =>
-          prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]
-        )
-        resetPage()
-      }
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const val = e.target.value
@@ -151,6 +140,18 @@ function TasksPageContent() {
   const handlePageSizeChange = (size: PageSize) => {
     setPageSize(size)
     setCurrentPage(1)
+  }
+
+  const handleFilterApply = (
+    cats: string[],
+    priorities: Priority[],
+    statuses: Status[]
+  ) => {
+    setSelectedCategories(cats)
+    setSelectedPriorities(priorities)
+    setSelectedStatuses(statuses)
+    setFilterPopupOpen(false)
+    resetPage()
   }
 
   // ─── フィルタ・ソート ──────────────────────────────────
@@ -199,7 +200,6 @@ function TasksPageContent() {
   )
 
   const getCategory = (categoryId: string) => categories.find(c => c.id === categoryId)
-  const categoryLabel = selectedCategories.length === 0 ? "すべて" : `${selectedCategories.length}件選択中`
   const currentSortValue = sortKey ? `${sortKey}_${sortOrder}` : ""
 
   return (
@@ -207,9 +207,12 @@ function TasksPageContent() {
       <h1 className="text-page-title mb-6">タスク一覧</h1>
 
       {/* Filter Bar */}
-      <div className="sticky top-0 bg-white z-30 mb-6 -mx-6 px-6 py-4 border-b border-gray-200 space-y-3">
-        <div className="flex gap-3">
-          <div className="relative flex-1">
+      <div className="sticky top-0 bg-white z-30 mb-6 -mx-6 px-6 py-4 border-b border-gray-200">
+
+        {/* 検索・並び替え・フィルタ */}
+        <div className="flex flex-col md:flex-row gap-3">
+          {/* 検索（常に1行目・全幅） */}
+          <div className="relative md:flex-1">
             <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
             <input
               type="text"
@@ -219,68 +222,100 @@ function TasksPageContent() {
               className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-          <select
-            value={currentSortValue}
-            onChange={handleSortChange}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary whitespace-nowrap"
-          >
-            <option value="">並び替え</option>
-            {SORT_OPTIONS.map(opt => (
-              <option key={`${opt.key}_${opt.order}`} value={`${opt.key}_${opt.order}`}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+
+          {/* 並び替え・フィルタ（モバイル2行目・PC同一行） */}
+          <div className="flex gap-3 items-stretch">
+            <select
+              value={currentSortValue}
+              onChange={handleSortChange}
+              className="flex-1 md:flex-none px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option value="">並び替え</option>
+              {SORT_OPTIONS.map(opt => (
+                <option key={`${opt.key}_${opt.order}`} value={`${opt.key}_${opt.order}`}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+
+            <div className="relative">
+              <button
+                onClick={() => setFilterPopupOpen(prev => !prev)}
+                className={`h-full flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeFilterCount > 0
+                    ? "border-primary bg-orange-50 text-primary"
+                    : "border-gray-300 text-gray-500 hover:border-gray-400"
+                  }`}
+              >
+                <SlidersHorizontal size={16} />
+                フィルタ
+                {activeFilterCount > 0 && (
+                  <span className="bg-primary text-white text-xs px-1.5 py-0.5 rounded-full leading-none">
+                    {activeFilterCount}
+                  </span>
+                )}
+              </button>
+
+              {filterPopupOpen && (
+                <TaskFilterPopup
+                  categories={categories}
+                  selectedCategories={selectedCategories}
+                  selectedPriorities={selectedPriorities}
+                  selectedStatuses={selectedStatuses}
+                  onApply={handleFilterApply}
+                  onClose={() => setFilterPopupOpen(false)}
+                />
+              )}
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-x-6 gap-y-2 items-center">
-          <div className="relative flex items-center gap-3">
-            <span className="text-xs font-medium text-gray-400 whitespace-nowrap">カテゴリ</span>
-            <button
-              onClick={() => setCategoryModalOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary text-gray-500"
-            >
-              {categoryLabel}
-              <ChevronDown size={14} />
-            </button>
-            {selectedCategories.length > 0 && (
+        {/* アクティブフィルターチップ */}
+        {hasActiveFilters && (
+          <div className="flex gap-2 flex-wrap items-center mt-3">
+            {selectedCategories.map(catId => {
+              const cat = categories.find(c => c.id === catId)
+              if (!cat) return null
+              return (
+                <button
+                  key={catId}
+                  onClick={() => { setSelectedCategories(prev => prev.filter(id => id !== catId)); resetPage() }}
+                  className="flex items-center gap-1 px-3 py-1 bg-orange-50 border border-primary text-primary text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
+                >
+                  {truncate(cat.name, 6)}
+                  <X size={11} />
+                </button>
+              )
+            })}
+            {selectedPriorities.map(p => (
               <button
-                onClick={() => { setSelectedCategories([]); resetPage() }}
-                className="text-gray-300 hover:text-gray-500"
+                key={p}
+                onClick={() => { setSelectedPriorities(prev => prev.filter(v => v !== p)); resetPage() }}
+                className="flex items-center gap-1 px-3 py-1 bg-orange-50 border border-primary text-primary text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
               >
-                <X size={14} />
+                {PRIORITY_LABELS[p]}
+                <X size={11} />
+              </button>
+            ))}
+            {selectedStatuses.map(s => (
+              <button
+                key={s}
+                onClick={() => { setSelectedStatuses(prev => prev.filter(v => v !== s)); resetPage() }}
+                className="flex items-center gap-1 px-3 py-1 bg-orange-50 border border-primary text-primary text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
+              >
+                {STATUS_LABELS[s]}
+                <X size={11} />
+              </button>
+            ))}
+            {activeFilterCount > 0 && (
+              <button
+                onClick={resetAllFilters}
+                className="text-xs text-gray-400 hover:text-gray-600 underline px-1"
+              >
+                すべて解除
               </button>
             )}
-            {categoryModalOpen && (
-              <CategoryModal
-                categories={categories}
-                selected={selectedCategories}
-                onToggle={toggleItem(setSelectedCategories)}
-                onClose={() => setCategoryModalOpen(false)}
-              />
-            )}
           </div>
-          <CheckboxGroup
-            label="優先度"
-            options={PRIORITY_OPTIONS}
-            selected={selectedPriorities}
-            onToggle={toggleItem(setSelectedPriorities)}
-          />
-          <CheckboxGroup
-            label="ステータス"
-            options={STATUS_OPTIONS}
-            selected={selectedStatuses}
-            onToggle={toggleItem(setSelectedStatuses)}
-          />
-          {hasActiveFilters && (
-            <button
-              onClick={resetAllFilters}
-              className="text-xs text-gray-400 hover:text-gray-600 underline whitespace-nowrap"
-            >
-              リセット
-            </button>
-          )}
-        </div>
+        )}
       </div>
 
       {/* タスク一覧 */}
