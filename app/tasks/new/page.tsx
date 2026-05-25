@@ -13,8 +13,8 @@ export default function NewTaskPage() {
       <h1 className="text-page-title mb-8">タスクを作成</h1>
       <TaskForm
         mode="create"
-        onSave={({ title, priority, categoryId }) => {
-          addTask(title, priority, categoryId)
+        onSave={({ title, priority, categoryId, dueDate }) => {
+          addTask(title, priority, categoryId, dueDate)
           router.push("/tasks?toast=created")
         }}
         onCancel={() => router.push("/tasks")}

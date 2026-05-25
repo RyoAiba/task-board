@@ -16,7 +16,7 @@ import { Toast } from "../../components/Toast"
 
 // ─── 型 ────────────────────────────────────────────────
 type Status = "incomplete" | "completed"
-type SortKey = "category" | "priority" | "status"
+type SortKey = "category" | "priority" | "status" | "dueDate"
 type SortOrder = "asc" | "desc"
 
 // ─── 定数 ──────────────────────────────────────────────
@@ -36,6 +36,8 @@ const SORT_OPTIONS: { label: string; key: SortKey; order: SortOrder }[] = [
   { label: "優先度：低い順", key: "priority", order: "desc" },
   { label: "未完了を先に", key: "status", order: "asc" },
   { label: "完了済を先に", key: "status", order: "desc" },
+  { label: "期限：古い順", key: "dueDate", order: "asc" },
+  { label: "期限：新しい順", key: "dueDate", order: "desc" },
 ]
 
 const TOAST_MESSAGES: Record<string, string> = {
@@ -171,6 +173,12 @@ function TasksPageContent() {
         result = PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]
       } else if (sortKey === "status") {
         result = Number(a.completed) - Number(b.completed)
+      } else if (sortKey === "dueDate") {
+        // 期限なしは常に最後
+        if (!a.dueDate && !b.dueDate) result = 0
+        else if (!a.dueDate) result = 1
+        else if (!b.dueDate) result = -1
+        else result = a.dueDate.localeCompare(b.dueDate)
       }
       return sortOrder === "asc" ? result : -result
     })

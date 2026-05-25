@@ -8,7 +8,7 @@ const TASK_TITLES = {
     "メール対応",
     "プレゼンテーション資料作成",
     "バグ修正",
-    "コード レビュー",
+    "コードレビュー",
     "ドキュメント更新",
     "営業資料準備",
     "市場分析レポート",
@@ -54,13 +54,38 @@ const TASK_TITLES = {
   ],
 }
 
+function formatDate(date: Date): string {
+  return date.toISOString().split("T")[0]
+}
+
+function addDays(base: Date, days: number): Date {
+  const d = new Date(base)
+  d.setDate(d.getDate() + days)
+  return d
+}
+
 export function generateDummyTasks(): Task[] {
   const tasks: Task[] = []
   const now = new Date()
   let taskId = 1
 
+  // インデックスに応じた期限パターン（繰り返し）
+  const dueDatePatterns = [
+    addDays(now, -3),  // 期限切れ
+    addDays(now, -1),  // 期限切れ
+    now,               // 今日
+    addDays(now, 1),   // あと1日
+    addDays(now, 3),   // あと3日
+    addDays(now, 7),   // 1週間後
+    addDays(now, 14),  // 2週間後
+    undefined,         // 期限なし
+    undefined,         // 期限なし
+    undefined,         // 期限なし
+  ]
+
   Object.entries(TASK_TITLES).forEach(([categoryName, titles]) => {
-    const categoryId = categoryName === "仕事" ? "cat_1" : categoryName === "趣味" ? "cat_2" : "cat_3"
+    const categoryId =
+      categoryName === "仕事" ? "cat_1" : categoryName === "趣味" ? "cat_2" : "cat_3"
 
     titles.forEach((title, index) => {
       const daysAgo = Math.floor(Math.random() * 5)
@@ -69,8 +94,8 @@ export function generateDummyTasks(): Task[] {
 
       const priorities: Array<"high" | "medium" | "low"> = ["high", "medium", "low"]
       const priority = priorities[index % 3]
-
       const completed = Math.random() < 0.4
+      const dueDateBase = dueDatePatterns[index % dueDatePatterns.length]
 
       tasks.push({
         id: `task_${taskId++}`,
@@ -79,6 +104,7 @@ export function generateDummyTasks(): Task[] {
         categoryId,
         completed,
         createdAt: createdDate.toISOString(),
+        dueDate: dueDateBase ? formatDate(dueDateBase) : undefined,
       })
     })
   })

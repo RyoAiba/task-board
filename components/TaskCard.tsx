@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Check } from "lucide-react"
 import { Task, PRIORITY_LABELS, CATEGORY_BADGE_CLASSES, Category } from "../types"
 import { getPriorityBadgeClass } from "../utils/priority"
+import { getDueDateBadge } from "../utils/dueDate"
 
 type TaskCardProps = {
   task: Task
@@ -15,7 +16,9 @@ type TaskCardProps = {
 export const TaskCard = memo(function TaskCard({ task, category, onToggle }: TaskCardProps) {
   const categoryBadgeClass = category
     ? CATEGORY_BADGE_CLASSES[category.color as keyof typeof CATEGORY_BADGE_CLASSES]
-    : "bg-gray-100 text-gray-600"
+    : null
+
+  const dueBadge = getDueDateBadge(task.dueDate, task.completed)
 
   return (
     <div className="relative px-4 py-2 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
@@ -37,13 +40,20 @@ export const TaskCard = memo(function TaskCard({ task, category, onToggle }: Tas
           >
             {task.title}
           </span>
-          <div className="flex items-center gap-2 mt-1">
-            <span className={`text-xs px-2 py-0.5 rounded whitespace-nowrap ${categoryBadgeClass}`}>
-              {category?.name ?? ""}
-            </span>
+          <div className="flex items-center gap-2 mt-1 flex-wrap">
+            {categoryBadgeClass && (
+              <span className={`text-xs px-2 py-0.5 rounded whitespace-nowrap ${categoryBadgeClass}`}>
+                {category!.name}
+              </span>
+            )}
             <span className={`text-xs px-2 py-0.5 rounded whitespace-nowrap ${getPriorityBadgeClass(task.priority)}`}>
               {PRIORITY_LABELS[task.priority]}
             </span>
+            {dueBadge && (
+              <span className={`text-xs px-2 py-0.5 rounded whitespace-nowrap ${dueBadge.className}`}>
+                {dueBadge.label}
+              </span>
+            )}
           </div>
         </div>
       </div>

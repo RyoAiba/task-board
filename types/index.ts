@@ -16,6 +16,7 @@ export type Task = {
   categoryId: string
   completed: boolean
   createdAt: string
+  dueDate?: string
 }
 
 export const DEFAULT_CATEGORIES: Category[] = [

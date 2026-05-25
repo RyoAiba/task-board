@@ -5,6 +5,7 @@ import { Priority } from "../types"
 import { useCategories } from "../hooks/useCategories"
 import { PrioritySelector } from "./PrioritySelector"
 import { CategorySelector } from "./CategorySelector"
+import { CalendarDays } from "lucide-react"
 
 const TITLE_MAX_LENGTH = 50
 
@@ -12,6 +13,7 @@ type FormValues = {
   title: string
   priority: Priority
   categoryId: string
+  dueDate: string
 }
 
 type Props = {
@@ -30,6 +32,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
   const [categoryId, setCategoryId] = useState(initialValues?.categoryId ?? "")
   const [errors, setErrors] = useState<{ title?: string }>({})
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [dueDate, setDueDate] = useState(initialValues?.dueDate ?? "")
 
   const initialized = useRef(false)
 
@@ -39,6 +42,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
       setTitle(initialValues.title)
       setPriority(initialValues.priority)
       setCategoryId(initialValues.categoryId)
+      setDueDate(initialValues.dueDate ?? "")
       initialized.current = true
     }
   }, [initialValues, mode])
@@ -46,7 +50,8 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
   const hasChanges = mode === "edit" && initialValues
     ? title !== initialValues.title ||
     priority !== initialValues.priority ||
-    categoryId !== initialValues.categoryId
+    categoryId !== initialValues.categoryId ||
+    dueDate !== initialValues.dueDate
     : true
 
   const validate = () => {
@@ -58,7 +63,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
 
   const handleSave = () => {
     if (!validate()) return
-    onSave({ title: title.trim(), priority, categoryId })
+    onSave({ title: title.trim(), priority, categoryId, dueDate })
   }
 
   return (
@@ -102,6 +107,32 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
         <CategorySelector categories={categories} value={categoryId} onChange={setCategoryId} />
       </div>
 
+      {/* 期限（任意） */}
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          期限
+          <span className="text-xs text-gray-400 font-normal ml-2">任意</span>
+        </label>
+        <div className="relative">
+          <CalendarDays size={16} className="absolute left-3 top-2.5 text-gray-400" />
+          <input
+            type="date"
+            value={dueDate}
+            onChange={e => setDueDate(e.target.value)}
+            className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700"
+          />
+        </div>
+        {dueDate && (
+          <button
+            type="button"
+            onClick={() => setDueDate("")}
+            className="mt-1 text-xs text-gray-400 hover:text-gray-600 underline"
+          >
+            期限を削除
+          </button>
+        )}
+      </div>
+
       {/* ボタン */}
       <div className="flex gap-3 pt-2">
         <button
@@ -114,8 +145,8 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
           onClick={handleSave}
           disabled={!hasChanges}
           className={`flex-1 py-2 font-semibold rounded-lg transition-colors ${hasChanges
-              ? "bg-primary text-white hover:opacity-90"
-              : "bg-gray-100 text-gray-400 cursor-not-allowed"
+            ? "bg-primary text-white hover:opacity-90"
+            : "bg-gray-100 text-gray-400 cursor-not-allowed"
             }`}
         >
           {mode === "create" ? "作成する" : "保存する"}
