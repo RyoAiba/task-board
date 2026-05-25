@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { Search, X, ChevronDown } from "lucide-react"
-import { PageSize } from "../../types"
+import { PageSize, Priority } from "../../types"
 import { useTasks } from "../../hooks/useTasks"
 import { useCategories } from "../../hooks/useCategories"
 import { TaskCard } from "../../components/TaskCard"
@@ -12,7 +12,6 @@ import { CheckboxGroup } from "../../components/CheckboxGroup"
 import { CategoryModal } from "../../components/CategoryModal"
 
 // ─── 型 ────────────────────────────────────────────────
-type Priority = "high" | "medium" | "low"
 type Status = "incomplete" | "completed"
 type SortKey = "category" | "priority" | "status"
 type SortOrder = "asc" | "desc"

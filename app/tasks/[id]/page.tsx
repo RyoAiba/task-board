@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useRouter, useParams } from "next/navigation"
 import Link from "next/link"
 import { useTasks } from "../../../hooks/useTasks"
@@ -26,6 +26,18 @@ export default function TaskDetailPage() {
   const [categoryId, setCategoryId] = useState(task?.categoryId ?? "")
   const [errors, setErrors] = useState<{ title?: string; categoryId?: string }>({})
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+
+  const initialized = useRef(false)
+
+  // tasksの非同期読み込み後にフォームを初期化する
+  useEffect(() => {
+    if (task && !initialized.current) {
+      setTitle(task.title)
+      setPriority(task.priority)
+      setCategoryId(task.categoryId)
+      initialized.current = true
+    }
+  }, [task])
 
   if (!task) {
     return (
