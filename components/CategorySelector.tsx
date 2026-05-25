@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { ChevronDown, X } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 import { Category, CATEGORY_DOT_CLASSES } from "../types"
 
 type Props = {
@@ -27,11 +27,11 @@ export function CategorySelector({ categories, value, onChange }: Props) {
   }, [])
 
   return (
-    <div ref={ref} className="relative flex items-center gap-1">
+    <div ref={ref} className="relative">
       <button
         type="button"
         onClick={() => setOpen(prev => !prev)}
-        className="flex-1 flex items-center justify-between px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary hover:border-gray-400"
+        className="w-full flex items-center justify-between px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary hover:border-gray-400"
       >
         {selected ? (
           <span className="flex items-center gap-2">
@@ -43,16 +43,6 @@ export function CategorySelector({ categories, value, onChange }: Props) {
         )}
         <ChevronDown size={16} className="text-gray-400" />
       </button>
-
-      {selected && (
-        <button
-          type="button"
-          onClick={() => onChange("")}
-          className="text-gray-300 hover:text-gray-500 p-1"
-        >
-          <X size={14} />
-        </button>
-      )}
 
       {open && (
         <div className="absolute top-full left-0 mt-1 z-50 w-full bg-white rounded-xl shadow-xl p-2">

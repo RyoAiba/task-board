@@ -99,16 +99,25 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
       </div>
 
       {/* カテゴリ（任意） */}
-      <div>
+      <div className="w-full sm:w-1/2">
         <label className="block text-sm font-semibold text-gray-700 mb-2">
           カテゴリ
           <span className="text-xs text-gray-400 font-normal ml-2">任意</span>
         </label>
         <CategorySelector categories={categories} value={categoryId} onChange={setCategoryId} />
+        {categoryId && (
+          <button
+            type="button"
+            onClick={() => setCategoryId("")}
+            className="mt-1 text-xs text-gray-400 hover:text-gray-600 underline"
+          >
+            カテゴリを削除
+          </button>
+        )}
       </div>
 
       {/* 期限（任意） */}
-      <div>
+      <div className="w-full sm:w-1/2">
         <label className="block text-sm font-semibold text-gray-700 mb-2">
           期限
           <span className="text-xs text-gray-400 font-normal ml-2">任意</span>
