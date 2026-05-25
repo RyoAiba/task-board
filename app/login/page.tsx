@@ -29,7 +29,7 @@ export default function LoginPage() {
       <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
         {/* アプリ名 */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 bg-[#FA6218] rounded-2xl flex items-center justify-center mb-4">
+          <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center mb-4">
             <ClipboardList size={30} className="text-white" />
           </div>
           <h1 className="text-xl font-bold text-gray-800">TasksBoard</h1>
@@ -48,7 +48,7 @@ export default function LoginPage() {
               }}
               onKeyDown={handleKeyDown}
               placeholder="パスワード"
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FA6218] pr-12"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary pr-12"
             />
             <button
               type="button"
@@ -65,7 +65,7 @@ export default function LoginPage() {
 
           <button
             onClick={handleLogin}
-            className="w-full py-3 bg-[#FA6218] text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+            className="w-full py-3 bg-primary text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
           >
             ログイン
           </button>

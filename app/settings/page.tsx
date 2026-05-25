@@ -44,10 +44,10 @@ export default function SettingsPage() {
                     value={editingName}
                     onChange={e => setEditingName(e.target.value)}
                     onKeyDown={e => e.key === "Enter" && saveEdit()}
-                    className="flex-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FA6218]"
+                    className="flex-1 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                     autoFocus
                   />
-                  <button onClick={saveEdit} className="text-[#FA6218] hover:opacity-70 transition-opacity">
+                  <button onClick={saveEdit} className="text-primary hover:opacity-70 transition-opacity">
                     <Check size={18} />
                   </button>
                   <button onClick={cancelEdit} className="text-gray-400 hover:opacity-70 transition-opacity">
@@ -58,7 +58,7 @@ export default function SettingsPage() {
                 <>
                   <div className={`w-3 h-3 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[cat.color]}`} />
                   <span className="flex-1 text-gray-800 font-medium">{cat.name}</span>
-                  <button onClick={() => startEdit(cat.id, cat.name)} className="text-gray-400 hover:text-[#FA6218] transition-colors">
+                  <button onClick={() => startEdit(cat.id, cat.name)} className="text-gray-400 hover:text-primary transition-colors">
                     <Pencil size={18} />
                   </button>
                 </>

@@ -174,13 +174,13 @@ function TasksPageContent() {
               placeholder="タスクを検索..."
               value={searchText}
               onChange={handleSearchChange}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FA6218]"
+              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
           <select
             value={currentSortValue}
             onChange={handleSortChange}
-            className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FA6218] whitespace-nowrap"
+            className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary whitespace-nowrap"
           >
             <option value="">並び替え</option>
             {SORT_OPTIONS.map(opt => (
@@ -196,7 +196,7 @@ function TasksPageContent() {
             <span className="text-xs font-medium text-gray-400 whitespace-nowrap">カテゴリ</span>
             <button
               onClick={() => setCategoryModalOpen(true)}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:border-[#FA6218] focus:outline-none focus:ring-2 focus:ring-[#FA6218] text-gray-500"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm border border-gray-300 rounded-lg hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary text-gray-500"
             >
               {categoryLabel}
               <ChevronDown size={14} />

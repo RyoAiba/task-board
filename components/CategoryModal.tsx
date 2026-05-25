@@ -42,7 +42,7 @@ export function CategoryModal({
                 type="checkbox"
                 checked={checked}
                 onChange={() => onToggle(cat.id)}
-                className="w-4 h-4 accent-[#FA6218] cursor-pointer"
+                className="w-4 h-4 accent-primary cursor-pointer"
               />
               <div className={`w-2 h-2 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[cat.color]}`} />
               <span className={`text-sm ${checked ? "text-gray-800 font-medium" : "text-gray-500"}`}>

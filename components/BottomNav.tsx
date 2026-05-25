@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Home, List, Plus, Settings, LogOut } from "lucide-react"
 import { LogoutModal } from "./LogoutModal"
 
-const NAV_ITEM_CLASS = "flex flex-col items-center justify-center gap-1 flex-1 py-3 text-gray-500 hover:text-[#FA6218] transition-colors"
+const NAV_ITEM_CLASS = "flex flex-col items-center justify-center gap-1 flex-1 py-3 text-gray-500 hover:text-primary transition-colors"
 
 export function BottomNav() {
   const [showLogoutModal, setShowLogoutModal] = useState(false)
@@ -23,7 +23,7 @@ export function BottomNav() {
         </Link>
         <Link
           href="/tasks/new"
-          className="flex items-center justify-center w-14 h-14 rounded-full bg-[#FA6218] text-white hover:bg-orange-600 transition-colors -mt-4 shadow-md"
+          className="flex items-center justify-center w-14 h-14 rounded-full bg-primary text-white hover:bg-orange-600 transition-colors -mt-4 shadow-md"
         >
           <Plus size={28} />
         </Link>

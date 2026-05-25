@@ -56,7 +56,7 @@ export default function NewTaskPage() {
             onChange={e => setTitle(e.target.value)}
             maxLength={TITLE_MAX_LENGTH}
             placeholder="タスク名を入力..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FA6218]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           />
           {errors.title && (
             <p className="text-red-500 text-xs mt-1">{errors.title}</p>
@@ -96,7 +96,7 @@ export default function NewTaskPage() {
           </Link>
           <button
             onClick={handleSubmit}
-            className="flex-1 py-2 bg-[#FA6218] text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+            className="flex-1 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
           >
             作成する
           </button>

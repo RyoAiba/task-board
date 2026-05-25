@@ -21,7 +21,7 @@ export function TaskCard({ task, category, onToggle }: TaskCardProps) {
       <div className="flex items-center gap-3">
         <button
           onClick={() => onToggle(task.id)}
-          className={`relative z-10 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-colors ${task.completed ? "bg-[#FA6218]" : "border-2 border-gray-300 bg-white"
+          className={`relative z-10 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-colors ${task.completed ? "bg-primary" : "border-2 border-gray-300 bg-white"
             }`}
         >
           {task.completed && <Check size={14} className="text-white" />}

@@ -61,8 +61,8 @@ export function Pagination({
               key={page}
               onClick={() => onPageChange(page)}
               className={`w-8 h-8 text-sm rounded transition-colors ${page === currentPage
-                  ? "bg-[#FA6218] text-white font-semibold"
-                  : "text-gray-500 hover:bg-gray-100"
+                ? "bg-primary text-white font-semibold"
+                : "text-gray-500 hover:bg-gray-100"
                 }`}
             >
               {page}
@@ -86,7 +86,7 @@ export function Pagination({
         <select
           value={pageSize}
           onChange={e => onPageSizeChange(Number(e.target.value) as PageSize)}
-          className="text-xs px-2 py-1 border border-gray-200 rounded text-gray-500 focus:outline-none focus:ring-2 focus:ring-[#FA6218]"
+          className="text-xs px-2 py-1 border border-gray-200 rounded text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary"
         >
           {PAGE_SIZE_OPTIONS.map(size => (
             <option key={size} value={size}>{size}件表示</option>

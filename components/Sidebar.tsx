@@ -7,8 +7,8 @@ import { LogoutModal } from "./LogoutModal"
 import { useCategories } from "../hooks/useCategories"
 import { CATEGORY_DOT_CLASSES } from "../types"
 
-const NAV_ITEM_CLASS = "flex items-center gap-4 p-4 font-bold text-gray-600 hover:text-[#FA6218] transition-colors"
-const CATEGORY_ITEM_CLASS = "block py-3 pr-3 text-sm text-gray-600 hover:text-[#FA6218] transition-colors"
+const NAV_ITEM_CLASS = "flex items-center gap-4 p-4 font-bold text-gray-600 hover:text-primary transition-colors"
+const CATEGORY_ITEM_CLASS = "block py-3 pr-3 text-sm text-gray-600 hover:text-primary transition-colors"
 
 export function Sidebar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false)

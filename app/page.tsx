@@ -138,7 +138,7 @@ export default function Dashboard() {
               className={`p-4 bg-white border border-gray-200 border-l-4 ${CATEGORY_BORDER_CLASSES[cat.color]} rounded-lg hover:shadow-md transition-shadow`}
             >
               <p className="text-body font-semibold text-gray-800">{cat.name}</p>
-              <p className="text-2xl font-bold mt-2 text-[#FA6218]">{cat.count}</p>
+              <p className="text-2xl font-bold mt-2 text-primary">{cat.count}</p>
             </Link>
           ))}
         </div>
@@ -155,7 +155,7 @@ export default function Dashboard() {
               className={`p-4 bg-white border border-gray-200 border-l-4 ${PRIORITY_BORDER_CLASSES[key]} rounded-lg hover:shadow-md transition-shadow`}
             >
               <p className="text-body font-semibold text-gray-800">{label}</p>
-              <p className="text-2xl font-bold mt-2 text-[#FA6218]">
+              <p className="text-2xl font-bold mt-2 text-primary">
                 {incompleteByCounts[key]}
               </p>
             </Link>

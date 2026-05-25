@@ -43,7 +43,7 @@ export default function TaskDetailPage() {
     return (
       <div className="p-6 max-w-xl mx-auto">
         <p className="text-gray-500">タスクが見つかりません</p>
-        <Link href="/tasks" className="text-[#FA6218] hover:underline mt-4 block">
+        <Link href="/tasks" className="text-primary hover:underline mt-4 block">
           タスク一覧に戻る
         </Link>
       </div>
@@ -89,7 +89,7 @@ export default function TaskDetailPage() {
             value={title}
             onChange={e => setTitle(e.target.value)}
             maxLength={TITLE_MAX_LENGTH}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FA6218]"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
           />
           {errors.title && (
             <p className="text-red-500 text-xs mt-1">{errors.title}</p>
@@ -129,7 +129,7 @@ export default function TaskDetailPage() {
           </button>
           <button
             onClick={handleSave}
-            className="flex-1 py-2 bg-[#FA6218] text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+            className="flex-1 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
           >
             保存する
           </button>
