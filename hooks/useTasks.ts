@@ -1,6 +1,6 @@
 "use client"
 
-import { useReducer, useEffect } from "react"
+import { useReducer, useEffect, useRef } from "react"
 import { Task, Priority } from "../types"
 import { generateDummyTasks } from "../lib/dummyData"
 
@@ -37,6 +37,7 @@ function taskReducer(state: Task[], action: TaskAction): Task[] {
 // ─── フック ───────────────────────────────────────────────
 export function useTasks() {
   const [tasks, dispatch] = useReducer(taskReducer, [])
+  const isInitialized = useRef(false)
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
@@ -52,6 +53,11 @@ export function useTasks() {
   }, [])
 
   useEffect(() => {
+    // 初回レンダリング（tasks=[]）では保存しない
+    if (!isInitialized.current) {
+      isInitialized.current = true
+      return
+    }
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
   }, [tasks])
 
