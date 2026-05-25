@@ -48,18 +48,10 @@
   - 設定（/settings）
   - ログアウト → タップで LogoutModal を表示
 
-## 実装済みコンポーネント
-- /BottomNav.tsx
-- /LayoutWrapper.tsx
-- /LogoutModal.tsx
-- /Pagination.tsx
-- /Sidebar.tsx
-- /TaskCard.tsx
-
 ## タスク一覧（/tasks）機能仕様
 ### フィルタ
 - 検索: タイトル部分一致
-- カテゴリ: モーダルで複数選択（未選択時は全件表示）
+- カテゴリ: ドロップダウンで複数選択（未選択時は全件表示）
 - 優先度: チェックボックスで複数選択（未選択時は全件表示）
 - ステータス: チェックボックスで複数選択（未選択時は全件表示）
 - フィルタバーはスクロール時に上部固定（sticky）、横幅いっぱいに表示しボーダーで境界を表現
@@ -75,12 +67,19 @@
 - デフォルト10件表示、30件に切り替え可能
 - フィルタ・ソート・検索変更時はページ1にリセット
 
+## タスク作成（/tasks/new）・タスク詳細・編集（/tasks/[id]）共通
+- タスク名は必須（空文字不可）、最大50文字
+- カテゴリは必須
+- バリデーションエラーはフィールド直下に赤文字で表示
+- タスク名入力欄には文字数カウンター表示（現在文字数 / 50）
+- カテゴリはドロップダウン形式のセレクター（CategorySelector）で選択
+
 ## タスク詳細・編集（/tasks/[id]）
 - キャンセルボタン押下で router.back()（遷移元に戻る）
 - 保存後も router.back()
 
 ## データ設計
-型定義の詳細は `src/types/index.ts` を参照。
+型定義の詳細は `types/index.ts` を参照。
 
 ## 設計方針
 - データの読み書きは useTasks() カスタムフックに集約する
@@ -90,13 +89,18 @@
 - コンポーネントは適切に分割する
 
 ## コーディング規約
-- any 型の使用禁止
-- ロジックをページコンポーネントに直接書かない
-- インラインスタイルは使わない（Tailwind を使う）
 - コンポーネントファイルは PascalCase（TaskCard.tsx）
-- 型定義は src/types/index.ts に集約
-- カスタムフックは src/hooks/ に配置
-- コンポーネントは src/components/ に配置
+- 型定義は types/index.ts に集約
+- カスタムフックは hooks/ に配置
+- コンポーネントは components/ に配置
+- eslint-disable コメントを使わない（ESLintルール自体を eslint.config.mjs で調整する）
+
+## やってはいけないこと
+- any 型の使用禁止
+- カテゴリ・優先度の表示名をハードコードしない
+- ロジックをページコンポーネントに直接書かない
+- インラインスタイルは使わない（style プロパティ禁止、Tailwind を使う）
+- `<a>` タグを使わない（Next.js の Link コンポーネントを使う）
 
 ## デザイン
 - テーマカラー: #FA6218
@@ -122,15 +126,23 @@
 
 ### カテゴリカラー
 - blue / violet / slate / pink / teal / cyan の6色
-- バッジ: CATEGORY_BADGE_CLASSES、ドット: CATEGORY_DOT_CLASSES（src/types/index.ts 参照）
+- バッジ: CATEGORY_BADGE_CLASSES、ドット: CATEGORY_DOT_CLASSES（types/index.ts 参照）
 
-## やってはいけないこと
-- any 型の使用禁止
-- カテゴリ・優先度の表示名をハードコードしない
-- ロジックをページコンポーネントに直接書かない
-- インラインスタイルは使わない（style プロパティ禁止、Tailwind を使う）
-- `<a>` タグを使わない（Next.js の Link コンポーネントを使う）
-- eslint-disable コメントを使わない
+## 実装済みコンポーネント
+- components/BottomNav.tsx
+- components/CategoryModal.tsx
+- components/CategorySelector.tsx
+- components/CheckboxGroup.tsx
+- components/LayoutWrapper.tsx
+- components/LogoutModal.tsx
+- components/Pagination.tsx
+- components/PrioritySelector.tsx
+- components/Sidebar.tsx
+- components/TaskCard.tsx
+
+## カスタムフック構成
+- hooks/useTasks.ts        タスクのCRUD・localStorage管理
+- hooks/useCategories.tsx  カテゴリのCRUD・localStorage管理・Contextプロバイダー
 
 ## 実装後に必ず行うこと
 - TypeScript の型エラーがないか確認（npx tsc --noEmit）
