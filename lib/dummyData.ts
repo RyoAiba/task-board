@@ -1,4 +1,4 @@
-import { Task } from "../types"
+import { Task, Priority, PRIORITY_LABELS } from "../types"
 
 const TASK_TITLES = {
   仕事: [
@@ -69,19 +69,20 @@ export function generateDummyTasks(): Task[] {
   const now = new Date()
   let taskId = 1
 
-  // インデックスに応じた期限パターン（繰り返し）
   const dueDatePatterns = [
-    addDays(now, -3),  // 期限切れ
-    addDays(now, -1),  // 期限切れ
-    now,               // 今日
-    addDays(now, 1),   // あと1日
-    addDays(now, 3),   // あと3日
-    addDays(now, 7),   // 1週間後
-    addDays(now, 14),  // 2週間後
-    undefined,         // 期限なし
-    undefined,         // 期限なし
-    undefined,         // 期限なし
+    addDays(now, -3),
+    addDays(now, -1),
+    now,
+    addDays(now, 1),
+    addDays(now, 3),
+    addDays(now, 7),
+    addDays(now, 14),
+    undefined,
+    undefined,
+    undefined,
   ]
+
+  const priorities = Object.keys(PRIORITY_LABELS) as Priority[]
 
   Object.entries(TASK_TITLES).forEach(([categoryName, titles]) => {
     const categoryId =
@@ -92,8 +93,7 @@ export function generateDummyTasks(): Task[] {
       const createdDate = new Date(now)
       createdDate.setDate(createdDate.getDate() - daysAgo)
 
-      const priorities: Array<"high" | "medium" | "low"> = ["high", "medium", "low"]
-      const priority = priorities[index % 3]
+      const priority = priorities[index % priorities.length]
       const completed = Math.random() < 0.4
       const dueDateBase = dueDatePatterns[index % dueDatePatterns.length]
 
