@@ -1,5 +1,6 @@
 "use client"
 
+import { memo } from "react"
 import Link from "next/link"
 import { Check } from "lucide-react"
 import { Task, PRIORITY_LABELS, CATEGORY_BADGE_CLASSES, Category } from "../types"
@@ -11,7 +12,7 @@ type TaskCardProps = {
   onToggle: (id: string) => void
 }
 
-export function TaskCard({ task, category, onToggle }: TaskCardProps) {
+export const TaskCard = memo(function TaskCard({ task, category, onToggle }: TaskCardProps) {
   const categoryBadgeClass = category
     ? CATEGORY_BADGE_CLASSES[category.color as keyof typeof CATEGORY_BADGE_CLASSES]
     : "bg-gray-100 text-gray-600"
@@ -48,4 +49,4 @@ export function TaskCard({ task, category, onToggle }: TaskCardProps) {
       </div>
     </div>
   )
-}
+})
