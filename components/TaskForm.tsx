@@ -5,6 +5,7 @@ import { Priority } from "../types"
 import { useCategories } from "../hooks/useCategories"
 import { PrioritySelector } from "./PrioritySelector"
 import { CategorySelector } from "./CategorySelector"
+import { DatePickerModal } from "./DatePickerModal"
 import { CalendarDays, CheckCircle, Circle } from "lucide-react"
 
 const TITLE_MAX_LENGTH = 50
@@ -35,6 +36,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
   const [completed, setCompleted] = useState(initialValues?.completed ?? false)
   const [errors, setErrors] = useState<{ title?: string }>({})
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+  const [showDatePicker, setShowDatePicker] = useState(false)
 
   const initialized = useRef(false)
 
@@ -148,23 +150,29 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
           <span className="text-xs text-gray-400 font-normal ml-2">任意</span>
         </label>
         <div className="relative">
-          <CalendarDays size={16} className="absolute left-3 top-2.5 text-gray-400" />
           <input
-            type="date"
-            value={dueDate}
-            onChange={e => setDueDate(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700"
+            type="text"
+            value={dueDate ? new Date(dueDate).toLocaleDateString("ja-JP") : ""}
+            readOnly
+            placeholder="期限を選択..."
+            className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 cursor-pointer bg-white"
+            onClick={() => setShowDatePicker(true)}
           />
-        </div>
-        {dueDate && (
           <button
             type="button"
-            onClick={() => setDueDate("")}
-            className="mt-1 text-xs text-gray-400 hover:text-gray-600 underline"
+            onClick={() => setShowDatePicker(true)}
+            className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600 transition-colors"
           >
-            期限を削除
+            <CalendarDays size={16} />
           </button>
-        )}
+          {showDatePicker && (
+            <DatePickerModal
+              selectedDate={dueDate}
+              onSelect={setDueDate}
+              onClose={() => setShowDatePicker(false)}
+            />
+          )}
+        </div>
       </div>
 
       {/* ボタン */}

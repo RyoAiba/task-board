@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Category, Priority, PRIORITY_LABELS } from "../types"
+import { Category, Priority } from "../types"
 
 type Status = "incomplete" | "completed"
 
@@ -82,8 +82,8 @@ export function TaskFilterPopup({
                 key={cat.id}
                 onClick={() => toggle(setPendingCategories, cat.id)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingCategories.includes(cat.id)
-                    ? "bg-orange-50 border border-primary text-primary"
-                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                  ? "bg-orange-50 border border-primary text-primary"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                   }`}
               >
                 {cat.name}
@@ -100,8 +100,8 @@ export function TaskFilterPopup({
                 key={value}
                 onClick={() => toggle(setPendingPriorities, value)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingPriorities.includes(value)
-                    ? "bg-orange-50 border border-primary text-primary"
-                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                  ? "bg-orange-50 border border-primary text-primary"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                   }`}
               >
                 {label}
@@ -118,8 +118,8 @@ export function TaskFilterPopup({
                 key={value}
                 onClick={() => toggle(setPendingStatuses, value)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingStatuses.includes(value)
-                    ? "bg-orange-50 border border-primary text-primary"
-                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                  ? "bg-orange-50 border border-primary text-primary"
+                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
                   }`}
               >
                 {label}
