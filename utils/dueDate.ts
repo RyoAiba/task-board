@@ -1,4 +1,4 @@
-export type DueDateStatus = "overdue" | "today" | "soon" | "normal" | "none"
+export type DueDateStatus = "overdue" | "today" | "soon" | "none"
 
 export type DueDateBadge = {
   status: DueDateStatus

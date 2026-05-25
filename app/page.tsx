@@ -8,8 +8,6 @@ import { PieChart, Pie, Cell, Label } from "recharts"
 import { getPriorityBadgeClass } from "../utils/priority"
 import { WeeklyCalendar } from "../components/WeeklyCalendar"
 
-const PRIMARY_COLOR = "#FA6218"
-
 const PRIORITY_ITEMS = (Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(
   ([key, label]) => ({ href: `/tasks?priority=${key}`, label, key })
 )
@@ -116,13 +114,13 @@ export default function Dashboard() {
                 startAngle={90}
                 endAngle={-270}
               >
-                <Cell fill={PRIMARY_COLOR} />
+                <Cell fill="var(--color-primary)" />
                 <Cell fill="#E5E7EB" />
                 <Label
                   value={`${completionRate}%`}
                   position="center"
                   fontSize={24}
-                  fill={PRIMARY_COLOR}
+                  fill="var(--color-primary)"
                   fontWeight="bold"
                 />
               </Pie>

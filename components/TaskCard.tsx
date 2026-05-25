@@ -15,7 +15,7 @@ type TaskCardProps = {
 
 export const TaskCard = memo(function TaskCard({ task, category, onToggle }: TaskCardProps) {
   const categoryBadgeClass = category
-    ? CATEGORY_BADGE_CLASSES[category.color as keyof typeof CATEGORY_BADGE_CLASSES]
+    ? CATEGORY_BADGE_CLASSES[category.color]
     : null
 
   const dueBadge = getDueDateBadge(task.dueDate, task.completed)
@@ -41,9 +41,9 @@ export const TaskCard = memo(function TaskCard({ task, category, onToggle }: Tas
             {task.title}
           </span>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            {categoryBadgeClass && (
+            {category && categoryBadgeClass && (
               <span className={`text-xs px-2 py-0.5 rounded whitespace-nowrap ${categoryBadgeClass}`}>
-                {category!.name}
+                {category.name}
               </span>
             )}
             <span className={`text-xs px-2 py-0.5 rounded whitespace-nowrap ${getPriorityBadgeClass(task.priority)}`}>
