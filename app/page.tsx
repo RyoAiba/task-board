@@ -6,6 +6,7 @@ import { useCategories } from "../hooks/useCategories"
 import { Priority, PRIORITY_LABELS, PRIORITY_ORDER, CATEGORY_BADGE_CLASSES, CATEGORY_BORDER_CLASSES, PRIORITY_BORDER_CLASSES } from "../types"
 import { PieChart, Pie, Cell, Label } from "recharts"
 import { getPriorityBadgeClass } from "../utils/priority"
+import { WeeklyCalendar } from "../components/WeeklyCalendar"
 
 const PRIMARY_COLOR = "#FA6218"
 
@@ -48,6 +49,8 @@ export default function Dashboard() {
   return (
     <div>
       <h1 className="text-page-title mb-8">ダッシュボード</h1>
+
+      <WeeklyCalendar tasks={tasks} />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* 未完了のタスク */}
