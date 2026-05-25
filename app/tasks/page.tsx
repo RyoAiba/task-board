@@ -56,6 +56,7 @@ function TasksPageContent() {
 
   const urlCategory = searchParams.get("category") || ""
   const urlPriority = searchParams.get("priority") as Priority | null
+  const urlStatus = searchParams.get("status") as Status | null
 
   // ─── state ───────────────────────────────────────────
   const [searchText, setSearchText] = useState("")
@@ -65,7 +66,9 @@ function TasksPageContent() {
   const [selectedPriorities, setSelectedPriorities] = useState<Priority[]>(
     urlPriority ? [urlPriority] : []
   )
-  const [selectedStatuses, setSelectedStatuses] = useState<Status[]>([])
+  const [selectedStatuses, setSelectedStatuses] = useState<Status[]>(
+    urlStatus ? [urlStatus] : []
+  )
   const [categoryModalOpen, setCategoryModalOpen] = useState(false)
   const [sortKey, setSortKey] = useState<SortKey | null>(null)
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc")
@@ -80,6 +83,10 @@ function TasksPageContent() {
   useEffect(() => {
     setSelectedPriorities(urlPriority ? [urlPriority] : [])
   }, [urlPriority])
+
+  useEffect(() => {
+    setSelectedStatuses(urlStatus ? [urlStatus] : [])
+  }, [urlStatus])
 
   useEffect(() => {
     setCategoryModalOpen(false)
@@ -174,7 +181,6 @@ function TasksPageContent() {
       } else if (sortKey === "status") {
         result = Number(a.completed) - Number(b.completed)
       } else if (sortKey === "dueDate") {
-        // 期限なしは常に最後
         if (!a.dueDate && !b.dueDate) result = 0
         else if (!a.dueDate) result = 1
         else if (!b.dueDate) result = -1

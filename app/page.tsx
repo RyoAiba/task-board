@@ -55,7 +55,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-section-title">未完了のタスク</h2>
             {incompleteTasks.length > 5 && (
-              <Link href="/tasks" className="text-xs text-primary hover:underline">
+              <Link href="/tasks?status=incomplete" className="text-xs text-primary hover:underline">
                 全て見る →
               </Link>
             )}
