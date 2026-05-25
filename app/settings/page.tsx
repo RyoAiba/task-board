@@ -10,7 +10,7 @@ const CATEGORY_NAME_MAX = 10
 
 export default function SettingsPage() {
   const { categories, updateCategory } = useCategories()
-  const { settings, updateSetting } = useSettings()
+  const { settings, updateSetting, isLoaded } = useSettings()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingName, setEditingName] = useState("")
   const [editingError, setEditingError] = useState("")
@@ -97,41 +97,43 @@ export default function SettingsPage() {
       </section>
 
       {/* カレンダー表示設定 */}
-      <section>
-        <h2 className="text-section-title mb-4">カレンダー表示</h2>
-        <div className="bg-white border border-gray-200 rounded-lg p-4 sm:max-w-md">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-1.5">
-              <p className="text-sm font-medium text-gray-800">完了済みタスクを表示</p>
-              <div className="relative group">
-                <button
-                  type="button"
-                  onClick={() => setTooltipOpen(prev => !prev)}
-                  className={`w-4 h-4 rounded-full border text-xs flex items-center justify-center leading-none transition-colors ${tooltipOpen
-                      ? "bg-primary border-primary text-white"
-                      : "border-gray-400 text-gray-400 hover:bg-primary hover:border-primary hover:text-white"
-                    }`}
-                >
-                  ?
-                </button>
-                <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg whitespace-normal z-10 transition-opacity ${tooltipOpen ? "opacity-100" : "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto"
-                  }`}>
-                  オフにすると完了済みタスクをカレンダーに表示しません
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800" />
+      {isLoaded && (
+        <section>
+          <h2 className="text-section-title mb-4">カレンダー表示</h2>
+          <div className="bg-white border border-gray-200 rounded-lg p-4 sm:max-w-md">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5">
+                <p className="text-sm font-medium text-gray-800">完了済みタスクを表示</p>
+                <div className="relative group">
+                  <button
+                    type="button"
+                    onClick={() => setTooltipOpen(prev => !prev)}
+                    className={`w-4 h-4 rounded-full border text-xs flex items-center justify-center leading-none transition-colors ${tooltipOpen
+                        ? "bg-primary border-primary text-white"
+                        : "border-gray-400 text-gray-400 hover:bg-primary hover:border-primary hover:text-white"
+                      }`}
+                  >
+                    ?
+                  </button>
+                  <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg whitespace-normal z-10 transition-opacity ${tooltipOpen ? "opacity-100" : "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto"
+                    }`}>
+                    オフにすると完了済みタスクをカレンダーに表示しません
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800" />
+                  </div>
                 </div>
               </div>
+              <button
+                onClick={() => updateSetting("showCompletedInCalendar", !settings.showCompletedInCalendar)}
+                className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ${settings.showCompletedInCalendar ? "bg-primary" : "bg-gray-200"
+                  }`}
+              >
+                <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${settings.showCompletedInCalendar ? "translate-x-5" : "translate-x-0"
+                  }`} />
+              </button>
             </div>
-            <button
-              onClick={() => updateSetting("showCompletedInCalendar", !settings.showCompletedInCalendar)}
-              className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ${settings.showCompletedInCalendar ? "bg-primary" : "bg-gray-200"
-                }`}
-            >
-              <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${settings.showCompletedInCalendar ? "translate-x-5" : "translate-x-0"
-                }`} />
-            </button>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   )
 }

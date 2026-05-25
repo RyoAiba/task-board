@@ -12,6 +12,7 @@ const DEFAULT_SETTINGS: Settings = {
 
 export function useSettings() {
   const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS)
+  const [isLoaded, setIsLoaded] = useState(false)
   const isInitialized = useRef(false)
 
   useEffect(() => {
@@ -23,6 +24,7 @@ export function useSettings() {
         setSettings(DEFAULT_SETTINGS)
       }
     }
+    setIsLoaded(true)
   }, [])
 
   useEffect(() => {
@@ -37,5 +39,5 @@ export function useSettings() {
     setSettings(prev => ({ ...prev, [key]: value }))
   }
 
-  return { settings, updateSetting }
+  return { settings, updateSetting, isLoaded }
 }
