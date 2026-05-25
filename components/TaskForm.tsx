@@ -5,7 +5,7 @@ import { Priority } from "../types"
 import { useCategories } from "../hooks/useCategories"
 import { PrioritySelector } from "./PrioritySelector"
 import { CategorySelector } from "./CategorySelector"
-import { CalendarDays } from "lucide-react"
+import { CalendarDays, CheckCircle, Circle } from "lucide-react"
 
 const TITLE_MAX_LENGTH = 50
 
@@ -14,6 +14,7 @@ type FormValues = {
   priority: Priority
   categoryId: string
   dueDate: string
+  completed: boolean
 }
 
 type Props = {
@@ -30,19 +31,20 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
   const [title, setTitle] = useState(initialValues?.title ?? "")
   const [priority, setPriority] = useState<Priority>(initialValues?.priority ?? "medium")
   const [categoryId, setCategoryId] = useState(initialValues?.categoryId ?? "")
+  const [dueDate, setDueDate] = useState(initialValues?.dueDate ?? "")
+  const [completed, setCompleted] = useState(initialValues?.completed ?? false)
   const [errors, setErrors] = useState<{ title?: string }>({})
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const [dueDate, setDueDate] = useState(initialValues?.dueDate ?? "")
 
   const initialized = useRef(false)
 
-  // 編集時：localStorageから非同期でタスクが読み込まれたらフォームを初期化
   useEffect(() => {
     if (mode === "edit" && initialValues && !initialized.current) {
       setTitle(initialValues.title)
       setPriority(initialValues.priority)
       setCategoryId(initialValues.categoryId)
       setDueDate(initialValues.dueDate ?? "")
+      setCompleted(initialValues.completed)
       initialized.current = true
     }
   }, [initialValues, mode])
@@ -51,7 +53,8 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
     ? title !== initialValues.title ||
     priority !== initialValues.priority ||
     categoryId !== initialValues.categoryId ||
-    dueDate !== initialValues.dueDate
+    dueDate !== initialValues.dueDate ||
+    completed !== initialValues.completed
     : true
 
   const validate = () => {
@@ -63,11 +66,33 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
 
   const handleSave = () => {
     if (!validate()) return
-    onSave({ title: title.trim(), priority, categoryId, dueDate })
+    onSave({ title: title.trim(), priority, categoryId, dueDate, completed })
   }
 
   return (
     <div className="space-y-6">
+
+      {/* ステータスバッジ（編集時のみ） */}
+      {mode === "edit" && (
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">ステータス</label>
+          <button
+            type="button"
+            onClick={() => setCompleted(prev => !prev)}
+            className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${completed
+              ? "bg-green-100 text-green-700 hover:bg-green-200"
+              : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              }`}
+          >
+            {completed
+              ? <CheckCircle size={16} />
+              : <Circle size={16} />
+            }
+            {completed ? "完了済" : "未完了"}
+          </button>
+        </div>
+      )}
+
       {/* タスク名 */}
       <div>
         <div className="flex justify-between mb-2">
@@ -158,7 +183,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
             : "bg-gray-100 text-gray-400 cursor-not-allowed"
             }`}
         >
-          {mode === "create" ? "作成する" : "保存する"}
+          保存する
         </button>
       </div>
 

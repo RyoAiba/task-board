@@ -2,7 +2,7 @@
 
 import { memo } from "react"
 import Link from "next/link"
-import { Check } from "lucide-react"
+import { CheckCircle, Circle } from "lucide-react"
 import { Task, PRIORITY_LABELS, CATEGORY_BADGE_CLASSES, Category } from "../types"
 import { getPriorityBadgeClass } from "../utils/priority"
 import { getDueDateBadge } from "../utils/dueDate"
@@ -25,19 +25,19 @@ export const TaskCard = memo(function TaskCard({ task, category, onToggle }: Tas
       <div className="flex items-center gap-3">
         <button
           onClick={() => onToggle(task.id)}
-          className={`relative z-10 flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-colors ${task.completed ? "bg-primary" : "border-2 border-gray-300 bg-white"
+          className={`relative z-10 flex-shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold transition-colors ${task.completed
+              ? "bg-green-100 text-green-700 hover:bg-green-200"
+              : "bg-gray-100 text-gray-500 hover:bg-gray-200"
             }`}
         >
-          {task.completed && <Check size={14} className="text-white" />}
+          {task.completed ? <CheckCircle size={11} /> : <Circle size={11} />}
+          {task.completed ? "完了済" : "未完了"}
         </button>
 
-        <Link href={`/tasks/${task.id}`} className="absolute inset-0 ml-11" />
+        <Link href={`/tasks/${task.id}`} className="absolute inset-0 ml-20" />
 
         <div className="flex-1 min-w-0">
-          <span
-            className={`block truncate ${task.completed ? "text-gray-400 line-through" : "text-gray-800 font-medium"
-              }`}
-          >
+          <span className={`block truncate ${task.completed ? "text-gray-400 line-through" : "text-gray-800 font-medium"}`}>
             {task.title}
           </span>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
