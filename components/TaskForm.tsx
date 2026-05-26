@@ -39,6 +39,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
   const [showDatePicker, setShowDatePicker] = useState(false)
 
   const initialized = useRef(false)
+  const dateInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (mode === "edit" && initialValues && !initialized.current) {
@@ -151,8 +152,9 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
         </label>
         <div className="relative">
           <input
+            ref={dateInputRef}
             type="text"
-            value={dueDate ? new Date(dueDate).toLocaleDateString("ja-JP") : ""}
+            value={dueDate ? new Date(dueDate + "T00:00:00").toLocaleDateString("ja-JP") : ""}
             readOnly
             placeholder="期限を選択..."
             className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 cursor-pointer bg-white"
@@ -165,14 +167,14 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
           >
             <CalendarDays size={16} />
           </button>
-          {showDatePicker && (
-            <DatePickerModal
-              selectedDate={dueDate}
-              onSelect={setDueDate}
-              onClose={() => setShowDatePicker(false)}
-            />
-          )}
         </div>
+        {showDatePicker && (
+          <DatePickerModal
+            selectedDate={dueDate}
+            onSelect={setDueDate}
+            onClose={() => setShowDatePicker(false)}
+          />
+        )}
       </div>
 
       {/* ボタン */}
