@@ -223,7 +223,7 @@ function TasksPageContent() {
             <select
               value={currentSortValue}
               onChange={handleSortChange}
-              className="flex-1 md:flex-none px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-500 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="flex-1 md:flex-none px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
             >
               <option value="">並び替え</option>
               {SORT_OPTIONS.map(opt => (
@@ -237,7 +237,7 @@ function TasksPageContent() {
                 onClick={() => setFilterPopupOpen(prev => !prev)}
                 className={`h-full flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeFilterCount > 0
                   ? "border-primary bg-orange-50 text-primary"
-                  : "border-gray-300 text-gray-500 hover:border-gray-400"
+                  : "border-gray-300 text-gray-400 hover:border-gray-400"
                   }`}
               >
                 <SlidersHorizontal size={16} />
@@ -343,7 +343,7 @@ function TasksPageContent() {
           </>
         ) : (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-body">タスクがありません</p>
+            <p className="text-gray-400 text-body">タスクがありません</p>
           </div>
         )}
       </div>

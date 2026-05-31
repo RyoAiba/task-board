@@ -78,13 +78,13 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
       {/* ステータスバッジ（編集時のみ） */}
       {mode === "edit" && (
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">ステータス</label>
+          <label className="block text-sm font-semibold text-gray-600 mb-2">ステータス</label>
           <button
             type="button"
             onClick={() => setCompleted(prev => !prev)}
             className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-colors ${completed
               ? "bg-green-100 text-green-700 hover:bg-green-200"
-              : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+              : "bg-gray-100 text-gray-400 hover:bg-gray-200"
               }`}
           >
             {completed
@@ -99,7 +99,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
       {/* タスク名 */}
       <div>
         <div className="flex justify-between mb-2">
-          <label className="text-sm font-semibold text-gray-700">
+          <label className="text-sm font-semibold text-gray-600">
             タスク名 <span className="text-red-500">*</span>
           </label>
           <span className={`text-xs ${title.length >= TITLE_MAX_LENGTH ? "text-red-500" : "text-gray-400"}`}>
@@ -122,13 +122,13 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
 
       {/* 優先度 */}
       <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">優先度</label>
+        <label className="block text-sm font-semibold text-gray-600 mb-2">優先度</label>
         <PrioritySelector value={priority} onChange={setPriority} />
       </div>
 
       {/* カテゴリ（任意） */}
       <div className="w-full sm:w-1/2">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label className="block text-sm font-semibold text-gray-600 mb-2">
           カテゴリ
           <span className="text-xs text-gray-400 font-normal ml-2">任意</span>
         </label>
@@ -146,7 +146,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
 
       {/* 期限（任意） */}
       <div className="w-full sm:w-1/2">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+        <label className="block text-sm font-semibold text-gray-600 mb-2">
           期限
           <span className="text-xs text-gray-400 font-normal ml-2">任意</span>
         </label>
@@ -157,7 +157,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
             value={dueDate ? new Date(dueDate + "T00:00:00").toLocaleDateString("ja-JP") : ""}
             readOnly
             placeholder="期限を選択..."
-            className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-700 cursor-pointer bg-white"
+            className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary text-gray-600 cursor-pointer bg-white"
             onClick={() => setShowDatePicker(true)}
           />
           <button
@@ -219,8 +219,8 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
             className="bg-white rounded-lg p-6 max-w-sm w-full mx-4"
             onClick={e => e.stopPropagation()}
           >
-            <h2 className="text-lg font-bold text-gray-800 mb-2">タスクを削除しますか？</h2>
-            <p className="text-sm text-gray-500 mb-6">この操作は取り消せません。</p>
+            <h2 className="text-lg font-bold  mb-2">タスクを削除しますか？</h2>
+            <p className="text-sm text-gray-400 mb-6">この操作は取り消せません。</p>
             <div className="flex gap-3">
               <button
                 onClick={() => setShowDeleteDialog(false)}

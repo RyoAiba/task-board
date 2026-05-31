@@ -28,7 +28,7 @@ export function CategoryModal({
   return (
     <div ref={ref} className="absolute top-full left-0 mt-1 z-50 bg-white rounded-xl shadow-xl w-64 p-4">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-semibold text-gray-700">カテゴリを選択</h2>
+        <h2 className="text-sm font-semibold text-gray-600">カテゴリを選択</h2>
         <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
           <X size={16} />
         </button>
@@ -45,7 +45,7 @@ export function CategoryModal({
                 className="w-4 h-4 accent-primary cursor-pointer"
               />
               <div className={`w-2 h-2 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[cat.color]}`} />
-              <span className={`text-sm ${checked ? "text-gray-800 font-medium" : "text-gray-500"}`}>
+              <span className={`text-sm ${checked ? " font-medium" : "text-gray-400"}`}>
                 {cat.name}
               </span>
             </label>

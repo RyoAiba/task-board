@@ -22,7 +22,7 @@ export function CheckboxGroup<T extends string>({
               onChange={() => onToggle(opt.value)}
               className="w-4 h-4 accent-primary cursor-pointer"
             />
-            <span className={`text-sm ${checked ? "text-gray-800 font-medium" : "text-gray-500"}`}>
+            <span className={`text-sm ${checked ? " font-medium" : "text-gray-400"}`}>
               {opt.label}
             </span>
           </label>

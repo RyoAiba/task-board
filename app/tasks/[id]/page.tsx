@@ -17,7 +17,7 @@ export default function TaskDetailPage() {
   if (!task) {
     return (
       <PageContainer>
-        <p className="text-gray-500">タスクが見つかりません</p>
+        <p className="text-gray-400">タスクが見つかりません</p>
         <Link href="/tasks" className="text-primary hover:underline mt-4 block">
           タスク一覧に戻る
         </Link>

@@ -75,7 +75,7 @@ export function TaskFilterPopup({
         className="absolute right-0 top-full mt-2 z-50 w-72 bg-white rounded-xl shadow-xl border border-gray-200 p-4"
       >
         <div className="mb-4">
-          <p className="text-xs font-semibold text-gray-500 mb-2">カテゴリ</p>
+          <p className="text-xs font-semibold text-gray-400 mb-2">カテゴリ</p>
           <div className="flex flex-wrap gap-2">
             {categories.map(cat => (
               <button
@@ -83,7 +83,7 @@ export function TaskFilterPopup({
                 onClick={() => toggle(setPendingCategories, cat.id)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingCategories.includes(cat.id)
                   ? "bg-orange-50 border border-primary text-primary"
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                  : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >
                 {cat.name}
@@ -93,7 +93,7 @@ export function TaskFilterPopup({
         </div>
 
         <div className="mb-4">
-          <p className="text-xs font-semibold text-gray-500 mb-2">優先度</p>
+          <p className="text-xs font-semibold text-gray-400 mb-2">優先度</p>
           <div className="flex gap-2">
             {PRIORITY_OPTIONS.map(({ label, value }) => (
               <button
@@ -101,7 +101,7 @@ export function TaskFilterPopup({
                 onClick={() => toggle(setPendingPriorities, value)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingPriorities.includes(value)
                   ? "bg-orange-50 border border-primary text-primary"
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                  : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >
                 {label}
@@ -111,7 +111,7 @@ export function TaskFilterPopup({
         </div>
 
         <div className="mb-4">
-          <p className="text-xs font-semibold text-gray-500 mb-2">ステータス</p>
+          <p className="text-xs font-semibold text-gray-400 mb-2">ステータス</p>
           <div className="flex gap-2">
             {STATUS_OPTIONS.map(({ label, value }) => (
               <button
@@ -119,7 +119,7 @@ export function TaskFilterPopup({
                 onClick={() => toggle(setPendingStatuses, value)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingStatuses.includes(value)
                   ? "bg-orange-50 border border-primary text-primary"
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                  : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >
                 {label}

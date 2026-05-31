@@ -26,8 +26,8 @@ export const TaskCard = memo(function TaskCard({ task, category, onToggle }: Tas
         <button
           onClick={() => onToggle(task.id)}
           className={`relative z-10 flex-shrink-0 flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold transition-colors ${task.completed
-              ? "bg-green-100 text-green-700 hover:bg-green-200"
-              : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+            ? "bg-green-100 text-green-700 hover:bg-green-200"
+            : "bg-gray-100 text-gray-400 hover:bg-gray-200"
             }`}
         >
           {task.completed ? <CheckCircle size={11} /> : <Circle size={11} />}
@@ -37,7 +37,7 @@ export const TaskCard = memo(function TaskCard({ task, category, onToggle }: Tas
         <Link href={`/tasks/${task.id}`} className="absolute inset-0 ml-20" />
 
         <div className="flex-1 min-w-0">
-          <span className={`block truncate ${task.completed ? "text-gray-400 line-through" : "text-gray-800 font-medium"}`}>
+          <span className={`block truncate ${task.completed ? "text-gray-400 line-through" : " font-medium"}`}>
             {task.title}
           </span>
           <div className="flex items-center gap-2 mt-1 flex-wrap">

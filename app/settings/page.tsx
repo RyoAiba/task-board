@@ -85,7 +85,7 @@ export default function SettingsPage() {
               ) : (
                 <>
                   <div className={`w-3 h-3 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[cat.color]}`} />
-                  <span className="flex-1 text-gray-800 font-medium">{cat.name}</span>
+                  <span className="flex-1  font-medium">{cat.name}</span>
                   <button onClick={() => startEdit(cat.id, cat.name)} className="text-gray-400 hover:text-primary transition-colors">
                     <Pencil size={18} />
                   </button>
@@ -103,7 +103,7 @@ export default function SettingsPage() {
           <div className="bg-white border border-gray-200 rounded-lg p-4 sm:max-w-md">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <p className="text-sm font-medium text-gray-800">完了済みタスクを表示</p>
+                <p className="text-sm font-medium ">完了済みタスクを表示</p>
                 <div className="relative group">
                   <button
                     type="button"

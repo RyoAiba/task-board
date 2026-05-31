@@ -32,8 +32,8 @@ export default function LoginPage() {
           <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center mb-4">
             <ClipboardList size={30} className="text-white" />
           </div>
-          <h1 className="text-xl font-bold text-gray-800">TasksBoard</h1>
-          <p className="text-sm text-gray-500 mt-1">パスワードを入力してください</p>
+          <h1 className="text-xl font-bold ">TasksBoard</h1>
+          <p className="text-sm text-gray-400 mt-1">パスワードを入力してください</p>
         </div>
 
         {/* パスワード入力 */}

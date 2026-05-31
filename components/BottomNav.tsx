@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Home, List, Plus, Settings, LogOut } from "lucide-react"
 import { LogoutModal } from "./LogoutModal"
 
-const NAV_ITEM_CLASS = "flex flex-col items-center justify-center flex-1 text-gray-800 hover:text-primary transition-colors"
+const NAV_ITEM_CLASS = "flex flex-col items-center justify-center flex-1  hover:text-primary transition-colors"
 
 export function BottomNav() {
   const [showLogoutModal, setShowLogoutModal] = useState(false)

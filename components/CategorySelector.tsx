@@ -36,7 +36,7 @@ export function CategorySelector({ categories, value, onChange }: Props) {
         {selected ? (
           <span className="flex items-center gap-2">
             <div className={`w-2 h-2 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[selected.color]}`} />
-            <span className="text-gray-700">{selected.name}</span>
+            <span className="text-gray-600">{selected.name}</span>
           </span>
         ) : (
           <span className="text-gray-400">カテゴリを選択...</span>
@@ -52,8 +52,8 @@ export function CategorySelector({ categories, value, onChange }: Props) {
               type="button"
               onClick={() => { onChange(cat.id); setOpen(false) }}
               className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-left transition-colors ${value === cat.id
-                  ? "bg-orange-50 text-orange-600 font-medium"
-                  : "text-gray-700 hover:bg-gray-50"
+                ? "bg-orange-50 text-orange-600 font-medium"
+                : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
               <div className={`w-2 h-2 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[cat.color]}`} />

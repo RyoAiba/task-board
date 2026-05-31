@@ -80,13 +80,13 @@ export function WeeklyCalendar({ tasks }: Props) {
               >
                 <div className={`px-3 py-2 text-center ${isToday ? "bg-primary" : "bg-gray-50 border-b border-gray-200"}`}>
                   <div className={`text-xs font-medium ${isToday ? "text-white" :
-                      dayOfWeek === 0 ? "text-red-500" :
-                        dayOfWeek === 6 ? "text-blue-500" :
-                          "text-gray-500"
+                    dayOfWeek === 0 ? "text-red-500" :
+                      dayOfWeek === 6 ? "text-blue-500" :
+                        "text-gray-400"
                     }`}>
                     {DAY_NAMES[dayOfWeek]}
                   </div>
-                  <div className={`text-sm font-bold ${isToday ? "text-white" : "text-gray-800"}`}>
+                  <div className={`text-sm font-bold ${isToday ? "text-white" : ""}`}>
                     {date.getMonth() + 1}/{date.getDate()}
                   </div>
                 </div>
@@ -101,7 +101,7 @@ export function WeeklyCalendar({ tasks }: Props) {
                           className={`flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors ${task.completed ? "opacity-40" : ""}`}
                         >
                           <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${PRIORITY_DOT_CLASSES[task.priority]}`} />
-                          <span className="text-xs text-gray-700 truncate">{task.title}</span>
+                          <span className="text-xs text-gray-600 truncate">{task.title}</span>
                         </Link>
                       ))}
                       {remainingCount > 0 && (
@@ -114,7 +114,7 @@ export function WeeklyCalendar({ tasks }: Props) {
                       )}
                     </>
                   ) : (
-                    <p className="text-xs text-gray-300 text-center py-3">－</p>
+                    <p className="text-xs text-gray-200 text-center py-3">－</p>
                   )}
                 </div>
               </div>
@@ -140,7 +140,7 @@ export function WeeklyCalendar({ tasks }: Props) {
             className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-xl shadow-xl w-72 p-4"
           >
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-700">
+              <h3 className="text-sm font-semibold text-gray-600">
                 {(() => {
                   const d = new Date(`${popupDate}T00:00:00`)
                   return `${d.getMonth() + 1}/${d.getDate()}（${DAY_NAMES[d.getDay()]}）`
@@ -159,7 +159,7 @@ export function WeeklyCalendar({ tasks }: Props) {
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors ${task.completed ? "opacity-40" : ""}`}
                 >
                   <div className={`w-2 h-2 rounded-full flex-shrink-0 ${PRIORITY_DOT_CLASSES[task.priority]}`} />
-                  <span className="text-sm text-gray-700">{task.title}</span>
+                  <span className="text-sm text-gray-600">{task.title}</span>
                 </Link>
               ))}
             </div>

@@ -75,7 +75,7 @@ export default function Dashboard() {
                     className="block py-2 px-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
                   >
                     <div className="flex-1 min-w-0">
-                      <span className="font-medium text-gray-800 block truncate">
+                      <span className="font-medium  block truncate">
                         {task.title}
                       </span>
                       <div className="flex items-center gap-2 mt-2">
@@ -94,7 +94,7 @@ export default function Dashboard() {
               })}
             </div>
           ) : (
-            <p className="text-gray-500">未完了のタスクはありません</p>
+            <p className="text-gray-400">未完了のタスクはありません</p>
           )}
         </section>
 
@@ -143,7 +143,7 @@ export default function Dashboard() {
               href={`/tasks?category=${cat.id}`}
               className={`p-4 bg-white border border-gray-200 border-l-4 ${CATEGORY_BORDER_CLASSES[cat.color]} rounded-lg hover:shadow-md transition-shadow`}
             >
-              <p className="text-body font-semibold text-gray-800">{cat.name}</p>
+              <p className="text-body font-semibold ">{cat.name}</p>
               <p className="text-2xl font-bold mt-2 text-primary">{cat.count}</p>
             </Link>
           ))}
@@ -160,7 +160,7 @@ export default function Dashboard() {
               href={href}
               className={`p-4 bg-white border border-gray-200 border-l-4 ${PRIORITY_BORDER_CLASSES[key]} rounded-lg hover:shadow-md transition-shadow`}
             >
-              <p className="text-body font-semibold text-gray-800">{label}</p>
+              <p className="text-body font-semibold ">{label}</p>
               <p className="text-2xl font-bold mt-2 text-primary">
                 {incompleteByCounts[key]}
               </p>

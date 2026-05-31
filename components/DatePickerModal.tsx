@@ -71,7 +71,7 @@ export function DatePickerModal({ selectedDate, onSelect, onClose }: Props) {
         className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[201] bg-white rounded-xl shadow-xl w-80 p-4"
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-gray-700">
+          <h2 className="text-sm font-semibold text-gray-600">
             {displayDate.getFullYear()}年{displayDate.getMonth() + 1}月
           </h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
@@ -97,7 +97,7 @@ export function DatePickerModal({ selectedDate, onSelect, onClose }: Props) {
 
         <div className="grid grid-cols-7 gap-1 mb-2">
           {dayNames.map(day => (
-            <div key={day} className="text-xs text-center font-semibold text-gray-500 py-2">
+            <div key={day} className="text-xs text-center font-semibold text-gray-400 py-2">
               {day}
             </div>
           ))}
@@ -110,10 +110,10 @@ export function DatePickerModal({ selectedDate, onSelect, onClose }: Props) {
               key={day}
               onClick={() => handleDateClick(day)}
               className={`w-8 h-8 text-sm rounded transition-colors mx-auto flex items-center justify-center ${isSelected(day)
-                  ? "bg-primary text-white font-semibold"
-                  : isToday(day)
-                    ? "border-2 border-primary text-primary font-semibold"
-                    : "text-gray-700 hover:bg-gray-100"
+                ? "bg-primary text-white font-semibold"
+                : isToday(day)
+                  ? "border-2 border-primary text-primary font-semibold"
+                  : "text-gray-600 hover:bg-gray-100"
                 }`}
             >
               {day}

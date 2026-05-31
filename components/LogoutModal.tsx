@@ -26,8 +26,8 @@ export function LogoutModal({ isOpen, onClose }: LogoutModalProps) {
         className="bg-white rounded-lg p-6 max-w-sm w-full mx-4"
         onClick={e => e.stopPropagation()}
       >
-        <h2 className="text-lg font-bold text-gray-800 mb-2">ログアウト</h2>
-        <p className="text-sm text-gray-500 mb-6">ログアウトしますか？</p>
+        <h2 className="text-lg font-bold  mb-2">ログアウト</h2>
+        <p className="text-sm text-gray-400 mb-6">ログアウトしますか？</p>
         <div className="flex gap-3">
           <button
             onClick={onClose}
