@@ -12,6 +12,7 @@ import { TaskCard } from "../../components/TaskCard"
 import { Pagination } from "../../components/Pagination"
 import { TaskFilterPopup } from "../../components/TaskFilterPopup"
 import { Toast } from "../../components/Toast"
+import { truncate } from "../../utils/string"
 
 // ─── 型 ────────────────────────────────────────────────
 type Status = "incomplete" | "completed"
@@ -39,10 +40,6 @@ const TOAST_MESSAGES: Record<string, string> = {
   created: "タスクを作成しました",
   saved: "タスクを保存しました",
   deleted: "タスクを削除しました",
-}
-
-function truncate(str: string, max: number): string {
-  return str.length > max ? str.slice(0, max) + "…" : str
 }
 
 // ─── メイン ─────────────────────────────────────────────
