@@ -4,6 +4,7 @@ import { useRouter, useParams } from "next/navigation"
 import Link from "next/link"
 import { useTasks } from "../../../hooks/useTasks"
 import { TaskForm } from "../../../components/TaskForm"
+import { PageContainer } from "../../../components/PageContainer"
 
 export default function TaskDetailPage() {
   const router = useRouter()
@@ -15,18 +16,17 @@ export default function TaskDetailPage() {
 
   if (!task) {
     return (
-      <div className="p-6 max-w-xl mx-auto">
+      <PageContainer>
         <p className="text-gray-500">タスクが見つかりません</p>
         <Link href="/tasks" className="text-primary hover:underline mt-4 block">
           タスク一覧に戻る
         </Link>
-      </div>
+      </PageContainer>
     )
   }
 
   return (
-    <div className="max-w-2xl">
-      <h1 className="text-page-title mb-8">タスクを編集</h1>
+    <PageContainer className="max-w-2xl">
       <TaskForm
         mode="edit"
         initialValues={{
@@ -46,6 +46,6 @@ export default function TaskDetailPage() {
         }}
         onCancel={() => router.back()}
       />
-    </div>
+    </PageContainer>
   )
 }

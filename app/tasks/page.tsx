@@ -203,15 +203,12 @@ function TasksPageContent() {
   const currentSortValue = sortKey ? `${sortKey}_${sortOrder}` : ""
 
   return (
-    <div>
-      <h1 className="text-page-title mb-6">タスク一覧</h1>
+    <div className="flex flex-col h-full">
 
-      {/* Filter Bar */}
-      <div className="sticky top-0 bg-white z-30 mb-6 -mx-6 px-6 py-4 border-b border-gray-200">
+      {/* ヘッダー（スクロールしない） */}
+      <div className="flex-shrink-0 p-2 pt-4 md:p-6 bg-white border-b border-gray-200">
 
-        {/* 検索・並び替え・フィルタ */}
         <div className="flex flex-col md:flex-row gap-3">
-          {/* 検索（常に1行目・全幅） */}
           <div className="relative md:flex-1">
             <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
             <input
@@ -222,8 +219,6 @@ function TasksPageContent() {
               className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
             />
           </div>
-
-          {/* 並び替え・フィルタ（モバイル2行目・PC同一行） */}
           <div className="flex gap-3 items-stretch">
             <select
               value={currentSortValue}
@@ -237,13 +232,12 @@ function TasksPageContent() {
                 </option>
               ))}
             </select>
-
             <div className="relative">
               <button
                 onClick={() => setFilterPopupOpen(prev => !prev)}
                 className={`h-full flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeFilterCount > 0
-                    ? "border-primary bg-orange-50 text-primary"
-                    : "border-gray-300 text-gray-500 hover:border-gray-400"
+                  ? "border-primary bg-orange-50 text-primary"
+                  : "border-gray-300 text-gray-500 hover:border-gray-400"
                   }`}
               >
                 <SlidersHorizontal size={16} />
@@ -254,7 +248,6 @@ function TasksPageContent() {
                   </span>
                 )}
               </button>
-
               {filterPopupOpen && (
                 <TaskFilterPopup
                   categories={categories}
@@ -269,9 +262,8 @@ function TasksPageContent() {
           </div>
         </div>
 
-        {/* アクティブフィルターチップ */}
         {hasActiveFilters && (
-          <div className="flex gap-2 flex-wrap items-center mt-3">
+          <div className="flex gap-2 flex-wrap items-center pt-3">
             {selectedCategories.map(catId => {
               const cat = categories.find(c => c.id === catId)
               if (!cat) return null
@@ -318,41 +310,43 @@ function TasksPageContent() {
         )}
       </div>
 
-      {/* タスク一覧 */}
-      {pagedTasks.length > 0 ? (
-        <>
-          <Pagination
-            currentPage={safePage}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            totalCount={filteredAndSortedTasks.length}
-            onPageChange={setCurrentPage}
-            onPageSizeChange={handlePageSizeChange}
-          />
-          <div className="space-y-2 my-4">
-            {pagedTasks.map(task => (
-              <TaskCard
-                key={task.id}
-                task={task}
-                category={getCategory(task.categoryId)}
-                onToggle={toggleCompleted}
-              />
-            ))}
+      {/* スクロール領域 */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 md:px-6 py-6">
+        {pagedTasks.length > 0 ? (
+          <>
+            <Pagination
+              currentPage={safePage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              totalCount={filteredAndSortedTasks.length}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={handlePageSizeChange}
+            />
+            <div className="space-y-2 my-4">
+              {pagedTasks.map(task => (
+                <TaskCard
+                  key={task.id}
+                  task={task}
+                  category={getCategory(task.categoryId)}
+                  onToggle={toggleCompleted}
+                />
+              ))}
+            </div>
+            <Pagination
+              currentPage={safePage}
+              totalPages={totalPages}
+              pageSize={pageSize}
+              totalCount={filteredAndSortedTasks.length}
+              onPageChange={setCurrentPage}
+              onPageSizeChange={handlePageSizeChange}
+            />
+          </>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-body">タスクがありません</p>
           </div>
-          <Pagination
-            currentPage={safePage}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            totalCount={filteredAndSortedTasks.length}
-            onPageChange={setCurrentPage}
-            onPageSizeChange={handlePageSizeChange}
-          />
-        </>
-      ) : (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-body">タスクがありません</p>
-        </div>
-      )}
+        )}
+      </div>
 
       <Toast message={toast.message} visible={toast.visible} />
     </div>

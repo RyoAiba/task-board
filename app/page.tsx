@@ -6,6 +6,7 @@ import { useCategories } from "../hooks/useCategories"
 import { Priority, PRIORITY_LABELS, PRIORITY_ORDER, CATEGORY_BADGE_CLASSES, CATEGORY_BORDER_CLASSES, PRIORITY_BORDER_CLASSES } from "../types"
 import { PieChart, Pie, Cell, Label } from "recharts"
 import { getPriorityBadgeClass } from "../utils/priority"
+import { PageContainer } from "../components/PageContainer"
 import { WeeklyCalendar } from "../components/WeeklyCalendar"
 
 const PRIORITY_ITEMS = (Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(
@@ -45,8 +46,7 @@ export default function Dashboard() {
   ]
 
   return (
-    <div>
-      <h1 className="text-page-title mb-8">ダッシュボード</h1>
+    <PageContainer>
 
       <WeeklyCalendar tasks={tasks} />
 
@@ -168,6 +168,6 @@ export default function Dashboard() {
           ))}
         </div>
       </section>
-    </div>
+    </PageContainer>
   )
 }

@@ -3,14 +3,14 @@
 import { useRouter } from "next/navigation"
 import { useTasks } from "../../../hooks/useTasks"
 import { TaskForm } from "../../../components/TaskForm"
+import { PageContainer } from "../../../components/PageContainer"
 
 export default function NewTaskPage() {
   const router = useRouter()
   const { addTask } = useTasks()
 
   return (
-    <div className="max-w-2xl">
-      <h1 className="text-page-title mb-8">タスクを作成</h1>
+    <PageContainer className="max-w-2xl">
       <TaskForm
         mode="create"
         onSave={({ title, priority, categoryId, dueDate }) => {
@@ -19,6 +19,6 @@ export default function NewTaskPage() {
         }}
         onCancel={() => router.push("/tasks")}
       />
-    </div>
+    </PageContainer>
   )
 }

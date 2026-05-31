@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { PageContainer } from "../../components/PageContainer"
 import { useCategories } from "../../hooks/useCategories"
 import { useSettings } from "../../hooks/useSettings"
 import { Pencil } from "lucide-react"
@@ -41,8 +42,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div>
-      <h1 className="text-page-title mb-8">設定</h1>
+    <PageContainer>
 
       {/* カテゴリ名を編集 */}
       <section className="mb-8">
@@ -109,8 +109,8 @@ export default function SettingsPage() {
                     type="button"
                     onClick={() => setTooltipOpen(prev => !prev)}
                     className={`w-4 h-4 rounded-full border text-xs flex items-center justify-center leading-none transition-colors ${tooltipOpen
-                        ? "bg-primary border-primary text-white"
-                        : "border-gray-400 text-gray-400 hover:bg-primary hover:border-primary hover:text-white"
+                      ? "bg-primary border-primary text-white"
+                      : "border-gray-400 text-gray-400 hover:bg-primary hover:border-primary hover:text-white"
                       }`}
                   >
                     ?
@@ -134,6 +134,6 @@ export default function SettingsPage() {
           </div>
         </section>
       )}
-    </div>
+    </PageContainer>
   )
 }
