@@ -112,7 +112,7 @@ export function DatePickerModal({ selectedDate, onSelect, onClose }: Props) {
               className={`w-8 h-8 text-sm rounded transition-colors mx-auto flex items-center justify-center ${isSelected(day)
                 ? "bg-primary text-white font-semibold"
                 : isToday(day)
-                  ? "border-2 border-primary text-primary font-semibold"
+                  ? "border border-primary text-primary font-semibold"
                   : "text-gray-600 hover:bg-gray-100"
                 }`}
             >

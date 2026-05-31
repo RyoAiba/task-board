@@ -19,7 +19,7 @@ export function PrioritySelector({ value, onChange }: Props) {
           key={p}
           type="button"
           onClick={() => onChange(p)}
-          className={`flex-1 py-2 px-3 rounded-lg border-2 text-sm font-semibold transition-colors ${value === p
+          className={`flex-1 py-2 px-3 rounded-lg border text-sm font-semibold transition-colors ${value === p
             ? PRIORITY_ACTIVE_CLASSES[p]
             : "border-gray-200 bg-white text-gray-400 hover:border-gray-300"
             }`}
