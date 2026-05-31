@@ -15,9 +15,9 @@ export function LayoutWrapper({
 
   return (
     <CategoriesProvider>
-      <div>
+      <div className="flex flex-col h-[100dvh]">
         {!isLoginPage && <Sidebar />}
-        <main className={isLoginPage ? "" : "md:ml-56 p-6 pt-4 pb-24 md:pb-4"}>
+        <main className={`flex-1 overflow-y-auto ${isLoginPage ? "" : "md:ml-56 p-6 pt-4 pb-6 md:pb-4"}`}>
           {children}
         </main>
         {!isLoginPage && <BottomNav />}

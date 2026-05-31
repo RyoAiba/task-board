@@ -12,7 +12,7 @@ export function BottomNav() {
 
   return (
     <>
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 flex items-center justify-between bg-white shadow-[0_-2px_8px_rgba(0,0,0,0.08)] z-40 pt-3 px-2">
+      <nav className="md:hidden flex items-center justify-between bg-white shadow-[0_-2px_8px_rgba(0,0,0,0.08)] z-40 pt-3 px-2">
         <Link href="/" className={NAV_ITEM_CLASS}>
           <Home size={24} />
           <span className="text-xs">ホーム</span>
