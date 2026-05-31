@@ -87,7 +87,7 @@ export function WeeklyCalendar({ tasks }: Props) {
                     {DAY_NAMES[dayOfWeek]}
                   </div>
                   <div className={`text-sm font-bold ${isToday ? "text-white" : ""}`}>
-                    {date.getMonth() + 1}/{date.getDate()}
+                    {date.getMonth() + 1}月{date.getDate()}日
                   </div>
                 </div>
 

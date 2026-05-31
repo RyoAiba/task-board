@@ -66,10 +66,10 @@ function TasksPageContent() {
     urlPriority ? [urlPriority] : []
   )
   const [selectedStatuses, setSelectedStatuses] = useState<Status[]>(
-    urlStatus ? [urlStatus] : []
+    urlStatus ? [urlStatus] : ["incomplete"]
   )
   const [filterPopupOpen, setFilterPopupOpen] = useState(false)
-  const [sortKey, setSortKey] = useState<SortKey | null>(null)
+  const [sortKey, setSortKey] = useState<SortKey | null>(urlStatus ? null : "dueDate")
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc")
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState<PageSize>(10)
@@ -84,7 +84,7 @@ function TasksPageContent() {
   }, [urlPriority])
 
   useEffect(() => {
-    setSelectedStatuses(urlStatus ? [urlStatus] : [])
+    setSelectedStatuses(urlStatus ? [urlStatus] : ["incomplete"])
   }, [urlStatus])
 
   useEffect(() => {
