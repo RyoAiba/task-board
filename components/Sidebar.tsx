@@ -16,7 +16,7 @@ export function Sidebar() {
 
   return (
     <>
-      <aside className="hidden md:flex flex-col w-56 h-screen fixed left-0 top-0 bg-white shadow-[2px_0_8px_rgba(0,0,0,0.08)] z-100">
+      <aside className="hidden md:flex flex-col w-56 h-screen fixed left-0 top-0 bg-white border-r border-gray-200 z-100">
         <div className="flex-1">
           <Link href="/" className={NAV_ITEM_CLASS}>
             <Home size={24} />
