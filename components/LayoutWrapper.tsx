@@ -20,7 +20,7 @@ export function LayoutWrapper({
         <main className={isLoginPage ? "" : "md:ml-56 p-6 pt-4 pb-24 md:pb-4"}>
           {children}
         </main>
-        {false && <BottomNav />}
+        {!isLoginPage && <BottomNav />}
       </div>
     </CategoriesProvider>
   )

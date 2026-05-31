@@ -13,11 +13,6 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://task-app-ts.vercel.app"),
   title: "TaskBoard",
   description: "カテゴリや優先度でタスクを整理する個人向けタスク管理アプリ",
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: "default",
-    title: "TaskBoard",
-  },
   icons: {
     icon: "/icon.svg",
     apple: "/apple-touch-icon.png",
