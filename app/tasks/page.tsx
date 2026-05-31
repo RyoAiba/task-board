@@ -206,7 +206,7 @@ function TasksPageContent() {
     <div className="flex flex-col h-full">
 
       {/* ヘッダー（スクロールしない） */}
-      <div className="flex-shrink-0 p-2 pt-4 md:p-6 bg-white border-b border-gray-200">
+      <div className="flex-shrink-0 p-4 md:p-6 bg-white border-b border-gray-200">
 
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative md:flex-1">
