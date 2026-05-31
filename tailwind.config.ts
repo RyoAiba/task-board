@@ -9,18 +9,8 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      colors: {
-        primary: "#FA6218",
-      },
       fontFamily: {
         "noto-sans-jp": "var(--font-noto-sans-jp)",
-      },
-      fontSize: {
-        "page-title": ["20px", { fontWeight: "700" }],
-        "section-title": ["16px", { fontWeight: "600" }],
-        "body": ["14px", { fontWeight: "400" }],
-        "caption": ["12px", { fontWeight: "400" }],
-        "badge": ["12px", { fontWeight: "500" }],
       },
     },
   },

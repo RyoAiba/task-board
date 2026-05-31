@@ -6,19 +6,44 @@
 
 @theme inline {
   --color-background: var(--background);
-  --color-primary: #FA6218;
+  --color-primary: #00C8AF;
   --font-sans: var(--font-noto-sans-jp), var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--background);
-  /* gray-800 */
   color: #1f2937;
   font-family: var(--font-noto-sans-jp), Arial, Helvetica, sans-serif;
 }
 
-/* Typography utilities */
+@layer utilities {
+  .text-page-title {
+    font-size: 20px;
+    font-weight: 700;
+  }
+
+  .text-section-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .text-body {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  .text-caption {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .text-badge {
+    font-size: 12px;
+    font-weight: 500;
+  }
+}
+
 h1 {
   @apply text-2xl font-bold;
 }
@@ -29,17 +54,4 @@ h2 {
 
 p {
   @apply text-sm;
-}
-
-.text-caption {
-  @apply text-xs;
-}
-
-.text-badge {
-  @apply text-xs font-medium;
-}
-
-.text-secondary {
-  /* gray-500 */
-  color: #6b7280;
 }
