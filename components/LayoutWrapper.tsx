@@ -11,7 +11,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
 
   return (
     <CategoriesProvider>
-      <div className="flex flex-col h-[100dvh]">
+      <div className="flex flex-col h-[100dvh] overscroll-none">
         {!isLoginPage && <Sidebar />}
         <main className={`flex-1 overflow-hidden flex flex-col ${isLoginPage ? "" : "md:ml-56"}`}>
           {children}
