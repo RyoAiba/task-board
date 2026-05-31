@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/icon.svg",
-    apple: "/apple-touch-icon.png",
+    apple: "/apple-touch-icon2.png",
   },
   openGraph: {
     title: "TaskBoard",
