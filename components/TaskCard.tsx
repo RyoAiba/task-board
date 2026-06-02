@@ -23,7 +23,7 @@ export const TaskCard = memo(function TaskCard({ task, category, onToggle }: Tas
         <button
           onClick={() => onToggle(task.id)}
           className={`relative z-10 flex-shrink-0 flex items-center rounded-full transition-colors cursor-pointer ${task.completed
-            ? "bg-[var(--brand-color-200)] text-[var(--brand-color-500)] hover:bg-green-200"
+            ? "bg-brand-200 text-brand-500 hover:bg-green-200"
             : "text-gray-200"
             }`}
         >

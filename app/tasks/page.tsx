@@ -213,14 +213,14 @@ function TasksPageContent() {
               placeholder="タスクを検索..."
               value={searchText}
               onChange={handleSearchChange}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
             />
           </div>
           <div className="flex gap-3 items-stretch">
             <select
               value={currentSortValue}
               onChange={handleSortChange}
-              className="flex-1 md:flex-none px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+              className="flex-1 md:flex-none px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
             >
               <option value="">並び替え</option>
               {SORT_OPTIONS.map(opt => (
@@ -319,7 +319,7 @@ function TasksPageContent() {
               onPageChange={setCurrentPage}
               onPageSizeChange={handlePageSizeChange}
             />
-            <div className="space-y-2 my-4">
+            <div className="divide-y divide-gray-200 my-4">
               {pagedTasks.map(task => (
                 <TaskCard
                   key={task.id}

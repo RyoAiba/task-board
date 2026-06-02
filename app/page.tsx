@@ -70,7 +70,7 @@ export default function Dashboard() {
             )}
           </div>
           {todayIncomplete.length > 0 ? (
-            <div className="space-y-2">
+            <div className="divide-y divide-gray-200">
               {todayIncomplete.slice(0, 5).map(task => (
                 <TaskCard
                   key={task.id}
@@ -102,7 +102,7 @@ export default function Dashboard() {
             )}
           </div>
           {overdueTasks.length > 0 ? (
-            <div className="space-y-2">
+            <div className="divide-y divide-gray-200">
               {overdueTasks.slice(0, 5).map(task => (
                 <TaskCard
                   key={task.id}
@@ -136,13 +136,13 @@ export default function Dashboard() {
               startAngle={90}
               endAngle={-270}
             >
-              <Cell fill="var(--brand-color-500)" />
-              <Cell fill="#E5E7EB" />
+              <Cell className="fill-brand-500" />
+              <Cell className="fill-gray-200" />
               <Label
                 value={`${completionRate}%`}
                 position="center"
                 fontSize={24}
-                fill="var(--brand-color-500)"
+                className="fill-brand-500"
                 fontWeight="bold"
               />
             </Pie>

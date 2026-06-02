@@ -31,7 +31,7 @@ export function CategorySelector({ categories, value, onChange }: Props) {
       <button
         type="button"
         onClick={() => setOpen(prev => !prev)}
-        className="w-full flex items-center justify-between px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary hover:border-gray-400"
+        className="w-full flex items-center justify-between px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 hover:border-gray-400"
       >
         {selected ? (
           <span className="flex items-center gap-2">
