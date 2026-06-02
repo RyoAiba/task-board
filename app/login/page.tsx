@@ -65,7 +65,7 @@ export default function LoginPage() {
 
           <button
             onClick={handleLogin}
-            className="w-full py-3 bg-brand-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+            className="w-full py-3 bg-brand-500 text-white font-semibold rounded-lg hover:opacity-90 transition-colors"
           >
             ログイン
           </button>
