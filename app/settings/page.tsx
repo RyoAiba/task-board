@@ -75,7 +75,7 @@ export default function SettingsPage() {
                       <p className="text-red-500 text-xs mt-1">{editingError}</p>
                     )}
                   </div>
-                  <button onClick={saveEdit} className="text-sm font-semibold text-primary hover:opacity-70 transition-opacity whitespace-nowrap">
+                  <button onClick={saveEdit} className="text-sm font-semibold text-brand-500 hover:opacity-70 transition-opacity whitespace-nowrap">
                     保存
                   </button>
                   <button onClick={cancelEdit} className="text-sm font-semibold text-gray-400 hover:opacity-70 transition-opacity whitespace-nowrap">
@@ -86,7 +86,7 @@ export default function SettingsPage() {
                 <>
                   <div className={`w-3 h-3 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[cat.color]}`} />
                   <span className="flex-1  font-medium">{cat.name}</span>
-                  <button onClick={() => startEdit(cat.id, cat.name)} className="text-gray-400 hover:text-primary transition-colors">
+                  <button onClick={() => startEdit(cat.id, cat.name)} className="text-gray-400 hover:text-brand-500 transition-colors">
                     <Pencil size={18} />
                   </button>
                 </>
@@ -109,8 +109,8 @@ export default function SettingsPage() {
                     type="button"
                     onClick={() => setTooltipOpen(prev => !prev)}
                     className={`w-4 h-4 rounded-full border text-xs flex items-center justify-center leading-none transition-colors ${tooltipOpen
-                      ? "bg-primary border-primary text-white"
-                      : "border-gray-400 text-gray-400 hover:bg-primary hover:border-primary hover:text-white"
+                      ? "bg-brand-500 border-brand-500 text-white"
+                      : "border-gray-400 text-gray-400 hover:bg-brand-500 hover:border-brand-500 hover:text-white"
                       }`}
                   >
                     ?
@@ -124,7 +124,7 @@ export default function SettingsPage() {
               </div>
               <button
                 onClick={() => updateSetting("showCompletedInCalendar", !settings.showCompletedInCalendar)}
-                className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ${settings.showCompletedInCalendar ? "bg-primary" : "bg-gray-200"
+                className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 ${settings.showCompletedInCalendar ? "bg-brand-500" : "bg-gray-200"
                   }`}
               >
                 <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${settings.showCompletedInCalendar ? "translate-x-5" : "translate-x-0"

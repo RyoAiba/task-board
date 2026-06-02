@@ -13,7 +13,7 @@ export function BottomNav() {
   const pathname = usePathname()
 
   const navClass = (href: string) =>
-    `${NAV_ITEM_CLASS} ${pathname === href ? "text-primary" : "text-gray-400 hover:text-primary"}`
+    `${NAV_ITEM_CLASS} ${pathname === href ? "text-brand-500" : "text-gray-400 hover:text-brand-500"}`
 
   return (
     <>
@@ -28,7 +28,7 @@ export function BottomNav() {
         </Link>
         <Link
           href="/tasks/new"
-          className="flex items-center justify-center w-14 h-14 rounded-full bg-primary text-white hover:bg-orange-600 transition-colors -mt-4 shadow-md flex-shrink-0"
+          className="flex items-center justify-center w-14 h-14 rounded-full bg-brand-500 text-white hover:bg-orange-600 transition-colors -mt-4 shadow-md flex-shrink-0"
         >
           <Plus size={28} />
         </Link>
@@ -38,7 +38,7 @@ export function BottomNav() {
         </Link>
         <button
           onClick={() => setShowLogoutModal(true)}
-          className={`${NAV_ITEM_CLASS} text-gray-400 hover:text-primary`}
+          className={`${NAV_ITEM_CLASS} text-gray-400 hover:text-brand-500`}
         >
           <LogOut size={24} strokeWidth={1.5} />
           <span className="text-[10px]">ログアウト</span>

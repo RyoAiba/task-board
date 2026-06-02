@@ -64,7 +64,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-section-title">今日のタスク</h2>
             {todayIncomplete.length > 5 && (
-              <Link href="/tasks?status=incomplete" className="text-xs text-primary hover:underline">
+              <Link href="/tasks?status=incomplete" className="text-xs text-brand-500 hover:underline">
                 全て見る →
               </Link>
             )}
@@ -81,7 +81,7 @@ export default function Dashboard() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 bg-white border border-gray-200 rounded-lg md:flex-1 md:flex md:items-center md:justify-center">
+            <div className="text-center py-8 bg-white md:flex-1 md:flex md:items-center md:justify-center">
               <p className="text-gray-400">
                 {allTodayCompleted
                   ? "今日のタスクは完了です！🎉"
@@ -96,7 +96,7 @@ export default function Dashboard() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-section-title">期限切れのタスク</h2>
             {overdueTasks.length > 5 && (
-              <Link href="/tasks?status=incomplete" className="text-xs text-primary hover:underline">
+              <Link href="/tasks?status=incomplete" className="text-xs text-brand-500 hover:underline">
                 全て見る →
               </Link>
             )}
@@ -113,7 +113,7 @@ export default function Dashboard() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 bg-white border border-gray-200 rounded-lg md:flex-1 md:flex md:items-center md:justify-center">
+            <div className="text-center py-8 bg-white md:flex-1 md:flex md:items-center md:justify-center">
               <p className="text-gray-400">期限切れのタスクはありません 👍</p>
             </div>
           )}
@@ -136,13 +136,13 @@ export default function Dashboard() {
               startAngle={90}
               endAngle={-270}
             >
-              <Cell fill="var(--color-primary)" />
+              <Cell fill="var(--brand-color-500)" />
               <Cell fill="#E5E7EB" />
               <Label
                 value={`${completionRate}%`}
                 position="center"
                 fontSize={24}
-                fill="var(--color-primary)"
+                fill="var(--brand-color-500)"
                 fontWeight="bold"
               />
             </Pie>
@@ -165,7 +165,7 @@ export default function Dashboard() {
               className={`p-4 bg-white border border-gray-200 border-l-4 ${CATEGORY_BORDER_CLASSES[cat.color]} rounded-lg hover:shadow-md transition-shadow`}
             >
               <p className="text-body font-semibold">{cat.name}</p>
-              <p className="text-2xl font-bold mt-2 text-primary">{cat.count}</p>
+              <p className="text-2xl font-bold mt-2 text-brand-500">{cat.count}</p>
             </Link>
           ))}
         </div>
@@ -182,7 +182,7 @@ export default function Dashboard() {
               className={`p-4 bg-white border border-gray-200 border-l-4 ${PRIORITY_BORDER_CLASSES[key]} rounded-lg hover:shadow-md transition-shadow`}
             >
               <p className="text-body font-semibold">{label}</p>
-              <p className="text-2xl font-bold mt-2 text-primary">
+              <p className="text-2xl font-bold mt-2 text-brand-500">
                 {incompleteByCounts[key]}
               </p>
             </Link>

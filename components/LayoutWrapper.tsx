@@ -29,7 +29,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     <CategoriesProvider>
       <div className="flex flex-col h-[100dvh] overscroll-none">
         {!isLoginPage && <Sidebar collapsed={collapsed} onToggle={toggleCollapsed} />}
-        <main className={`flex-1 overflow-hidden flex flex-col transition-[margin] duration-300 ease-in-out ${isLoginPage ? "" : collapsed ? "md:ml-14" : "md:ml-64"
+        <main className={`flex-1 overflow-hidden flex flex-col transition-[margin] duration-300 ease-in-out ${isLoginPage ? "" : collapsed ? "md:ml-13" : "md:ml-64"
           }`}>
           {children}
         </main>

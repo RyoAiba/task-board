@@ -78,7 +78,7 @@ export function WeeklyCalendar({ tasks }: Props) {
                 key={dateStr}
                 className="flex-shrink-0 w-32 sm:w-36 rounded-xl border border-gray-200 bg-white overflow-hidden"
               >
-                <div className={`px-3 py-2 text-center ${isToday ? "bg-primary" : "bg-gray-50 border-b border-gray-200"}`}>
+                <div className={`px-3 py-2 text-center ${isToday ? "bg-brand-500" : "bg-gray-50 border-b border-gray-200"}`}>
                   <div className={`text-xs font-medium ${isToday ? "text-white" :
                     dayOfWeek === 0 ? "text-red-500" :
                       dayOfWeek === 6 ? "text-blue-500" :
@@ -86,7 +86,7 @@ export function WeeklyCalendar({ tasks }: Props) {
                     }`}>
                     {DAY_NAMES[dayOfWeek]}
                   </div>
-                  <div className={`text-sm font-bold ${isToday ? "text-white" : ""}`}>
+                  <div className={`text-sm ${isToday ? "text-white" : ""}`}>
                     {date.getMonth() + 1}月{date.getDate()}日
                   </div>
                 </div>
@@ -107,7 +107,7 @@ export function WeeklyCalendar({ tasks }: Props) {
                       {remainingCount > 0 && (
                         <button
                           onClick={() => setPopupDate(dateStr)}
-                          className="w-full text-left px-2 py-1 text-xs text-primary hover:bg-orange-50 rounded-lg transition-colors font-medium"
+                          className="w-full text-left px-2 py-1 text-xs text-brand-500 hover:bg-orange-50 rounded-lg transition-colors font-medium"
                         >
                           +{remainingCount}件
                         </button>
@@ -126,7 +126,7 @@ export function WeeklyCalendar({ tasks }: Props) {
       <div className="mt-1 flex justify-end">
         <button
           onClick={() => setDisplayDays(prev => prev + LOAD_MORE_DAYS)}
-          className="text-sm text-gray-400 hover:text-primary transition-colors"
+          className="text-sm text-gray-400 hover:text-brand-500 transition-colors"
         >
           次の7日を読み込む →
         </button>

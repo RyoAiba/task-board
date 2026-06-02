@@ -12,7 +12,7 @@ type Props = {
   onToggle: () => void
 }
 
-const ITEM_CLASS = "flex items-center gap-2 pl-4 py-2 text-sm text-gray-600 hover:text-primary transition-colors"
+const ITEM_CLASS = "flex items-center gap-2 pl-4 py-2 text-sm text-gray-600 hover:text-brand-500 transition-colors"
 
 export function Sidebar({ collapsed, onToggle }: Props) {
   const [showLogoutModal, setShowLogoutModal] = useState(false)
@@ -25,7 +25,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
         <div className={`flex p-2 ${collapsed ? "justify-center" : "justify-end"}`}>
           <button
             onClick={onToggle}
-            className="p-1 text-gray-600 hover:text-primary transition-colors"
+            className="p-1 text-gray-600 hover:text-brand-500 transition-colors"
             title={collapsed ? "サイドバーを開く" : "サイドバーを閉じる"}
           >
             <PanelLeft size={20} />
@@ -52,7 +52,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
                   <Link
                     key={cat.id}
                     href={`/tasks?category=${cat.id}`}
-                    className="flex items-center gap-2 py-2 pl-12 pr-2 text-sm text-gray-600 hover:text-primary transition-colors"
+                    className="flex items-center gap-2 py-2 pl-12 pr-2 text-sm text-gray-600 hover:text-brand-500 transition-colors"
                   >
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[cat.color]}`} />
                     <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>{cat.name}</span>

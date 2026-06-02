@@ -82,7 +82,7 @@ export function TaskFilterPopup({
                 key={cat.id}
                 onClick={() => toggle(setPendingCategories, cat.id)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingCategories.includes(cat.id)
-                  ? "bg-orange-50 border border-primary text-primary"
+                  ? "bg-orange-50 border border-brand-500 text-brand-500"
                   : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >
@@ -100,7 +100,7 @@ export function TaskFilterPopup({
                 key={value}
                 onClick={() => toggle(setPendingPriorities, value)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingPriorities.includes(value)
-                  ? "bg-orange-50 border border-primary text-primary"
+                  ? "bg-orange-50 border border-brand-500 text-brand-500"
                   : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >
@@ -118,7 +118,7 @@ export function TaskFilterPopup({
                 key={value}
                 onClick={() => toggle(setPendingStatuses, value)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingStatuses.includes(value)
-                  ? "bg-orange-50 border border-primary text-primary"
+                  ? "bg-orange-50 border border-brand-500 text-brand-500"
                   : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >
@@ -137,7 +137,7 @@ export function TaskFilterPopup({
           </button>
           <button
             onClick={handleApply}
-            className="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
+            className="px-4 py-2 bg-brand-500 text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
           >
             適用する
           </button>

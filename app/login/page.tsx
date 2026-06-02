@@ -29,7 +29,7 @@ export default function LoginPage() {
       <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
         {/* アプリ名 */}
         <div className="flex flex-col items-center mb-8">
-          <div className="w-14 h-14 bg-primary rounded-2xl flex items-center justify-center mb-4">
+          <div className="w-14 h-14 bg-brand-500 rounded-2xl flex items-center justify-center mb-4">
             <ClipboardList size={30} className="text-white" />
           </div>
           <h1 className="text-xl font-bold ">TasksBoard</h1>
@@ -65,7 +65,7 @@ export default function LoginPage() {
 
           <button
             onClick={handleLogin}
-            className="w-full py-3 bg-primary text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
+            className="w-full py-3 bg-brand-500 text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors"
           >
             ログイン
           </button>

@@ -6,9 +6,13 @@
 
 @theme inline {
   --color-background: var(--background);
-  --color-primary: #00C8AF;
   --font-sans: var(--font-noto-sans-jp), var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+@theme {
+  --color-brand-500: #00C8AF;
+  --color-brand-200: #CFF9F3;
 }
 
 body {

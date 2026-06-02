@@ -189,7 +189,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
           onClick={handleSave}
           disabled={!hasChanges}
           className={`flex-1 py-2 font-semibold rounded-lg transition-colors ${hasChanges
-            ? "bg-primary text-white hover:opacity-90"
+            ? "bg-brand-500 text-white hover:opacity-90"
             : "bg-gray-100 text-gray-400 cursor-not-allowed"
             }`}
         >

@@ -18,7 +18,7 @@ export default function TaskDetailPage() {
     return (
       <PageContainer>
         <p className="text-gray-400">タスクが見つかりません</p>
-        <Link href="/tasks" className="text-primary hover:underline mt-4 block">
+        <Link href="/tasks" className="text-brand-500 hover:underline mt-4 block">
           タスク一覧に戻る
         </Link>
       </PageContainer>

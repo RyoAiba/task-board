@@ -233,14 +233,14 @@ function TasksPageContent() {
               <button
                 onClick={() => setFilterPopupOpen(prev => !prev)}
                 className={`h-full flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeFilterCount > 0
-                  ? "border-primary bg-orange-50 text-primary"
+                  ? "border-brand-500 bg-orange-50 text-brand-500"
                   : "border-gray-300 text-gray-400 hover:border-gray-400"
                   }`}
               >
                 <SlidersHorizontal size={16} />
                 フィルタ
                 {activeFilterCount > 0 && (
-                  <span className="bg-primary text-white text-xs px-1.5 py-0.5 rounded-full leading-none">
+                  <span className="bg-brand-500 text-white text-xs px-1.5 py-0.5 rounded-full leading-none">
                     {activeFilterCount}
                   </span>
                 )}
@@ -268,7 +268,7 @@ function TasksPageContent() {
                 <button
                   key={catId}
                   onClick={() => { setSelectedCategories(prev => prev.filter(id => id !== catId)); resetPage() }}
-                  className="flex items-center gap-1 px-3 py-1 bg-orange-50 border border-primary text-primary text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
+                  className="flex items-center gap-1 px-3 py-1 bg-orange-50 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
                 >
                   {truncate(cat.name, 6)}
                   <X size={11} />
@@ -279,7 +279,7 @@ function TasksPageContent() {
               <button
                 key={p}
                 onClick={() => { setSelectedPriorities(prev => prev.filter(v => v !== p)); resetPage() }}
-                className="flex items-center gap-1 px-3 py-1 bg-orange-50 border border-primary text-primary text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
+                className="flex items-center gap-1 px-3 py-1 bg-orange-50 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
               >
                 {PRIORITY_LABELS[p]}
                 <X size={11} />
@@ -289,7 +289,7 @@ function TasksPageContent() {
               <button
                 key={s}
                 onClick={() => { setSelectedStatuses(prev => prev.filter(v => v !== s)); resetPage() }}
-                className="flex items-center gap-1 px-3 py-1 bg-orange-50 border border-primary text-primary text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
+                className="flex items-center gap-1 px-3 py-1 bg-orange-50 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
               >
                 {STATUS_LABELS[s]}
                 <X size={11} />
