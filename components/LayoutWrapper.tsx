@@ -1,19 +1,36 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { Sidebar } from "./Sidebar"
 import { BottomNav } from "./BottomNav"
 import { CategoriesProvider } from "@/hooks/useCategories"
 
+const STORAGE_KEY = "sidebar-collapsed"
+
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isLoginPage = pathname === "/login"
+  const [collapsed, setCollapsed] = useState(false)
+
+  useEffect(() => {
+    setCollapsed(localStorage.getItem(STORAGE_KEY) === "true")
+  }, [])
+
+  const toggleCollapsed = () => {
+    setCollapsed(prev => {
+      const next = !prev
+      localStorage.setItem(STORAGE_KEY, String(next))
+      return next
+    })
+  }
 
   return (
     <CategoriesProvider>
       <div className="flex flex-col h-[100dvh] overscroll-none">
-        {!isLoginPage && <Sidebar />}
-        <main className={`flex-1 overflow-hidden flex flex-col ${isLoginPage ? "" : "md:ml-64"}`}>
+        {!isLoginPage && <Sidebar collapsed={collapsed} onToggle={toggleCollapsed} />}
+        <main className={`flex-1 overflow-hidden flex flex-col transition-[margin] duration-300 ease-in-out ${isLoginPage ? "" : collapsed ? "md:ml-14" : "md:ml-64"
+          }`}>
           {children}
         </main>
         {!isLoginPage && <BottomNav />}
