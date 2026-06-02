@@ -82,7 +82,7 @@ export function TaskFilterPopup({
                 key={cat.id}
                 onClick={() => toggle(setPendingCategories, cat.id)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingCategories.includes(cat.id)
-                  ? "bg-orange-50 border border-brand-500 text-brand-500"
+                  ? "bg-brand-100 border border-brand-500 text-brand-500"
                   : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >
@@ -100,7 +100,7 @@ export function TaskFilterPopup({
                 key={value}
                 onClick={() => toggle(setPendingPriorities, value)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingPriorities.includes(value)
-                  ? "bg-orange-50 border border-brand-500 text-brand-500"
+                  ? "bg-brand-100 border border-brand-500 text-brand-500"
                   : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >
@@ -118,7 +118,7 @@ export function TaskFilterPopup({
                 key={value}
                 onClick={() => toggle(setPendingStatuses, value)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingStatuses.includes(value)
-                  ? "bg-orange-50 border border-brand-500 text-brand-500"
+                  ? "bg-brand-100 border border-brand-500 text-brand-500"
                   : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >

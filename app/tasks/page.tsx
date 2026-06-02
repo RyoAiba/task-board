@@ -203,7 +203,7 @@ function TasksPageContent() {
     <div className="flex flex-col h-full">
 
       {/* ヘッダー（スクロールしない） */}
-      <div className="flex-shrink-0 p-4 md:p-6 bg-white border-b border-gray-200">
+      <div className="flex-shrink-0 p-4 md:p-5 bg-white border-b border-gray-200">
 
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative md:flex-1">
@@ -213,14 +213,14 @@ function TasksPageContent() {
               placeholder="タスクを検索..."
               value={searchText}
               onChange={handleSearchChange}
-              className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="w-full pl-10 pr-3 py-1.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-500"
             />
           </div>
           <div className="flex gap-3 items-stretch">
             <select
               value={currentSortValue}
               onChange={handleSortChange}
-              className="flex-1 md:flex-none px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="flex-1 md:flex-none px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-brand-500"
             >
               <option value="">並び替え</option>
               {SORT_OPTIONS.map(opt => (
@@ -233,7 +233,7 @@ function TasksPageContent() {
               <button
                 onClick={() => setFilterPopupOpen(prev => !prev)}
                 className={`h-full flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeFilterCount > 0
-                  ? "border-brand-500 bg-orange-50 text-brand-500"
+                  ? "border-brand-500 bg-brand-100 text-brand-500"
                   : "border-gray-300 text-gray-400 hover:border-gray-400"
                   }`}
               >
@@ -268,7 +268,7 @@ function TasksPageContent() {
                 <button
                   key={catId}
                   onClick={() => { setSelectedCategories(prev => prev.filter(id => id !== catId)); resetPage() }}
-                  className="flex items-center gap-1 px-3 py-1 bg-orange-50 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
+                  className="flex items-center gap-1 px-3 py-1 bg-brand-100 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
                 >
                   {truncate(cat.name, 6)}
                   <X size={11} />
@@ -279,7 +279,7 @@ function TasksPageContent() {
               <button
                 key={p}
                 onClick={() => { setSelectedPriorities(prev => prev.filter(v => v !== p)); resetPage() }}
-                className="flex items-center gap-1 px-3 py-1 bg-orange-50 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
+                className="flex items-center gap-1 px-3 py-1 bg-brand-100 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
               >
                 {PRIORITY_LABELS[p]}
                 <X size={11} />
@@ -289,7 +289,7 @@ function TasksPageContent() {
               <button
                 key={s}
                 onClick={() => { setSelectedStatuses(prev => prev.filter(v => v !== s)); resetPage() }}
-                className="flex items-center gap-1 px-3 py-1 bg-orange-50 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
+                className="flex items-center gap-1 px-3 py-1 bg-brand-100 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
               >
                 {STATUS_LABELS[s]}
                 <X size={11} />

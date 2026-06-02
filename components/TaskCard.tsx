@@ -45,11 +45,11 @@ export const TaskCard = memo(function TaskCard({ task, category, onToggle }: Tas
           </span>
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
             {category && <CategoryBadge category={category} />}
-            <span className={`text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap ${getPriorityBadgeClass(task.priority)}`}>
+            <span className={`text-[11px] px-1.5 py-0.5 rounded whitespace-nowrap ${getPriorityBadgeClass(task.priority)}`}>
               {PRIORITY_LABELS[task.priority]}
             </span>
             {dueBadge && (
-              <span className={`text-[10px] px-1.5 py-0.5 rounded whitespace-nowrap ${dueBadge.className}`}>
+              <span className={`text-[11px] px-1.5 py-0.5 rounded whitespace-nowrap ${dueBadge.className}`}>
                 {dueBadge.label}
               </span>
             )}

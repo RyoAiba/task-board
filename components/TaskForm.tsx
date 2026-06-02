@@ -113,7 +113,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
           onChange={e => setTitle(e.target.value)}
           maxLength={TITLE_MAX_LENGTH}
           placeholder="タスク名を入力..."
-          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500"
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-500"
         />
         {errors.title && (
           <p className="text-red-500 text-xs mt-1">{errors.title}</p>
@@ -157,7 +157,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
             value={dueDate ? new Date(dueDate + "T00:00:00").toLocaleDateString("ja-JP") : ""}
             readOnly
             placeholder="期限を選択..."
-            className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 text-gray-600 cursor-pointer bg-white"
+            className="w-full pl-3 pr-10 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-brand-500 text-gray-600 cursor-pointer bg-white"
             onClick={() => setShowDatePicker(true)}
           />
           <button

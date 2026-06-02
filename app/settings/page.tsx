@@ -64,7 +64,7 @@ export default function SettingsPage() {
                         }}
                         onKeyDown={e => e.key === "Enter" && saveEdit()}
                         maxLength={CATEGORY_NAME_MAX}
-                        className="w-full sm:w-48 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-500 text-sm"
+                        className="w-full sm:w-48 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm"
                         autoFocus
                       />
                       <span className={`text-xs whitespace-nowrap ${editingName.length >= CATEGORY_NAME_MAX ? "text-red-500" : "text-gray-400"}`}>

@@ -86,7 +86,7 @@ export function Pagination({
         <select
           value={pageSize}
           onChange={e => onPageSizeChange(Number(e.target.value) as PageSize)}
-          className="text-xs px-2 py-1 border border-gray-200 rounded text-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
+          className="text-xs px-2 py-1 border border-gray-200 rounded text-gray-400 focus:outline-none focus:ring-1 focus:ring-brand-500"
         >
           {PAGE_SIZE_OPTIONS.map(size => (
             <option key={size} value={size}>{size}件表示</option>

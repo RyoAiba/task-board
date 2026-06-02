@@ -107,7 +107,7 @@ export function WeeklyCalendar({ tasks }: Props) {
                       {remainingCount > 0 && (
                         <button
                           onClick={() => setPopupDate(dateStr)}
-                          className="w-full text-left px-2 py-1 text-xs text-brand-500 hover:bg-orange-50 rounded-lg transition-colors font-medium"
+                          className="w-full text-left px-2 py-1 text-xs text-brand-500 hover:bg-brand-100 rounded-lg transition-colors font-medium"
                         >
                           +{remainingCount}件
                         </button>
