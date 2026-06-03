@@ -46,12 +46,6 @@ export const PRIORITY_ORDER: Record<Priority, number> = {
   low: 2,
 }
 
-export const PRIORITY_DOT_CLASSES: Record<Priority, string> = {
-  high: "bg-red-500",
-  medium: "bg-amber-500",
-  low: "bg-blue-500",
-}
-
 export const CATEGORY_DOT_CLASSES: Record<CategoryColor, string> = {
   blue: "bg-blue-400",
   violet: "bg-violet-400",
@@ -73,8 +67,20 @@ export const CATEGORY_BORDER_CLASSES: Record<CategoryColor, string> = {
   cyan: "border-l-cyan-400",
 }
 
-export const PRIORITY_BORDER_CLASSES: Record<Priority, string> = {
-  high: "border-l-red-500",
-  medium: "border-l-amber-500",
-  low: "border-l-blue-500",
+export const PRIORITY_PRIMARY: Record<Priority, string> = {
+  high: "bg-priority-high",
+  medium: "bg-priority-medium",
+  low: "bg-priority-low",
+}
+
+export const PRIORITY_MIDDLE: Record<Priority, string> = {
+  high: "bg-priority-high/10 text-priority-high",
+  medium: "bg-priority-medium/5 text-priority-medium",
+  low: "bg-priority-low/10 text-priority-low",
+}
+
+export const PRIORITY_SOFT: Record<Priority, string> = {
+  high: "bg-priority-high/5 text-priority-high/80",
+  medium: "bg-priority-medium/5 text-priority-medium/80",
+  low: "bg-priority-low/5 text-priority-low/80",
 }

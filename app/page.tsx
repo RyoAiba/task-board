@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useTasks } from "../hooks/useTasks"
 import { useCategories } from "../hooks/useCategories"
-import { Priority, PRIORITY_LABELS, CATEGORY_BORDER_CLASSES, PRIORITY_BORDER_CLASSES } from "../types"
+import { Priority, PRIORITY_LABELS, CATEGORY_BORDER_CLASSES } from "../types"
 import { PieChart, Pie, Cell, Label } from "recharts"
 import { PageContainer } from "../components/PageContainer"
 import { WeeklyCalendar } from "../components/WeeklyCalendar"
@@ -179,7 +179,7 @@ export default function Dashboard() {
             <Link
               key={key}
               href={href}
-              className={`p-4 bg-white border border-gray-200 border-l-4 ${PRIORITY_BORDER_CLASSES[key]} rounded-lg hover:shadow-md transition-shadow`}
+              className={`p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow`}
             >
               <p className="text-body font-semibold">{label}</p>
               <p className="text-2xl font-bold mt-2 text-brand-500">

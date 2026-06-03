@@ -11,9 +11,15 @@
 }
 
 @theme {
+  /* Brand */
   --color-brand-100: #ECFFFB;
   --color-brand-200: #CFF9F3;
   --color-brand-500: #00C8AF;
+
+  /* Priority */
+  --color-priority-high: #FB7185;
+  --color-priority-medium: #FAC571;
+  --color-priority-low: #6BB6FA;
 }
 
 body {

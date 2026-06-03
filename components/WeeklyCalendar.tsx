@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import Link from "next/link"
 import { X } from "lucide-react"
-import { Task, PRIORITY_ORDER, PRIORITY_DOT_CLASSES } from "../types"
+import { Task, PRIORITY_ORDER, PRIORITY_PRIMARY } from "../types"
 import { useSettings } from "../hooks/useSettings"
 
 type Props = {
@@ -47,7 +47,9 @@ export function WeeklyCalendar({ tasks }: Props) {
       })
       .sort((a, b) => {
         if (a.completed !== b.completed) return Number(a.completed) - Number(b.completed)
-        return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]
+        const orderA = a.priority ? PRIORITY_ORDER[a.priority] : 99
+        const orderB = b.priority ? PRIORITY_ORDER[b.priority] : 99
+        return orderA - orderB
       })
   }
 
@@ -100,7 +102,7 @@ export function WeeklyCalendar({ tasks }: Props) {
                           href={`/tasks/${task.id}`}
                           className={`flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors ${task.completed ? "opacity-40" : ""}`}
                         >
-                          <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${PRIORITY_DOT_CLASSES[task.priority]}`} />
+                          <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${task.priority ? PRIORITY_PRIMARY[task.priority] : "bg-gray-300"}`} />
                           <span className="text-xs text-gray-600 truncate">{task.title}</span>
                         </Link>
                       ))}
@@ -158,7 +160,7 @@ export function WeeklyCalendar({ tasks }: Props) {
                   onClick={() => setPopupDate(null)}
                   className={`flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors ${task.completed ? "opacity-40" : ""}`}
                 >
-                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${PRIORITY_DOT_CLASSES[task.priority]}`} />
+                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${task.priority ? PRIORITY_PRIMARY[task.priority] : "bg-gray-300"}`} />
                   <span className="text-sm text-gray-600">{task.title}</span>
                 </Link>
               ))}
