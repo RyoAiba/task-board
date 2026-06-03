@@ -2,19 +2,19 @@
 
 import { useState, useEffect, useRef } from "react"
 import { ChevronDown } from "lucide-react"
-import { Category, CATEGORY_DOT_CLASSES } from "../types"
+import { Label, CATEGORY_DOT_CLASSES } from "../types"
 
 type Props = {
-  categories: Category[]
+  labels: Label[]
   value: string
-  onChange: (categoryId: string) => void
+  onChange: (labelId: string) => void
 }
 
-export function CategorySelector({ categories, value, onChange }: Props) {
+export function LabelSelector({ labels, value, onChange }: Props) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
-  const selected = categories.find(c => c.id === value)
+  const selected = labels.find(c => c.id === value)
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -39,25 +39,25 @@ export function CategorySelector({ categories, value, onChange }: Props) {
             <span className="text-gray-600">{selected.name}</span>
           </span>
         ) : (
-          <span className="text-gray-400">カテゴリを選択...</span>
+          <span className="text-gray-400">ラベルを選択...</span>
         )}
         <ChevronDown size={16} className="text-gray-400" />
       </button>
 
       {open && (
         <div className="absolute top-full left-0 mt-1 z-50 w-full bg-white rounded-xl shadow-xl p-2">
-          {categories.map(cat => (
+          {labels.map(label => (
             <button
-              key={cat.id}
+              key={label.id}
               type="button"
-              onClick={() => { onChange(cat.id); setOpen(false) }}
-              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-left transition-colors ${value === cat.id
+              onClick={() => { onChange(label.id); setOpen(false) }}
+              className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm text-left transition-colors ${value === label.id
                 ? "bg-brand-100 text-orange-600 font-medium"
                 : "text-gray-600 hover:bg-gray-50"
                 }`}
             >
-              <div className={`w-2 h-2 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[cat.color]}`} />
-              {cat.name}
+              <div className={`w-2 h-2 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[label.color]}`} />
+              {label.name}
             </button>
           ))}
         </div>

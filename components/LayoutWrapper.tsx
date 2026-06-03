@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { Sidebar } from "./Sidebar"
 import { BottomNav } from "./BottomNav"
-import { CategoriesProvider } from "@/hooks/useCategories"
+import { LabelsProvider } from "@/hooks/useLabels"
 
 const STORAGE_KEY = "sidebar-collapsed"
 
@@ -26,7 +26,7 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <CategoriesProvider>
+    <LabelsProvider>
       <div className="flex flex-col h-[100dvh] overscroll-none">
         {!isLoginPage && <Sidebar collapsed={collapsed} onToggle={toggleCollapsed} />}
         <main className={`flex-1 overflow-hidden flex flex-col transition-[margin] duration-300 ease-in-out ${isLoginPage ? "" : collapsed ? "md:ml-13" : "md:ml-64"
@@ -35,6 +35,6 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
         </main>
         {!isLoginPage && <BottomNav />}
       </div>
-    </CategoriesProvider>
+    </LabelsProvider>
   )
 }

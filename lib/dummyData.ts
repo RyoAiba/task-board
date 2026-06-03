@@ -84,9 +84,9 @@ export function generateDummyTasks(): Task[] {
 
   const priorities = Object.keys(PRIORITY_LABELS) as Priority[]
 
-  Object.entries(TASK_TITLES).forEach(([categoryName, titles]) => {
-    const categoryId =
-      categoryName === "仕事" ? "cat_1" : categoryName === "趣味" ? "cat_2" : "cat_3"
+  Object.entries(TASK_TITLES).forEach(([labelName, titles]) => {
+    const labelId =
+      labelName === "仕事" ? "cat_1" : labelName === "趣味" ? "cat_2" : "cat_3"
 
     titles.forEach((title, index) => {
       const daysAgo = Math.floor(Math.random() * 5)
@@ -101,7 +101,7 @@ export function generateDummyTasks(): Task[] {
         id: `task_${taskId++}`,
         title,
         priority,
-        categoryId,
+        labelId,
         completed,
         createdAt: createdDate.toISOString(),
         dueDate: dueDateBase ? formatDate(dueDateBase) : undefined,

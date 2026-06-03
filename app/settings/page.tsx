@@ -2,15 +2,14 @@
 
 import { useState } from "react"
 import { PageContainer } from "../../components/PageContainer"
-import { useCategories } from "../../hooks/useCategories"
+import { useLabels } from "../../hooks/useLabels"
 import { useSettings } from "../../hooks/useSettings"
 import { Pencil } from "lucide-react"
-import { CATEGORY_DOT_CLASSES } from "../../types"
 
 const CATEGORY_NAME_MAX = 10
 
 export default function SettingsPage() {
-  const { categories, updateCategory } = useCategories()
+  const { labels, updateLabel } = useLabels()
   const { settings, updateSetting, isLoaded } = useSettings()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingName, setEditingName] = useState("")
@@ -32,10 +31,10 @@ export default function SettingsPage() {
   const saveEdit = () => {
     if (!editingId) return
     if (!editingName.trim()) {
-      setEditingError("カテゴリ名を入力してください")
+      setEditingError("ラベル名を入力してください")
       return
     }
-    updateCategory(editingId, editingName.trim())
+    updateLabel(editingId, editingName.trim())
     setEditingId(null)
     setEditingName("")
     setEditingError("")
@@ -44,15 +43,15 @@ export default function SettingsPage() {
   return (
     <PageContainer>
 
-      {/* カテゴリ名を編集 */}
+      {/* ラベル名を編集 */}
       <section className="mb-8">
-        <h2 className="text-section-title mb-4">カテゴリ名を編集</h2>
+        <h2 className="text-section-title mb-4">ラベル名を編集</h2>
         <div className="space-y-2 sm:max-w-md">
-          {categories.map(cat => (
-            <div key={cat.id} className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg sm:max-w-md">
-              {editingId === cat.id ? (
+          {labels.map(label => (
+            <div key={label.id} className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg sm:max-w-md">
+              {editingId === label.id ? (
                 <>
-                  <div className={`w-3 h-3 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[cat.color]}`} />
+                  <div className="w-3 h-3 rounded-full flex-shrink-0" />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <input
@@ -84,9 +83,9 @@ export default function SettingsPage() {
                 </>
               ) : (
                 <>
-                  <div className={`w-3 h-3 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[cat.color]}`} />
-                  <span className="flex-1  font-medium">{cat.name}</span>
-                  <button onClick={() => startEdit(cat.id, cat.name)} className="text-gray-400 hover:text-brand-500 transition-colors">
+                  <div className="w-3 h-3 rounded-full flex-shrink-0" />
+                  <span className="flex-1  font-medium">{label.name}</span>
+                  <button onClick={() => startEdit(label.id, label.name)} className="text-gray-400 hover:text-brand-500 transition-colors">
                     <Pencil size={18} />
                   </button>
                 </>

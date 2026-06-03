@@ -32,12 +32,12 @@ export default function TaskDetailPage() {
         initialValues={{
           title: task.title,
           priority: task.priority,
-          categoryId: task.categoryId,
+          labelId: task.labelId,
           dueDate: task.dueDate ?? "",
           completed: task.completed,
         }}
-        onSave={({ title, priority, categoryId, dueDate, completed }) => {
-          updateTask(id, { title, priority, categoryId, dueDate: dueDate || undefined, completed })
+        onSave={({ title, priority, labelId, dueDate, completed }) => {
+          updateTask(id, { title, priority, labelId, dueDate: dueDate || undefined, completed })
           router.push("/tasks?toast=saved")
         }}
         onDelete={() => {

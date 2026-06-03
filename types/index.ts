@@ -1,31 +1,31 @@
 export type Priority = "high" | "medium" | "low"
 
-export type CategoryColor = "blue" | "violet" | "slate" | "pink" | "teal" | "cyan"
+export type LabelColor = "blue" | "violet" | "slate" | "pink" | "teal" | "cyan"
 
-export type Category = {
+export type Label = {
   id: string
   name: string
   order: number
-  color: CategoryColor
+  color: LabelColor
 }
 
 export type Task = {
   id: string
   title: string
   priority?: Priority
-  categoryId: string
+  labelId: string
   completed: boolean
   createdAt: string
   dueDate?: string
 }
 
-export const DEFAULT_CATEGORIES: Category[] = [
+export const DEFAULT_LABELS: Label[] = [
   { id: "cat_1", name: "仕事", order: 1, color: "blue" },
   { id: "cat_2", name: "趣味", order: 2, color: "violet" },
   { id: "cat_3", name: "その他", order: 3, color: "slate" },
 ]
 
-export const CATEGORY_BADGE_CLASSES: Record<CategoryColor, string> = {
+export const CATEGORY_BADGE_CLASSES: Record<LabelColor, string> = {
   blue: "bg-blue-100 text-blue-600",
   violet: "bg-violet-100 text-violet-600",
   slate: "bg-slate-100 text-slate-600",
@@ -46,7 +46,7 @@ export const PRIORITY_ORDER: Record<Priority, number> = {
   low: 2,
 }
 
-export const CATEGORY_DOT_CLASSES: Record<CategoryColor, string> = {
+export const CATEGORY_DOT_CLASSES: Record<LabelColor, string> = {
   blue: "bg-blue-400",
   violet: "bg-violet-400",
   slate: "bg-slate-400",
@@ -58,7 +58,7 @@ export const CATEGORY_DOT_CLASSES: Record<CategoryColor, string> = {
 export const PAGE_SIZE_OPTIONS = [10, 30] as const
 export type PageSize = typeof PAGE_SIZE_OPTIONS[number]
 
-export const CATEGORY_BORDER_CLASSES: Record<CategoryColor, string> = {
+export const CATEGORY_BORDER_CLASSES: Record<LabelColor, string> = {
   blue: "border-l-blue-400",
   violet: "border-l-violet-400",
   slate: "border-l-slate-400",

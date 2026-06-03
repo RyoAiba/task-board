@@ -2,9 +2,9 @@
 
 import { useState, useEffect, useRef } from "react"
 import { Priority } from "../types"
-import { useCategories } from "../hooks/useCategories"
+import { useLabels } from "../hooks/useLabels"
 import { PrioritySelector } from "./PrioritySelector"
-import { CategorySelector } from "./CategorySelector"
+import { LabelSelector } from "./LabelSelector"
 import { DatePickerModal } from "./DatePickerModal"
 import { CalendarDays, CheckCircle, Circle } from "lucide-react"
 
@@ -13,7 +13,7 @@ const TITLE_MAX_LENGTH = 50
 type FormValues = {
   title: string
   priority?: Priority
-  categoryId: string
+  labelId: string
   dueDate: string
   completed: boolean
 }
@@ -27,11 +27,11 @@ type Props = {
 }
 
 export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Props) {
-  const { categories } = useCategories()
+  const { labels } = useLabels()
 
   const [title, setTitle] = useState(initialValues?.title ?? "")
   const [priority, setPriority] = useState<Priority | undefined>(initialValues?.priority)
-  const [categoryId, setCategoryId] = useState(initialValues?.categoryId ?? "")
+  const [labelId, setLabelId] = useState(initialValues?.labelId ?? "")
   const [dueDate, setDueDate] = useState(initialValues?.dueDate ?? "")
   const [completed, setCompleted] = useState(initialValues?.completed ?? false)
   const [errors, setErrors] = useState<{ title?: string }>({})
@@ -45,7 +45,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
     if (mode === "edit" && initialValues && !initialized.current) {
       setTitle(initialValues.title)
       setPriority(initialValues.priority)
-      setCategoryId(initialValues.categoryId)
+      setLabelId(initialValues.labelId)
       setDueDate(initialValues.dueDate ?? "")
       setCompleted(initialValues.completed)
       initialized.current = true
@@ -55,7 +55,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
   const hasChanges = mode === "edit" && initialValues
     ? title !== initialValues.title ||
     priority !== initialValues.priority ||
-    categoryId !== initialValues.categoryId ||
+    labelId !== initialValues.labelId ||
     dueDate !== initialValues.dueDate ||
     completed !== initialValues.completed
     : true
@@ -69,7 +69,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
 
   const handleSave = () => {
     if (!validate()) return
-    onSave({ title: title.trim(), priority, categoryId, dueDate, completed })
+    onSave({ title: title.trim(), priority, labelId, dueDate, completed })
   }
 
   return (
@@ -138,20 +138,20 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
         )}
       </div>
 
-      {/* カテゴリ（任意） */}
+      {/* ラベル（任意） */}
       <div className="w-full sm:w-1/2">
         <label className="block text-sm font-semibold text-gray-600 mb-2">
-          カテゴリ
+          ラベル
           <span className="text-xs text-gray-400 font-normal ml-2">任意</span>
         </label>
-        <CategorySelector categories={categories} value={categoryId} onChange={setCategoryId} />
-        {categoryId && (
+        <LabelSelector labels={labels} value={labelId} onChange={setLabelId} />
+        {labelId && (
           <button
             type="button"
-            onClick={() => setCategoryId("")}
+            onClick={() => setLabelId("")}
             className="mt-1 text-xs text-gray-400 hover:text-gray-600 underline"
           >
-            カテゴリを削除
+            ラベルを削除
           </button>
         )}
       </div>

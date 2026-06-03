@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation"
 import { Search, X, SlidersHorizontal } from "lucide-react"
 import { PageSize, Priority, PRIORITY_LABELS, PRIORITY_ORDER } from "../../types"
 import { useTasks } from "../../hooks/useTasks"
-import { useCategories } from "../../hooks/useCategories"
+import { useLabels } from "../../hooks/useLabels"
 import { useToast } from "../../hooks/useToast"
 import { TaskCard } from "../../components/TaskCard"
 import { Pagination } from "../../components/Pagination"
@@ -16,7 +16,7 @@ import { truncate } from "../../utils/string"
 
 // ─── 型 ────────────────────────────────────────────────
 type Status = "incomplete" | "completed"
-type SortKey = "category" | "priority" | "status" | "dueDate"
+type SortKey = "label" | "priority" | "status" | "dueDate"
 type SortOrder = "asc" | "desc"
 
 // ─── 定数 ──────────────────────────────────────────────
@@ -26,8 +26,8 @@ const STATUS_LABELS: Record<Status, string> = {
 }
 
 const SORT_OPTIONS: { label: string; key: SortKey; order: SortOrder }[] = [
-  { label: "カテゴリ：昇順", key: "category", order: "asc" },
-  { label: "カテゴリ：降順", key: "category", order: "desc" },
+  { label: "ラベル：昇順", key: "label", order: "asc" },
+  { label: "ラベル：降順", key: "label", order: "desc" },
   { label: "優先度：高い順", key: "priority", order: "asc" },
   { label: "優先度：低い順", key: "priority", order: "desc" },
   { label: "未完了を先に", key: "status", order: "asc" },
@@ -47,17 +47,17 @@ function TasksPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { tasks, toggleCompleted } = useTasks()
-  const { categories } = useCategories()
+  const { labels } = useLabels()
   const { toast, showToast } = useToast()
 
-  const urlCategory = searchParams.get("category") || ""
+  const urlLabel = searchParams.get("label") || ""
   const urlPriority = searchParams.get("priority") as Priority | null
   const urlStatus = searchParams.get("status") as Status | null
 
   // ─── state ───────────────────────────────────────────
   const [searchText, setSearchText] = useState("")
   const [selectedCategories, setSelectedCategories] = useState<string[]>(
-    urlCategory ? [urlCategory] : []
+    urlLabel ? [urlLabel] : []
   )
   const [selectedPriorities, setSelectedPriorities] = useState<Priority[]>(
     urlPriority ? [urlPriority] : []
@@ -73,8 +73,8 @@ function TasksPageContent() {
 
   // ─── effect ──────────────────────────────────────────
   useEffect(() => {
-    setSelectedCategories(urlCategory ? [urlCategory] : [])
-  }, [urlCategory])
+    setSelectedCategories(urlLabel ? [urlLabel] : [])
+  }, [urlLabel])
 
   useEffect(() => {
     setSelectedPriorities(urlPriority ? [urlPriority] : [])
@@ -140,11 +140,11 @@ function TasksPageContent() {
   }
 
   const handleFilterApply = (
-    cats: string[],
+    labels: string[],
     priorities: Priority[],
     statuses: Status[]
   ) => {
-    setSelectedCategories(cats)
+    setSelectedCategories(labels)
     setSelectedPriorities(priorities)
     setSelectedStatuses(statuses)
     setFilterPopupOpen(false)
@@ -155,8 +155,8 @@ function TasksPageContent() {
   const filteredAndSortedTasks = useMemo(() => {
     const filtered = tasks.filter(task => {
       const matchesSearch = task.title.toLowerCase().includes(searchText.toLowerCase())
-      const matchesCategory =
-        selectedCategories.length === 0 || selectedCategories.includes(task.categoryId)
+      const matchesLabel =
+        selectedCategories.length === 0 || selectedCategories.includes(task.labelId)
       const matchesPriority =
         selectedPriorities.length === 0 ||
         (task.priority !== undefined && selectedPriorities.includes(task.priority))
@@ -164,16 +164,16 @@ function TasksPageContent() {
         selectedStatuses.length === 0 ||
         (selectedStatuses.includes("incomplete") && !task.completed) ||
         (selectedStatuses.includes("completed") && task.completed)
-      return matchesSearch && matchesCategory && matchesPriority && matchesStatus
+      return matchesSearch && matchesLabel && matchesPriority && matchesStatus
     })
 
     if (!sortKey) return filtered
 
     return [...filtered].sort((a, b) => {
       let result = 0
-      if (sortKey === "category") {
-        const orderA = categories.find(c => c.id === a.categoryId)?.order ?? 0
-        const orderB = categories.find(c => c.id === b.categoryId)?.order ?? 0
+      if (sortKey === "label") {
+        const orderA = labels.find(l => l.id === a.labelId)?.order ?? 0
+        const orderB = labels.find(l => l.id === b.labelId)?.order ?? 0
         result = orderA - orderB
       } else if (sortKey === "priority") {
         const orderA = a.priority ? PRIORITY_ORDER[a.priority] : 99
@@ -189,7 +189,7 @@ function TasksPageContent() {
       }
       return sortOrder === "asc" ? result : -result
     })
-  }, [searchText, selectedCategories, selectedPriorities, selectedStatuses, sortKey, sortOrder, tasks, categories])
+  }, [searchText, selectedCategories, selectedPriorities, selectedStatuses, sortKey, sortOrder, tasks, labels])
 
   // ─── ページネーション ──────────────────────────────────
   const totalPages = Math.max(1, Math.ceil(filteredAndSortedTasks.length / pageSize))
@@ -199,7 +199,7 @@ function TasksPageContent() {
     safePage * pageSize
   )
 
-  const getCategory = (categoryId: string) => categories.find(c => c.id === categoryId)
+  const getLabel = (labelId: string) => labels.find(label => label.id === labelId)
   const currentSortValue = sortKey ? `${sortKey}_${sortOrder}` : ""
 
   return (
@@ -250,7 +250,7 @@ function TasksPageContent() {
               </button>
               {filterPopupOpen && (
                 <TaskFilterPopup
-                  categories={categories}
+                  labels={labels}
                   selectedCategories={selectedCategories}
                   selectedPriorities={selectedPriorities}
                   selectedStatuses={selectedStatuses}
@@ -264,16 +264,16 @@ function TasksPageContent() {
 
         {hasActiveFilters && (
           <div className="flex gap-2 flex-wrap items-center pt-3">
-            {selectedCategories.map(catId => {
-              const cat = categories.find(c => c.id === catId)
-              if (!cat) return null
+            {selectedCategories.map(labelId => {
+              const label = labels.find(l => l.id === labelId)
+              if (!label) return null
               return (
                 <button
-                  key={catId}
-                  onClick={() => { setSelectedCategories(prev => prev.filter(id => id !== catId)); resetPage() }}
+                  key={labelId}
+                  onClick={() => { setSelectedCategories(prev => prev.filter(id => id !== labelId)); resetPage() }}
                   className="flex items-center gap-1 px-3 py-1 bg-brand-100 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
                 >
-                  {truncate(cat.name, 6)}
+                  {truncate(label.name, 6)}
                   <X size={11} />
                 </button>
               )
@@ -327,7 +327,7 @@ function TasksPageContent() {
                 <TaskCard
                   key={task.id}
                   task={task}
-                  category={getCategory(task.categoryId)}
+                  label={getLabel(task.labelId)}
                   onToggle={toggleCompleted}
                 />
               ))}

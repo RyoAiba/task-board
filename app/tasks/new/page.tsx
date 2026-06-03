@@ -13,8 +13,8 @@ export default function NewTaskPage() {
     <PageContainer className="max-w-2xl">
       <TaskForm
         mode="create"
-        onSave={({ title, priority, categoryId, dueDate }) => {
-          addTask(title, priority, categoryId, dueDate)
+        onSave={({ title, priority, labelId, dueDate }) => {
+          addTask(title, priority, labelId, dueDate)
           router.push("/tasks?toast=created")
         }}
         onCancel={() => router.push("/tasks")}

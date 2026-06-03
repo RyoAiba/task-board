@@ -12,14 +12,14 @@ const notoSansJP = Noto_Sans_JP({
 export const metadata: Metadata = {
   metadataBase: new URL("https://task-app-ts.vercel.app"),
   title: "TaskBoard",
-  description: "カテゴリや優先度でタスクを整理する個人向けタスク管理アプリ",
+  description: "ラベルや優先度でタスクを整理する個人向けタスク管理アプリ",
   icons: {
     icon: "/icon.svg",
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
     title: "TaskBoard",
-    description: "カテゴリや優先度でタスクを整理する個人向けタスク管理アプリ",
+    description: "ラベルや優先度でタスクを整理する個人向けタスク管理アプリ",
     url: "https://task-app-ts.vercel.app",
     siteName: "TaskBoard",
     type: "website",

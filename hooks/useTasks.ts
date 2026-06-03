@@ -61,12 +61,12 @@ export function useTasks() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
   }, [tasks])
 
-  const addTask = (title: string, priority: Priority | undefined, categoryId: string, dueDate?: string): Task => {
+  const addTask = (title: string, priority: Priority | undefined, labelId: string, dueDate?: string): Task => {
     const newTask: Task = {
       id: `task_${Date.now()}`,
       title,
       priority,
-      categoryId,
+      labelId,
       completed: false,
       createdAt: new Date().toISOString(),
       dueDate,

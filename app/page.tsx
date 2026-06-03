@@ -2,8 +2,8 @@
 
 import Link from "next/link"
 import { useTasks } from "../hooks/useTasks"
-import { useCategories } from "../hooks/useCategories"
-import { Priority, PRIORITY_LABELS, CATEGORY_BORDER_CLASSES } from "../types"
+import { useLabels } from "../hooks/useLabels"
+import { Priority, PRIORITY_LABELS } from "../types"
 import { PieChart, Pie, Cell, Label } from "recharts"
 import { PageContainer } from "../components/PageContainer"
 import { WeeklyCalendar } from "../components/WeeklyCalendar"
@@ -15,7 +15,7 @@ const PRIORITY_ITEMS = (Object.entries(PRIORITY_LABELS) as [Priority, string][])
 
 export default function Dashboard() {
   const { tasks, toggleCompleted } = useTasks()
-  const { categories } = useCategories()
+  const { labels } = useLabels()
 
   // ─── 今日 / 期限切れ ─────────────────────────────────
   const todayStr = new Date().toISOString().split("T")[0]
@@ -34,9 +34,9 @@ export default function Dashboard() {
   const completionRate =
     tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0
 
-  const categoryTaskCounts = categories.map(cat => ({
-    ...cat,
-    count: tasks.filter(t => t.categoryId === cat.id).length,
+  const labelTaskCounts = labels.map(label => ({
+    ...label,
+    count: tasks.filter(t => t.labelId === label.id).length,
   }))
 
   const incompleteByCounts: Record<string, number> = {
@@ -45,8 +45,8 @@ export default function Dashboard() {
     low: incompleteTasks.filter(t => t.priority === "low").length,
   }
 
-  const getCategory = (categoryId: string) =>
-    categories.find(c => c.id === categoryId)
+  const getLabel = (labelId: string) =>
+    labels.find(label => label.id === labelId)
 
   const chartData = [
     { name: "完了", value: completedCount },
@@ -75,7 +75,7 @@ export default function Dashboard() {
                 <TaskCard
                   key={task.id}
                   task={task}
-                  category={getCategory(task.categoryId)}
+                  label={getLabel(task.labelId)}
                   onToggle={toggleCompleted}
                 />
               ))}
@@ -107,7 +107,7 @@ export default function Dashboard() {
                 <TaskCard
                   key={task.id}
                   task={task}
-                  category={getCategory(task.categoryId)}
+                  label={getLabel(task.labelId)}
                   onToggle={toggleCompleted}
                 />
               ))}
@@ -154,18 +154,18 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* カテゴリ別タスク数 */}
+      {/* ラベル別タスク数 */}
       <section className="mb-8">
-        <h2 className="text-section-title mb-4">カテゴリ別タスク数</h2>
+        <h2 className="text-section-title mb-4">ラベル別タスク数</h2>
         <div className="grid grid-cols-3 gap-4">
-          {categoryTaskCounts.map(cat => (
+          {labelTaskCounts.map(label => (
             <Link
-              key={cat.id}
-              href={`/tasks?category=${cat.id}`}
-              className={`p-4 bg-white border border-gray-200 border-l-4 ${CATEGORY_BORDER_CLASSES[cat.color]} rounded-lg hover:shadow-md transition-shadow`}
+              key={label.id}
+              href={`/tasks?label=${label.id}`}
+              className={`p-4 bg-white border border-gray-200 border-l-4 rounded-lg hover:shadow-md transition-shadow`}
             >
-              <p className="text-body font-semibold">{cat.name}</p>
-              <p className="text-2xl font-bold mt-2 text-brand-500">{cat.count}</p>
+              <p className="text-body font-semibold">{label.name}</p>
+              <p className="text-2xl font-bold mt-2 text-brand-500">{label.count}</p>
             </Link>
           ))}
         </div>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { Category, Priority } from "../types"
+import { Label, Priority } from "../types"
 
 type Status = "incomplete" | "completed"
 
@@ -17,16 +17,16 @@ const PRIORITY_OPTIONS: { label: string; value: Priority }[] = [
 ]
 
 type Props = {
-  categories: Category[]
+  labels: Label[]
   selectedCategories: string[]
   selectedPriorities: Priority[]
   selectedStatuses: Status[]
-  onApply: (categories: string[], priorities: Priority[], statuses: Status[]) => void
+  onApply: (labels: string[], priorities: Priority[], statuses: Status[]) => void
   onClose: () => void
 }
 
 export function TaskFilterPopup({
-  categories,
+  labels,
   selectedCategories,
   selectedPriorities,
   selectedStatuses,
@@ -75,18 +75,18 @@ export function TaskFilterPopup({
         className="absolute right-0 top-full mt-2 z-50 w-72 bg-white rounded-xl shadow-xl border border-gray-200 p-4"
       >
         <div className="mb-4">
-          <p className="text-xs font-semibold text-gray-400 mb-2">カテゴリ</p>
+          <p className="text-xs font-semibold text-gray-400 mb-2">ラベル</p>
           <div className="flex flex-wrap gap-2">
-            {categories.map(cat => (
+            {labels.map(label => (
               <button
-                key={cat.id}
-                onClick={() => toggle(setPendingCategories, cat.id)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingCategories.includes(cat.id)
+                key={label.id}
+                onClick={() => toggle(setPendingCategories, label.id)}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingCategories.includes(label.id)
                   ? "bg-brand-100 border border-brand-500 text-brand-500"
                   : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >
-                {cat.name}
+                {label.name}
               </button>
             ))}
           </div>

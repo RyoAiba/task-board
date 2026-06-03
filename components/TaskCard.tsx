@@ -3,18 +3,18 @@
 import { memo } from "react"
 import Link from "next/link"
 import { CheckCircle, Circle } from "lucide-react"
-import { Task, Category } from "../types"
+import { Task, Label } from "../types"
 import { getPriorityCircleClass } from "../utils/priority"
 import { getDueDateBadge } from "../utils/dueDate"
-import { CategoryBadge } from "./CategoryBadge"
+import { LabelBadge } from "./LabelBadge"
 
 type TaskCardProps = {
   task: Task
-  category: Category | undefined
+  label: Label | undefined
   onToggle: (id: string) => void
 }
 
-export const TaskCard = memo(function TaskCard({ task, category, onToggle }: TaskCardProps) {
+export const TaskCard = memo(function TaskCard({ task, label, onToggle }: TaskCardProps) {
   const dueBadge = getDueDateBadge(task.dueDate, task.completed)
 
   return (
@@ -41,7 +41,7 @@ export const TaskCard = memo(function TaskCard({ task, category, onToggle }: Tas
             {task.title}
           </span>
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-            {category && <CategoryBadge category={category} />}
+            {label && <LabelBadge label={label} />}
             {dueBadge && (
               <span className={`text-[11px] px-1.5 py-0.5 rounded whitespace-nowrap ${dueBadge.className}`}>
                 {dueBadge.label}

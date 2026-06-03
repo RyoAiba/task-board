@@ -1,14 +1,14 @@
 import { useEffect, useRef } from "react"
 import { X } from "lucide-react"
-import { Category, CATEGORY_DOT_CLASSES } from "../types"
+import { Label, CATEGORY_DOT_CLASSES } from "../types"
 
-export function CategoryModal({
-  categories,
+export function LabelModal({
+  labels,
   selected,
   onToggle,
   onClose,
 }: {
-  categories: Category[]
+  labels: Label[]
   selected: string[]
   onToggle: (id: string) => void
   onClose: () => void
@@ -28,25 +28,25 @@ export function CategoryModal({
   return (
     <div ref={ref} className="absolute top-full left-0 mt-1 z-50 bg-white rounded-xl shadow-xl w-64 p-4">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-sm font-semibold text-gray-600">カテゴリを選択</h2>
+        <h2 className="text-sm font-semibold text-gray-600">ラベルを選択</h2>
         <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
           <X size={16} />
         </button>
       </div>
       <div className="space-y-2 max-h-60 overflow-y-auto">
-        {categories.map(cat => {
-          const checked = selected.includes(cat.id)
+        {labels.map(label => {
+          const checked = selected.includes(label.id)
           return (
-            <label key={cat.id} className="flex items-center gap-2.5 cursor-pointer py-1">
+            <label key={label.id} className="flex items-center gap-2.5 cursor-pointer py-1">
               <input
                 type="checkbox"
                 checked={checked}
-                onChange={() => onToggle(cat.id)}
+                onChange={() => onToggle(label.id)}
                 className="w-4 h-4 accent-primary cursor-pointer"
               />
-              <div className={`w-2 h-2 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[cat.color]}`} />
+              <div className={`w-2 h-2 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[label.color]}`} />
               <span className={`text-sm ${checked ? " font-medium" : "text-gray-400"}`}>
-                {cat.name}
+                {label.name}
               </span>
             </label>
           )
