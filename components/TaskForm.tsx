@@ -12,7 +12,7 @@ const TITLE_MAX_LENGTH = 50
 
 type FormValues = {
   title: string
-  priority: Priority
+  priority?: Priority
   categoryId: string
   dueDate: string
   completed: boolean
@@ -30,7 +30,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
   const { categories } = useCategories()
 
   const [title, setTitle] = useState(initialValues?.title ?? "")
-  const [priority, setPriority] = useState<Priority>(initialValues?.priority ?? "medium")
+  const [priority, setPriority] = useState<Priority | undefined>(initialValues?.priority)
   const [categoryId, setCategoryId] = useState(initialValues?.categoryId ?? "")
   const [dueDate, setDueDate] = useState(initialValues?.dueDate ?? "")
   const [completed, setCompleted] = useState(initialValues?.completed ?? false)
@@ -120,10 +120,22 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
         )}
       </div>
 
-      {/* 優先度 */}
+      {/* 優先度（任意） */}
       <div>
-        <label className="block text-sm font-semibold text-gray-600 mb-2">優先度</label>
+        <label className="block text-sm font-semibold text-gray-600 mb-2">
+          優先度
+          <span className="text-xs text-gray-400 font-normal ml-2">任意</span>
+        </label>
         <PrioritySelector value={priority} onChange={setPriority} />
+        {priority && (
+          <button
+            type="button"
+            onClick={() => setPriority(undefined)}
+            className="mt-1 text-xs text-gray-400 hover:text-gray-600 underline"
+          >
+            優先度を削除
+          </button>
+        )}
       </div>
 
       {/* カテゴリ（任意） */}

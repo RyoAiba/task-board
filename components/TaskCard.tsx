@@ -3,8 +3,8 @@
 import { memo } from "react"
 import Link from "next/link"
 import { CheckCircle, Circle } from "lucide-react"
-import { Task, PRIORITY_LABELS, Category } from "../types"
-import { getPriorityBadgeClass } from "../utils/priority"
+import { Task, Category } from "../types"
+import { getPriorityCircleClass } from "../utils/priority"
 import { getDueDateBadge } from "../utils/dueDate"
 import { CategoryBadge } from "./CategoryBadge"
 
@@ -22,10 +22,7 @@ export const TaskCard = memo(function TaskCard({ task, category, onToggle }: Tas
       <div className="flex items-center gap-3">
         <button
           onClick={() => onToggle(task.id)}
-          className={`relative z-10 flex-shrink-0 flex items-center rounded-full transition-colors cursor-pointer ${task.completed
-            ? "bg-brand-200 text-brand-500 hover:bg-green-200"
-            : "text-gray-200"
-            }`}
+          className={`relative z-10 flex-shrink-0 flex items-center rounded-full transition-colors cursor-pointer ${getPriorityCircleClass(task.priority, task.completed)}`}
         >
           {task.completed ? (
             <CheckCircle size={20} />
@@ -45,9 +42,6 @@ export const TaskCard = memo(function TaskCard({ task, category, onToggle }: Tas
           </span>
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
             {category && <CategoryBadge category={category} />}
-            <span className={`text-[11px] px-1.5 py-0.5 rounded whitespace-nowrap ${getPriorityBadgeClass(task.priority)}`}>
-              {PRIORITY_LABELS[task.priority]}
-            </span>
             {dueBadge && (
               <span className={`text-[11px] px-1.5 py-0.5 rounded whitespace-nowrap ${dueBadge.className}`}>
                 {dueBadge.label}

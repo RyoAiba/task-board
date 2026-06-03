@@ -12,7 +12,7 @@ export type Category = {
 export type Task = {
   id: string
   title: string
-  priority: Priority
+  priority?: Priority
   categoryId: string
   completed: boolean
   createdAt: string
@@ -49,7 +49,7 @@ export const PRIORITY_ORDER: Record<Priority, number> = {
 export const PRIORITY_DOT_CLASSES: Record<Priority, string> = {
   high: "bg-red-500",
   medium: "bg-amber-500",
-  low: "bg-green-500",
+  low: "bg-blue-500",
 }
 
 export const CATEGORY_DOT_CLASSES: Record<CategoryColor, string> = {
@@ -76,5 +76,5 @@ export const CATEGORY_BORDER_CLASSES: Record<CategoryColor, string> = {
 export const PRIORITY_BORDER_CLASSES: Record<Priority, string> = {
   high: "border-l-red-500",
   medium: "border-l-amber-500",
-  low: "border-l-green-500",
+  low: "border-l-blue-500",
 }

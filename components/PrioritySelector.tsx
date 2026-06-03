@@ -1,14 +1,14 @@
 import { Priority, PRIORITY_LABELS, PRIORITY_DOT_CLASSES } from "../types"
 
 type Props = {
-  value: Priority
-  onChange: (priority: Priority) => void
+  value: Priority | undefined
+  onChange: (priority: Priority | undefined) => void
 }
 
 const PRIORITY_ACTIVE_CLASSES: Record<Priority, string> = {
   high: "border-red-500 bg-red-50 text-red-600",
   medium: "border-amber-500 bg-amber-50 text-amber-600",
-  low: "border-green-500 bg-green-50 text-green-600",
+  low: "border-blue-500 bg-blue-50 text-blue-600",  // ← 変更
 }
 
 export function PrioritySelector({ value, onChange }: Props) {
@@ -18,7 +18,7 @@ export function PrioritySelector({ value, onChange }: Props) {
         <button
           key={p}
           type="button"
-          onClick={() => onChange(p)}
+          onClick={() => onChange(value === p ? undefined : p)}
           className={`flex-1 py-2 px-3 rounded-lg border text-sm font-semibold transition-colors ${value === p
             ? PRIORITY_ACTIVE_CLASSES[p]
             : "border-gray-200 bg-white text-gray-400 hover:border-gray-300"

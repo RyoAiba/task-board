@@ -158,7 +158,8 @@ function TasksPageContent() {
       const matchesCategory =
         selectedCategories.length === 0 || selectedCategories.includes(task.categoryId)
       const matchesPriority =
-        selectedPriorities.length === 0 || selectedPriorities.includes(task.priority)
+        selectedPriorities.length === 0 ||
+        (task.priority !== undefined && selectedPriorities.includes(task.priority))
       const matchesStatus =
         selectedStatuses.length === 0 ||
         (selectedStatuses.includes("incomplete") && !task.completed) ||
@@ -175,7 +176,9 @@ function TasksPageContent() {
         const orderB = categories.find(c => c.id === b.categoryId)?.order ?? 0
         result = orderA - orderB
       } else if (sortKey === "priority") {
-        result = PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]
+        const orderA = a.priority ? PRIORITY_ORDER[a.priority] : 99
+        const orderB = b.priority ? PRIORITY_ORDER[b.priority] : 99
+        result = orderA - orderB
       } else if (sortKey === "status") {
         result = Number(a.completed) - Number(b.completed)
       } else if (sortKey === "dueDate") {
