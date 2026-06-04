@@ -19,7 +19,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
 
   return (
     <>
-      <aside className={`hidden md:flex flex-col h-screen fixed left-0 top-0 bg-white border-r border-gray-200 z-100 overflow-hidden transition-[width] duration-300 ease-in-out ${collapsed ? "w-13" : "w-64"
+      <aside className={`hidden md:flex flex-col h-screen fixed left-0 top-0 bg-white border-r border-gray-200 overflow-hidden transition-[width] duration-300 ease-in-out ${collapsed ? "w-13" : "w-64"
         }`}>
         <div className={`flex p-2 ${collapsed ? "justify-center" : "justify-end"}`}>
           <button

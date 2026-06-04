@@ -1,13 +1,16 @@
 "use client"
 
+import { useCallback } from "react"
 import Link from "next/link"
 import { useTasks } from "../hooks/useTasks"
 import { useLabels } from "../hooks/useLabels"
+import { useToast } from "../hooks/useToast"
 import { Priority, PRIORITY_LABELS } from "../types"
 import { PieChart, Pie, Cell, Label } from "recharts"
 import { PageContainer } from "../components/PageContainer"
 import { WeeklyCalendar } from "../components/WeeklyCalendar"
 import { TaskCard } from "../components/TaskCard"
+import { ToastStack } from "../components/Toast"
 
 const PRIORITY_ITEMS = (Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(
   ([key, label]) => ({ href: `/tasks?priority=${key}`, label, key })
@@ -16,6 +19,7 @@ const PRIORITY_ITEMS = (Object.entries(PRIORITY_LABELS) as [Priority, string][])
 export default function Dashboard() {
   const { tasks, toggleCompleted } = useTasks()
   const { labels } = useLabels()
+  const { toasts, showToast, dismiss } = useToast()
 
   // ─── 今日 / 期限切れ ─────────────────────────────────
   const todayStr = new Date().toISOString().split("T")[0]
@@ -28,7 +32,7 @@ export default function Dashboard() {
     !t.completed && t.dueDate && t.dueDate < todayStr
   )
 
-  // ─── 統計（あとで圧縮） ──────────────────────────────
+  // ─── 統計 ────────────────────────────────────────────
   const incompleteTasks = tasks.filter(t => !t.completed)
   const completedCount = tasks.filter(t => t.completed).length
   const completionRate =
@@ -53,6 +57,16 @@ export default function Dashboard() {
     { name: "未完了", value: tasks.length - completedCount },
   ]
 
+  // ─── ハンドラ ─────────────────────────────────────────
+  const handleToggle = useCallback((id: string) => {
+    const task = tasks.find(t => t.id === id)
+    if (!task) return
+    toggleCompleted(id)
+    if (!task.completed) {
+      showToast("タスクを完了しました", () => toggleCompleted(id))
+    }
+  }, [tasks, toggleCompleted, showToast])
+
   return (
     <PageContainer>
 
@@ -76,7 +90,7 @@ export default function Dashboard() {
                   key={task.id}
                   task={task}
                   label={getLabel(task.labelId)}
-                  onToggle={toggleCompleted}
+                  onToggle={handleToggle}
                 />
               ))}
             </div>
@@ -108,7 +122,7 @@ export default function Dashboard() {
                   key={task.id}
                   task={task}
                   label={getLabel(task.labelId)}
-                  onToggle={toggleCompleted}
+                  onToggle={handleToggle}
                 />
               ))}
             </div>
@@ -120,7 +134,7 @@ export default function Dashboard() {
         </section>
       </div>
 
-      {/* 完了率（仮配置：あとで圧縮） */}
+      {/* 完了率 */}
       <section className="mb-8">
         <h2 className="text-section-title mb-4">完了率</h2>
         <div className="bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-center justify-center">
@@ -162,7 +176,7 @@ export default function Dashboard() {
             <Link
               key={label.id}
               href={`/tasks?label=${label.id}`}
-              className={`p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow`}
+              className="p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
             >
               <p className="text-body font-semibold">{label.name}</p>
               <p className="text-2xl font-bold mt-2 text-brand-500">{label.count}</p>
@@ -179,7 +193,7 @@ export default function Dashboard() {
             <Link
               key={key}
               href={href}
-              className={`p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow`}
+              className="p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
             >
               <p className="text-body font-semibold">{label}</p>
               <p className="text-2xl font-bold mt-2 text-brand-500">
@@ -189,6 +203,8 @@ export default function Dashboard() {
           ))}
         </div>
       </section>
+
+      <ToastStack toasts={toasts} onDismiss={dismiss} />
     </PageContainer>
   )
 }

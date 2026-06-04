@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo, useEffect, Suspense } from "react"
+import { useState, useMemo, useEffect, useCallback, useRef, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import { useSearchParams } from "next/navigation"
 import { Search, X, SlidersHorizontal } from "lucide-react"
@@ -11,7 +11,7 @@ import { useToast } from "../../hooks/useToast"
 import { TaskCard } from "../../components/TaskCard"
 import { Pagination } from "../../components/Pagination"
 import { TaskFilterPopup } from "../../components/TaskFilterPopup"
-import { Toast } from "../../components/Toast"
+import { ToastStack } from "../../components/Toast"
 import { truncate } from "../../utils/string"
 
 // ─── 型 ────────────────────────────────────────────────
@@ -48,7 +48,8 @@ function TasksPageContent() {
   const searchParams = useSearchParams()
   const { tasks, toggleCompleted } = useTasks()
   const { labels } = useLabels()
-  const { toast, showToast } = useToast()
+  const { toasts, showToast, dismiss } = useToast()
+  const processedToastRef = useRef<string | null>(null)
 
   const urlLabel = searchParams.get("label") || ""
   const urlPriority = searchParams.get("priority") as Priority | null
@@ -90,7 +91,8 @@ function TasksPageContent() {
 
   useEffect(() => {
     const toastParam = searchParams.get("toast")
-    if (toastParam && TOAST_MESSAGES[toastParam]) {
+    if (toastParam && TOAST_MESSAGES[toastParam] && processedToastRef.current !== toastParam) {
+      processedToastRef.current = toastParam
       showToast(TOAST_MESSAGES[toastParam])
       const params = new URLSearchParams(searchParams.toString())
       params.delete("toast")
@@ -101,6 +103,15 @@ function TasksPageContent() {
 
   // ─── ハンドラ ─────────────────────────────────────────
   const resetPage = () => setCurrentPage(1)
+
+  const handleToggle = useCallback((id: string) => {
+    const task = tasks.find(t => t.id === id)
+    if (!task) return
+    toggleCompleted(id)
+    if (!task.completed) {
+      showToast("タスクを完了しました", () => toggleCompleted(id))
+    }
+  }, [tasks, toggleCompleted, showToast])
 
   const activeFilterCount =
     selectedLabels.length + selectedPriorities.length + selectedStatuses.length
@@ -235,8 +246,8 @@ function TasksPageContent() {
               <button
                 onClick={() => setFilterPopupOpen(prev => !prev)}
                 className={`h-full flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeFilterCount > 0
-                    ? "border-brand-500 bg-brand-100 text-brand-500"
-                    : "border-gray-300 text-gray-400 hover:border-gray-400"
+                  ? "border-brand-500 bg-brand-100 text-brand-500"
+                  : "border-gray-300 text-gray-400 hover:border-gray-400"
                   }`}
               >
                 <SlidersHorizontal size={16} />
@@ -327,7 +338,7 @@ function TasksPageContent() {
                   key={task.id}
                   task={task}
                   label={getLabel(task.labelId)}
-                  onToggle={toggleCompleted}
+                  onToggle={handleToggle}
                 />
               ))}
             </div>
@@ -347,7 +358,7 @@ function TasksPageContent() {
         )}
       </div>
 
-      <Toast message={toast.message} visible={toast.visible} />
+      <ToastStack toasts={toasts} onDismiss={dismiss} />
     </div>
   )
 }
