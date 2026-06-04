@@ -14,25 +14,25 @@ export function ToastStack({ toasts, onDismiss }: Props) {
       {toasts.map(toast => (
         <div
           key={toast.id}
-          className="flex items-center gap-3 bg-gray-800 text-white text-xs font-light px-4 py-3 rounded-lg shadow-lg animate-slide-up"
+          className="flex items-center gap-2 bg-gray-800 text-white text-sm font-light p-2 py-1.5 rounded-lg shadow-lg animate-slide-up"
         >
-          <span className="whitespace-nowrap">{toast.message}</span>
+          <span className="whitespace-nowrap pl-2">{toast.message}</span>
           {toast.onUndo && (
             <button
               onClick={() => {
                 toast.onUndo?.()
                 onDismiss(toast.id)
               }}
-              className="text-brand-200 font-normal hover:opacity-80 transition-opacity whitespace-nowrap"
+              className="text-brand-200 text-sm hover:opacity-80 transition-opacity whitespace-nowrap p-2"
             >
               元に戻す
             </button>
           )}
           <button
             onClick={() => onDismiss(toast.id)}
-            className="text-gray-400 hover:text-white transition-colors"
+            className="text-gray-400 hover:text-white transition-colors p-2"
           >
-            <X size={14} />
+            <X size={20} />
           </button>
         </div>
       ))}

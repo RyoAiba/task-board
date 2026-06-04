@@ -4,6 +4,10 @@
   --background: #ffffff;
 }
 
+* {
+  touch-action: manipulation;
+}
+
 @theme inline {
   --color-background: var(--background);
   --font-sans: var(--font-noto-sans-jp), var(--font-geist-sans);
