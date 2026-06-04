@@ -20,6 +20,11 @@
   --color-priority-high: #FB7185;
   --color-priority-medium: #FAC571;
   --color-priority-low: #6BB6FA;
+
+  /* Due date */
+  --color-due-overdue: #E05A67;
+  --color-due-today: #E09A3A;
+  --color-due-soon: #4AAF9A;
 }
 
 body {

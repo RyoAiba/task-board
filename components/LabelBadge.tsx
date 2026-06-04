@@ -11,7 +11,7 @@ type Props = {
 export function LabelBadge({ label }: Props) {
   return (
     <span className="inline-flex items-center gap-1 text-xs text-gray-400">
-      <Tag size={12} />
+      <Tag size={11} className="translate-y-px flex-shrink-0" />
       {truncate(label.name, NAME_MAX_LENGTH)}
     </span>
   )

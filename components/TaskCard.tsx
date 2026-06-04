@@ -2,10 +2,10 @@
 
 import { memo } from "react"
 import Link from "next/link"
-import { CheckCircle, Circle } from "lucide-react"
+import { CheckCircle, Circle, CalendarDays } from "lucide-react"
 import { Task, Label } from "../types"
 import { getPriorityCircleClass } from "../utils/priority"
-import { getDueDateBadge } from "../utils/dueDate"
+import { getDueDateInfo } from "../utils/dueDate"
 import { LabelBadge } from "./LabelBadge"
 
 type TaskCardProps = {
@@ -15,21 +15,21 @@ type TaskCardProps = {
 }
 
 export const TaskCard = memo(function TaskCard({ task, label, onToggle }: TaskCardProps) {
-  const dueBadge = getDueDateBadge(task.dueDate, task.completed)
+  const dueDateInfo = getDueDateInfo(task.dueDate, task.completed)
 
   return (
     <div className="group/card relative px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
       <div className="flex items-center gap-3">
         <button
           onClick={() => onToggle(task.id)}
-          className={`relative z-10 flex-shrink-0 flex items-center rounded-full transition-colors cursor-pointer ${getPriorityCircleClass(task.priority, task.completed)}`}
+          className={`group/toggle relative z-10 flex-shrink-0 flex items-center rounded-full transition-colors cursor-pointer ${getPriorityCircleClass(task.priority)}`}
         >
           {task.completed ? (
             <CheckCircle size={22} />
           ) : (
             <>
-              <Circle size={22} className="block group-hover/card:hidden" />
-              <CheckCircle size={22} className="hidden group-hover/card:block" />
+              <Circle size={22} className="block group-hover/toggle:hidden" />
+              <CheckCircle size={22} className="hidden group-hover/toggle:block" />
             </>
           )}
         </button>
@@ -40,10 +40,11 @@ export const TaskCard = memo(function TaskCard({ task, label, onToggle }: TaskCa
           <span className={`block text-sm truncate ${task.completed ? "text-gray-400 line-through" : ""}`}>
             {task.title}
           </span>
-          <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-            {dueBadge && (
-              <span className={`text-[11px] px-1.5 py-0.5 rounded whitespace-nowrap ${dueBadge.className}`}>
-                {dueBadge.label}
+          <div className="flex items-center gap-2 mt-1 flex-wrap">
+            {dueDateInfo && (
+              <span className={`inline-flex items-center gap-0.5 text-xs ${dueDateInfo.className}`}>
+                <CalendarDays size={11} />
+                {dueDateInfo.label}
               </span>
             )}
             {label && <LabelBadge label={label} />}
