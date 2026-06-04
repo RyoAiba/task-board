@@ -25,11 +25,11 @@ export const TaskCard = memo(function TaskCard({ task, label, onToggle }: TaskCa
           className={`relative z-10 flex-shrink-0 flex items-center rounded-full transition-colors cursor-pointer ${getPriorityCircleClass(task.priority, task.completed)}`}
         >
           {task.completed ? (
-            <CheckCircle size={20} />
+            <CheckCircle size={22} />
           ) : (
             <>
-              <Circle size={20} className="block group-hover/card:hidden" />
-              <CheckCircle size={20} className="hidden group-hover/card:block" />
+              <Circle size={22} className="block group-hover/card:hidden" />
+              <CheckCircle size={22} className="hidden group-hover/card:block" />
             </>
           )}
         </button>
@@ -41,12 +41,12 @@ export const TaskCard = memo(function TaskCard({ task, label, onToggle }: TaskCa
             {task.title}
           </span>
           <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-            {label && <LabelBadge label={label} />}
             {dueBadge && (
               <span className={`text-[11px] px-1.5 py-0.5 rounded whitespace-nowrap ${dueBadge.className}`}>
                 {dueBadge.label}
               </span>
             )}
+            {label && <LabelBadge label={label} />}
           </div>
         </div>
       </div>

@@ -18,22 +18,22 @@ const PRIORITY_OPTIONS: { label: string; value: Priority }[] = [
 
 type Props = {
   labels: Label[]
-  selectedCategories: string[]
+  selectedLabels: string[]
   selectedPriorities: Priority[]
   selectedStatuses: Status[]
-  onApply: (labels: string[], priorities: Priority[], statuses: Status[]) => void
+  onApply: (labelIds: string[], priorities: Priority[], statuses: Status[]) => void
   onClose: () => void
 }
 
 export function TaskFilterPopup({
   labels,
-  selectedCategories,
+  selectedLabels,
   selectedPriorities,
   selectedStatuses,
   onApply,
   onClose,
 }: Props) {
-  const [pendingCategories, setPendingCategories] = useState(selectedCategories)
+  const [pendingLabels, setPendingLabels] = useState(selectedLabels)
   const [pendingPriorities, setPendingPriorities] = useState(selectedPriorities)
   const [pendingStatuses, setPendingStatuses] = useState(selectedStatuses)
   const ref = useRef<HTMLDivElement>(null)
@@ -58,13 +58,13 @@ export function TaskFilterPopup({
   }
 
   const handleReset = () => {
-    setPendingCategories([])
+    setPendingLabels([])
     setPendingPriorities([])
     setPendingStatuses([])
   }
 
   const handleApply = () => {
-    onApply(pendingCategories, pendingPriorities, pendingStatuses)
+    onApply(pendingLabels, pendingPriorities, pendingStatuses)
   }
 
   return (
@@ -80,10 +80,10 @@ export function TaskFilterPopup({
             {labels.map(label => (
               <button
                 key={label.id}
-                onClick={() => toggle(setPendingCategories, label.id)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingCategories.includes(label.id)
-                  ? "bg-brand-100 border border-brand-500 text-brand-500"
-                  : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                onClick={() => toggle(setPendingLabels, label.id)}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingLabels.includes(label.id)
+                    ? "bg-brand-100 border border-brand-500 text-brand-500"
+                    : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >
                 {label.name}
@@ -100,8 +100,8 @@ export function TaskFilterPopup({
                 key={value}
                 onClick={() => toggle(setPendingPriorities, value)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingPriorities.includes(value)
-                  ? "bg-brand-100 border border-brand-500 text-brand-500"
-                  : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                    ? "bg-brand-100 border border-brand-500 text-brand-500"
+                    : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >
                 {label}
@@ -118,8 +118,8 @@ export function TaskFilterPopup({
                 key={value}
                 onClick={() => toggle(setPendingStatuses, value)}
                 className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingStatuses.includes(value)
-                  ? "bg-brand-100 border border-brand-500 text-brand-500"
-                  : "bg-gray-100 text-gray-400 hover:bg-gray-200"
+                    ? "bg-brand-100 border border-brand-500 text-brand-500"
+                    : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   }`}
               >
                 {label}

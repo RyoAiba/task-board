@@ -56,7 +56,7 @@ function TasksPageContent() {
 
   // ─── state ───────────────────────────────────────────
   const [searchText, setSearchText] = useState("")
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+  const [selectedLabels, setSelectedLabels] = useState<string[]>(
     urlLabel ? [urlLabel] : []
   )
   const [selectedPriorities, setSelectedPriorities] = useState<Priority[]>(
@@ -73,7 +73,7 @@ function TasksPageContent() {
 
   // ─── effect ──────────────────────────────────────────
   useEffect(() => {
-    setSelectedCategories(urlLabel ? [urlLabel] : [])
+    setSelectedLabels(urlLabel ? [urlLabel] : [])
   }, [urlLabel])
 
   useEffect(() => {
@@ -103,12 +103,12 @@ function TasksPageContent() {
   const resetPage = () => setCurrentPage(1)
 
   const activeFilterCount =
-    selectedCategories.length + selectedPriorities.length + selectedStatuses.length
+    selectedLabels.length + selectedPriorities.length + selectedStatuses.length
 
   const hasActiveFilters = searchText !== "" || activeFilterCount > 0
 
   const resetAllFilters = () => {
-    setSelectedCategories([])
+    setSelectedLabels([])
     setSelectedPriorities([])
     setSelectedStatuses([])
     setSearchText("")
@@ -140,11 +140,11 @@ function TasksPageContent() {
   }
 
   const handleFilterApply = (
-    labels: string[],
+    labelIds: string[],
     priorities: Priority[],
     statuses: Status[]
   ) => {
-    setSelectedCategories(labels)
+    setSelectedLabels(labelIds)
     setSelectedPriorities(priorities)
     setSelectedStatuses(statuses)
     setFilterPopupOpen(false)
@@ -156,7 +156,7 @@ function TasksPageContent() {
     const filtered = tasks.filter(task => {
       const matchesSearch = task.title.toLowerCase().includes(searchText.toLowerCase())
       const matchesLabel =
-        selectedCategories.length === 0 || selectedCategories.includes(task.labelId)
+        selectedLabels.length === 0 || selectedLabels.includes(task.labelId)
       const matchesPriority =
         selectedPriorities.length === 0 ||
         (task.priority !== undefined && selectedPriorities.includes(task.priority))
@@ -189,7 +189,7 @@ function TasksPageContent() {
       }
       return sortOrder === "asc" ? result : -result
     })
-  }, [searchText, selectedCategories, selectedPriorities, selectedStatuses, sortKey, sortOrder, tasks, labels])
+  }, [searchText, selectedLabels, selectedPriorities, selectedStatuses, sortKey, sortOrder, tasks, labels])
 
   // ─── ページネーション ──────────────────────────────────
   const totalPages = Math.max(1, Math.ceil(filteredAndSortedTasks.length / pageSize))
@@ -207,7 +207,6 @@ function TasksPageContent() {
 
       {/* ヘッダー（スクロールしない） */}
       <div className="flex-shrink-0 p-4 md:p-5 bg-white border-b border-gray-200">
-
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative md:flex-1">
             <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
@@ -236,8 +235,8 @@ function TasksPageContent() {
               <button
                 onClick={() => setFilterPopupOpen(prev => !prev)}
                 className={`h-full flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeFilterCount > 0
-                  ? "border-brand-500 bg-brand-100 text-brand-500"
-                  : "border-gray-300 text-gray-400 hover:border-gray-400"
+                    ? "border-brand-500 bg-brand-100 text-brand-500"
+                    : "border-gray-300 text-gray-400 hover:border-gray-400"
                   }`}
               >
                 <SlidersHorizontal size={16} />
@@ -251,7 +250,7 @@ function TasksPageContent() {
               {filterPopupOpen && (
                 <TaskFilterPopup
                   labels={labels}
-                  selectedCategories={selectedCategories}
+                  selectedLabels={selectedLabels}
                   selectedPriorities={selectedPriorities}
                   selectedStatuses={selectedStatuses}
                   onApply={handleFilterApply}
@@ -264,13 +263,13 @@ function TasksPageContent() {
 
         {hasActiveFilters && (
           <div className="flex gap-2 flex-wrap items-center pt-3">
-            {selectedCategories.map(labelId => {
+            {selectedLabels.map(labelId => {
               const label = labels.find(l => l.id === labelId)
               if (!label) return null
               return (
                 <button
                   key={labelId}
-                  onClick={() => { setSelectedCategories(prev => prev.filter(id => id !== labelId)); resetPage() }}
+                  onClick={() => { setSelectedLabels(prev => prev.filter(id => id !== labelId)); resetPage() }}
                   className="flex items-center gap-1 px-3 py-1 bg-brand-100 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
                 >
                   {truncate(label.name, 6)}

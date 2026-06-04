@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import { X } from "lucide-react"
-import { Label, CATEGORY_DOT_CLASSES } from "../types"
+import { Label } from "../types"
 
 export function LabelModal({
   labels,
@@ -44,7 +44,7 @@ export function LabelModal({
                 onChange={() => onToggle(label.id)}
                 className="w-4 h-4 accent-primary cursor-pointer"
               />
-              <div className={`w-2 h-2 rounded-full flex-shrink-0 ${CATEGORY_DOT_CLASSES[label.color]}`} />
+              <div className="w-2 h-2 rounded-full flex-shrink-0 bg-gray-400" />
               <span className={`text-sm ${checked ? " font-medium" : "text-gray-400"}`}>
                 {label.name}
               </span>

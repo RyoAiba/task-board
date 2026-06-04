@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { Home, Plus, Settings, LogOut, List, PanelLeft } from "lucide-react"
+import { Home, Plus, Settings, LogOut, List, PanelLeft, Tag } from "lucide-react"
 import { LogoutModal } from "./LogoutModal"
 import { useLabels } from "../hooks/useLabels"
 
@@ -53,8 +53,8 @@ export function Sidebar({ collapsed, onToggle }: Props) {
                     href={`/tasks?label=${label.id}`}
                     className="flex items-center gap-2 py-2 pl-12 pr-2 text-sm text-gray-600 hover:text-brand-500 transition-colors"
                   >
-                    <div className="w-2 h-2 rounded-full flex-shrink-0" />
-                    <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>{label.name}</span>
+                    <Tag size={14} className="flex-shrink-0 text-gray-400" />
+                    <span className="whitespace-nowrap">{label.name}</span>
                   </Link>
                 ))}
               </div>

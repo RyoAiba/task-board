@@ -6,38 +6,30 @@ import { useLabels } from "../../hooks/useLabels"
 import { useSettings } from "../../hooks/useSettings"
 import { Pencil } from "lucide-react"
 
-const CATEGORY_NAME_MAX = 10
+const LABEL_NAME_MAX = 10
 
 export default function SettingsPage() {
   const { labels, updateLabel } = useLabels()
   const { settings, updateSetting, isLoaded } = useSettings()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editingName, setEditingName] = useState("")
-  const [editingError, setEditingError] = useState("")
   const [tooltipOpen, setTooltipOpen] = useState(false)
 
   const startEdit = (id: string, name: string) => {
     setEditingId(id)
     setEditingName(name)
-    setEditingError("")
   }
 
   const cancelEdit = () => {
     setEditingId(null)
     setEditingName("")
-    setEditingError("")
   }
 
   const saveEdit = () => {
-    if (!editingId) return
-    if (!editingName.trim()) {
-      setEditingError("ラベル名を入力してください")
-      return
-    }
+    if (!editingId || !editingName.trim()) return
     updateLabel(editingId, editingName.trim())
     setEditingId(null)
     setEditingName("")
-    setEditingError("")
   }
 
   return (
@@ -48,33 +40,33 @@ export default function SettingsPage() {
         <h2 className="text-section-title mb-4">ラベル名を編集</h2>
         <div className="space-y-2 sm:max-w-md">
           {labels.map(label => (
-            <div key={label.id} className="flex items-center gap-3 p-4 bg-white border border-gray-200 rounded-lg sm:max-w-md">
+            <div key={label.id} className="flex items-center gap-3 p-4 bg-white rounded-lg hover:bg-gray-50">
               {editingId === label.id ? (
                 <>
-                  <div className="w-3 h-3 rounded-full flex-shrink-0" />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <input
                         type="text"
                         value={editingName}
-                        onChange={e => {
-                          setEditingName(e.target.value)
-                          setEditingError("")
-                        }}
+                        onChange={e => setEditingName(e.target.value)}
                         onKeyDown={e => e.key === "Enter" && saveEdit()}
-                        maxLength={CATEGORY_NAME_MAX}
+                        maxLength={LABEL_NAME_MAX}
                         className="w-full sm:w-48 px-3 py-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm"
                         autoFocus
                       />
-                      <span className={`text-xs whitespace-nowrap ${editingName.length >= CATEGORY_NAME_MAX ? "text-red-500" : "text-gray-400"}`}>
-                        {editingName.length} / {CATEGORY_NAME_MAX}
+                      <span className={`text-xs whitespace-nowrap ${editingName.length >= LABEL_NAME_MAX ? "text-red-500" : "text-gray-400"}`}>
+                        {editingName.length} / {LABEL_NAME_MAX}
                       </span>
                     </div>
-                    {editingError && (
-                      <p className="text-red-500 text-xs mt-1">{editingError}</p>
+                    {!editingName.trim() && (
+                      <p className="text-red-500 text-xs mt-1">ラベル名を入力してください</p>
                     )}
                   </div>
-                  <button onClick={saveEdit} className="text-sm font-semibold text-brand-500 hover:opacity-70 transition-opacity whitespace-nowrap">
+                  <button
+                    onClick={saveEdit}
+                    disabled={!editingName.trim()}
+                    className="text-sm font-semibold text-brand-500 hover:opacity-70 transition-opacity whitespace-nowrap disabled:opacity-30"
+                  >
                     保存
                   </button>
                   <button onClick={cancelEdit} className="text-sm font-semibold text-gray-400 hover:opacity-70 transition-opacity whitespace-nowrap">
@@ -83,8 +75,7 @@ export default function SettingsPage() {
                 </>
               ) : (
                 <>
-                  <div className="w-3 h-3 rounded-full flex-shrink-0" />
-                  <span className="flex-1  font-medium">{label.name}</span>
+                  <span className="flex-1 text-sm text-gray-600">{label.name}</span>
                   <button onClick={() => startEdit(label.id, label.name)} className="text-gray-400 hover:text-brand-500 transition-colors">
                     <Pencil size={18} />
                   </button>
@@ -99,26 +90,27 @@ export default function SettingsPage() {
       {isLoaded && (
         <section>
           <h2 className="text-section-title mb-4">カレンダー表示</h2>
-          <div className="bg-white border border-gray-200 rounded-lg p-4 sm:max-w-md">
+          <div className="bg-white rounded-lg p-4 sm:max-w-md">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5">
-                <p className="text-sm font-medium ">完了済みタスクを表示</p>
-                <div className="relative group">
+                <p className="text-sm text-gray-600">完了済みタスクを表示</p>
+                <div className="relative">
                   <button
                     type="button"
                     onClick={() => setTooltipOpen(prev => !prev)}
                     className={`w-4 h-4 rounded-full border text-xs flex items-center justify-center leading-none transition-colors ${tooltipOpen
-                      ? "bg-brand-500 border-brand-500 text-white"
-                      : "border-gray-400 text-gray-400 hover:bg-brand-500 hover:border-brand-500 hover:text-white"
+                        ? "bg-brand-500 border-brand-500 text-white"
+                        : "border-gray-400 text-gray-400 hover:bg-brand-500 hover:border-brand-500 hover:text-white"
                       }`}
                   >
                     ?
                   </button>
-                  <div className={`absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg whitespace-normal z-10 transition-opacity ${tooltipOpen ? "opacity-100" : "opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto"
-                    }`}>
-                    オフにすると完了済みタスクをカレンダーに表示しません
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800" />
-                  </div>
+                  {tooltipOpen && (
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg z-10">
+                      オフにすると完了済みタスクをカレンダーに表示しません
+                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800" />
+                    </div>
+                  )}
                 </div>
               </div>
               <button

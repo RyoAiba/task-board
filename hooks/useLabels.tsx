@@ -1,36 +1,30 @@
 "use client"
 
 import { createContext, useContext, useReducer, useEffect, useRef, useState, ReactNode } from "react"
-import { Label, LabelColor, DEFAULT_LABELS } from "../types"
+import { Label, DEFAULT_LABELS } from "../types"
 
 const STORAGE_KEY = "task-board-labels"
-const COLOR_CYCLE: LabelColor[] = ["blue", "violet", "slate", "pink", "teal", "cyan"]
-
-function migrateLabel(c: Label, index: number): Label {
-  if (c.color) return c
-  return { ...c, color: COLOR_CYCLE[index % COLOR_CYCLE.length] }
-}
 
 // ─── アクション定義 ───────────────────────────────────────
 type LabelAction =
   | { type: "INIT"; payload: Label[] }
-  | { type: "ADD_CATEGORY"; payload: Label }
-  | { type: "UPDATE_CATEGORY"; payload: { id: string; name: string } }
-  | { type: "DELETE_CATEGORY"; payload: string }
+  | { type: "ADD_LABEL"; payload: Label }
+  | { type: "UPDATE_LABEL"; payload: { id: string; name: string } }
+  | { type: "DELETE_LABEL"; payload: string }
 
 // ─── reducer ─────────────────────────────────────────────
 function labelReducer(state: Label[], action: LabelAction): Label[] {
   switch (action.type) {
     case "INIT":
       return action.payload
-    case "ADD_CATEGORY":
+    case "ADD_LABEL":
       return [...state, action.payload]
-    case "UPDATE_CATEGORY":
-      return state.map(c =>
-        c.id === action.payload.id ? { ...c, name: action.payload.name } : c
+    case "UPDATE_LABEL":
+      return state.map(label =>
+        label.id === action.payload.id ? { ...label, name: action.payload.name } : label
       )
-    case "DELETE_CATEGORY":
-      return state.filter(c => c.id !== action.payload)
+    case "DELETE_LABEL":
+      return state.filter(label => label.id !== action.payload)
   }
 }
 
@@ -52,13 +46,10 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) {
-      try {
-        dispatch({ type: "INIT", payload: JSON.parse(stored).map((c: Label, i: number) => migrateLabel(c, i)) })
-      } catch {
-        dispatch({ type: "INIT", payload: DEFAULT_LABELS })
-      }
-    } else {
+    try {
+      const parsed = stored ? JSON.parse(stored) : DEFAULT_LABELS
+      dispatch({ type: "INIT", payload: parsed })
+    } catch {
       dispatch({ type: "INIT", payload: DEFAULT_LABELS })
     }
     setIsLoaded(true)
@@ -76,19 +67,18 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
     const newLabel: Label = {
       id: `cat_${Date.now()}`,
       name,
-      order: Math.max(0, ...labels.map(c => c.order)) + 1,
-      color: COLOR_CYCLE[labels.length % COLOR_CYCLE.length],
+      order: Math.max(0, ...labels.map(l => l.order)) + 1,
     }
-    dispatch({ type: "ADD_CATEGORY", payload: newLabel })
+    dispatch({ type: "ADD_LABEL", payload: newLabel })
     return newLabel
   }
 
   const updateLabel = (id: string, name: string): void => {
-    dispatch({ type: "UPDATE_CATEGORY", payload: { id, name } })
+    dispatch({ type: "UPDATE_LABEL", payload: { id, name } })
   }
 
   const deleteLabel = (id: string): void => {
-    dispatch({ type: "DELETE_CATEGORY", payload: id })
+    dispatch({ type: "DELETE_LABEL", payload: id })
   }
 
   return (

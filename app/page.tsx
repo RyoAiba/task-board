@@ -162,7 +162,7 @@ export default function Dashboard() {
             <Link
               key={label.id}
               href={`/tasks?label=${label.id}`}
-              className={`p-4 bg-white border border-gray-200 border-l-4 rounded-lg hover:shadow-md transition-shadow`}
+              className={`p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow`}
             >
               <p className="text-body font-semibold">{label.name}</p>
               <p className="text-2xl font-bold mt-2 text-brand-500">{label.count}</p>
