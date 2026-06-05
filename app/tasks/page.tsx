@@ -1,25 +1,24 @@
 "use client"
 
-import { useState, useMemo, useEffect, useCallback, useRef, Suspense } from "react"
-import { useRouter } from "next/navigation"
-import { useSearchParams } from "next/navigation"
-import { Search, X, SlidersHorizontal } from "lucide-react"
-import { PageSize, Priority, PRIORITY_LABELS, PRIORITY_ORDER } from "../../types"
-import { useTasks } from "../../hooks/useTasks"
+import { useState, useMemo, useEffect, useRef, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Search, SlidersHorizontal, X } from "lucide-react"
+
+import { type PageSize, type Priority, PRIORITY_LABELS, PRIORITY_ORDER } from "../../types"
 import { useLabels } from "../../hooks/useLabels"
+import { useTasks } from "../../hooks/useTasks"
+import { useTaskToggle } from "../../hooks/useTaskToggle"
 import { useToast } from "../../hooks/useToast"
-import { TaskCard } from "../../components/TaskCard"
 import { Pagination } from "../../components/Pagination"
+import { TaskCard } from "../../components/TaskCard"
 import { TaskFilterPopup } from "../../components/TaskFilterPopup"
 import { ToastStack } from "../../components/Toast"
 import { truncate } from "../../utils/string"
 
-// ─── 型 ────────────────────────────────────────────────
 type Status = "incomplete" | "completed"
 type SortKey = "label" | "priority" | "status" | "dueDate"
 type SortOrder = "asc" | "desc"
 
-// ─── 定数 ──────────────────────────────────────────────
 const STATUS_LABELS: Record<Status, string> = {
   incomplete: "未完了",
   completed: "完了済",
@@ -42,20 +41,19 @@ const TOAST_MESSAGES: Record<string, string> = {
   deleted: "タスクを削除しました",
 }
 
-// ─── メイン ─────────────────────────────────────────────
 function TasksPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { tasks, toggleCompleted } = useTasks()
   const { labels } = useLabels()
   const { toasts, showToast, dismiss } = useToast()
+  const { handleToggle } = useTaskToggle(tasks, toggleCompleted, showToast)
   const processedToastRef = useRef<string | null>(null)
 
   const urlLabel = searchParams.get("label") || ""
   const urlPriority = searchParams.get("priority") as Priority | null
   const urlStatus = searchParams.get("status") as Status | null
 
-  // ─── state ───────────────────────────────────────────
   const [searchText, setSearchText] = useState("")
   const [selectedLabels, setSelectedLabels] = useState<string[]>(
     urlLabel ? [urlLabel] : []
@@ -72,7 +70,6 @@ function TasksPageContent() {
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState<PageSize>(10)
 
-  // ─── effect ──────────────────────────────────────────
   useEffect(() => {
     setSelectedLabels(urlLabel ? [urlLabel] : [])
   }, [urlLabel])
@@ -101,17 +98,7 @@ function TasksPageContent() {
     }
   }, [searchParams, router, showToast])
 
-  // ─── ハンドラ ─────────────────────────────────────────
   const resetPage = () => setCurrentPage(1)
-
-  const handleToggle = useCallback((id: string) => {
-    const task = tasks.find(t => t.id === id)
-    if (!task) return
-    toggleCompleted(id)
-    if (!task.completed) {
-      showToast("タスクを完了しました", () => toggleCompleted(id))
-    }
-  }, [tasks, toggleCompleted, showToast])
 
   const activeFilterCount =
     selectedLabels.length + selectedPriorities.length + selectedStatuses.length
@@ -162,7 +149,7 @@ function TasksPageContent() {
     resetPage()
   }
 
-  // ─── フィルタ・ソート ──────────────────────────────────
+  // フィルタ・ソート
   const filteredAndSortedTasks = useMemo(() => {
     const filtered = tasks.filter(task => {
       const matchesSearch = task.title.toLowerCase().includes(searchText.toLowerCase())
@@ -202,7 +189,7 @@ function TasksPageContent() {
     })
   }, [searchText, selectedLabels, selectedPriorities, selectedStatuses, sortKey, sortOrder, tasks, labels])
 
-  // ─── ページネーション ──────────────────────────────────
+  // ページネーション
   const totalPages = Math.max(1, Math.ceil(filteredAndSortedTasks.length / pageSize))
   const safePage = Math.min(currentPage, totalPages)
   const pagedTasks = filteredAndSortedTasks.slice(

@@ -1,16 +1,17 @@
 "use client"
 
-import { useCallback } from "react"
 import Link from "next/link"
-import { useTasks } from "../hooks/useTasks"
-import { useLabels } from "../hooks/useLabels"
-import { useToast } from "../hooks/useToast"
-import { Priority, PRIORITY_LABELS } from "../types"
 import { PieChart, Pie, Cell, Label } from "recharts"
+
+import { type Priority, PRIORITY_LABELS } from "../types"
+import { useLabels } from "../hooks/useLabels"
+import { useTasks } from "../hooks/useTasks"
+import { useTaskToggle } from "../hooks/useTaskToggle"
+import { useToast } from "../hooks/useToast"
 import { PageContainer } from "../components/PageContainer"
-import { WeeklyCalendar } from "../components/WeeklyCalendar"
 import { TaskCard } from "../components/TaskCard"
 import { ToastStack } from "../components/Toast"
+import { WeeklyCalendar } from "../components/WeeklyCalendar"
 
 const PRIORITY_ITEMS = (Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(
   ([key, label]) => ({ href: `/tasks?priority=${key}`, label, key })
@@ -20,8 +21,9 @@ export default function Dashboard() {
   const { tasks, toggleCompleted } = useTasks()
   const { labels } = useLabels()
   const { toasts, showToast, dismiss } = useToast()
+  const { handleToggle } = useTaskToggle(tasks, toggleCompleted, showToast)
 
-  // ─── 今日 / 期限切れ ─────────────────────────────────
+  // 今日 / 期限切れ
   const todayStr = new Date().toISOString().split("T")[0]
 
   const allTodayTasks = tasks.filter(t => t.dueDate === todayStr)
@@ -32,7 +34,7 @@ export default function Dashboard() {
     !t.completed && t.dueDate && t.dueDate < todayStr
   )
 
-  // ─── 統計 ────────────────────────────────────────────
+  // 統計
   const incompleteTasks = tasks.filter(t => !t.completed)
   const completedCount = tasks.filter(t => t.completed).length
   const completionRate =
@@ -56,16 +58,6 @@ export default function Dashboard() {
     { name: "完了", value: completedCount },
     { name: "未完了", value: tasks.length - completedCount },
   ]
-
-  // ─── ハンドラ ─────────────────────────────────────────
-  const handleToggle = useCallback((id: string) => {
-    const task = tasks.find(t => t.id === id)
-    if (!task) return
-    toggleCompleted(id)
-    if (!task.completed) {
-      showToast("タスクを完了しました", () => toggleCompleted(id))
-    }
-  }, [tasks, toggleCompleted, showToast])
 
   return (
     <PageContainer>
