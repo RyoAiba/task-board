@@ -68,7 +68,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
       isInitialized.current = true
       return
     }
-    // localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
   }, [tasks])
 
   const addTask = (title: string, priority: Priority | undefined, labelId: string, dueDate?: string): Task => {
