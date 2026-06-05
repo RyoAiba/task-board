@@ -141,9 +141,7 @@ export default function Dashboard() {
               dataKey="value"
               startAngle={90}
               endAngle={-270}
-              animationBegin={0}
-              animationDuration={800}
-              isAnimationActive={true}
+              isAnimationActive={false}
             >
               <Cell className="fill-brand-500" />
               <Cell className="fill-gray-200" />
