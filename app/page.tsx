@@ -1,5 +1,6 @@
 "use client"
 
+import { useMemo } from "react"
 import Link from "next/link"
 import { PieChart, Pie, Cell, Label } from "recharts"
 
@@ -24,40 +25,46 @@ export default function Dashboard() {
   const { handleToggle } = useTaskToggle(tasks, toggleCompleted, showToast)
 
   // 今日 / 期限切れ
-  const todayStr = new Date().toISOString().split("T")[0]
-
-  const allTodayTasks = tasks.filter(t => t.dueDate === todayStr)
-  const todayIncomplete = allTodayTasks.filter(t => !t.completed)
-  const allTodayCompleted = allTodayTasks.length > 0 && todayIncomplete.length === 0
-
-  const overdueTasks = tasks.filter(t =>
-    !t.completed && t.dueDate && t.dueDate < todayStr
-  )
+  const { todayIncomplete, allTodayCompleted, overdueTasks } = useMemo(() => {
+    const todayStr = new Date().toISOString().split("T")[0]
+    const allTodayTasks = tasks.filter(t => t.dueDate === todayStr)
+    const todayIncomplete = allTodayTasks.filter(t => !t.completed)
+    const allTodayCompleted = allTodayTasks.length > 0 && todayIncomplete.length === 0
+    const overdueTasks = tasks.filter(t =>
+      !t.completed && t.dueDate && t.dueDate < todayStr
+    )
+    return { todayIncomplete, allTodayCompleted, overdueTasks }
+  }, [tasks])
 
   // 統計
-  const incompleteTasks = tasks.filter(t => !t.completed)
-  const completedCount = tasks.filter(t => t.completed).length
-  const completionRate =
-    tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0
+  const { completedCount, completionRate, chartData, incompleteByCounts } = useMemo(() => {
+    const completedCount = tasks.filter(t => t.completed).length
+    const completionRate =
+      tasks.length > 0 ? Math.round((completedCount / tasks.length) * 100) : 0
+    const chartData = [
+      { name: "完了", value: completedCount },
+      { name: "未完了", value: tasks.length - completedCount },
+    ]
+    const incompleteTasks = tasks.filter(t => !t.completed)
+    const incompleteByCounts: Record<string, number> = {
+      high: incompleteTasks.filter(t => t.priority === "high").length,
+      medium: incompleteTasks.filter(t => t.priority === "medium").length,
+      low: incompleteTasks.filter(t => t.priority === "low").length,
+    }
+    return { completedCount, completionRate, chartData, incompleteByCounts }
+  }, [tasks])
 
-  const labelTaskCounts = labels.map(label => ({
-    ...label,
-    count: tasks.filter(t => t.labelId === label.id).length,
-  }))
-
-  const incompleteByCounts: Record<string, number> = {
-    high: incompleteTasks.filter(t => t.priority === "high").length,
-    medium: incompleteTasks.filter(t => t.priority === "medium").length,
-    low: incompleteTasks.filter(t => t.priority === "low").length,
-  }
+  // ラベル別タスク数
+  const labelTaskCounts = useMemo(() =>
+    labels.map(label => ({
+      ...label,
+      count: tasks.filter(t => t.labelId === label.id).length,
+    })),
+    [labels, tasks]
+  )
 
   const getLabel = (labelId: string) =>
     labels.find(label => label.id === labelId)
-
-  const chartData = [
-    { name: "完了", value: completedCount },
-    { name: "未完了", value: tasks.length - completedCount },
-  ]
 
   return (
     <PageContainer>

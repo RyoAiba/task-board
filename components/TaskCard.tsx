@@ -24,8 +24,7 @@ export const TaskCard = memo(function TaskCard({ task, label, onToggle }: TaskCa
       <div className="flex items-center gap-3">
         <button
           onClick={() => onToggle(task.id)}
-          className="group/toggle relative z-10 flex-shrink-0 flex items-center justify-center p-1 -m-1 cursor-pointer"
-          style={{ background: "none" }}
+          className="group/toggle relative z-10 flex-shrink-0 flex items-center justify-center p-1 -m-1 cursor-pointer bg-transparent"
         >
           <span className={`flex items-center rounded-full transition-colors ${priorityClass}`}>
             {task.completed ? (

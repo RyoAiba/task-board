@@ -39,7 +39,6 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
   const [showDatePicker, setShowDatePicker] = useState(false)
 
   const initialized = useRef(false)
-  const dateInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (mode === "edit" && initialValues && !initialized.current) {
@@ -164,7 +163,6 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
         </label>
         <div className="relative">
           <input
-            ref={dateInputRef}
             type="text"
             value={dueDate ? new Date(dueDate + "T00:00:00").toLocaleDateString("ja-JP") : ""}
             readOnly
