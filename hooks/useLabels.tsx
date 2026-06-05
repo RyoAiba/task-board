@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useEffect, useReducer, useRef, useState, type ReactNode } from "react"
+import { createContext, useContext, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from "react"
 
 import { type Label, DEFAULT_LABELS } from "../types"
 
@@ -67,6 +67,12 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer)
   }, [labels])
 
+  // orderでソートして提供
+  const sortedLabels = useMemo(
+    () => [...labels].sort((a, b) => a.order - b.order),
+    [labels]
+  )
+
   const addLabel = (name: string): Label => {
     const newLabel: Label = {
       id: `cat_${Date.now()}`,
@@ -86,7 +92,7 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <LabelsContext.Provider value={{ labels, isLoaded, addLabel, updateLabel, deleteLabel }}>
+    <LabelsContext.Provider value={{ labels: sortedLabels, isLoaded, addLabel, updateLabel, deleteLabel }}>
       {children}
     </LabelsContext.Provider>
   )

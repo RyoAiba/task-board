@@ -6,7 +6,9 @@ import { EyeOff, Home, List, LogOut, MoreVertical, PanelLeft, Plus, Settings, Ta
 
 import { useLabels } from "../hooks/useLabels"
 import { useTasks } from "../hooks/useTasks"
+import { useToast } from "../hooks/useToast"
 import { LogoutModal } from "./LogoutModal"
+import { ToastStack } from "./Toast"
 
 type Props = {
   collapsed: boolean
@@ -19,8 +21,15 @@ export function Sidebar({ collapsed, onToggle }: Props) {
   const [showLogoutModal, setShowLogoutModal] = useState(false)
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
-  const { labels, isLoaded } = useLabels()
+  const { labels, isLoaded, updateLabel } = useLabels()
   const { tasks } = useTasks()
+  const { toasts, showToast, dismiss } = useToast()
+
+  // 表示するラベル（非表示ではないもの）
+  const visibleLabels = useMemo(() =>
+    labels.filter(label => !label.hidden),
+    [labels]
+  )
 
   // ラベルごとの未完了タスク数
   const incompleteCountByLabel = useMemo(() => {
@@ -46,8 +55,9 @@ export function Sidebar({ collapsed, onToggle }: Props) {
   }, [openMenuId])
 
   const handleHide = (labelId: string) => {
-    console.log("非表示にする:", labelId)
+    updateLabel(labelId, { hidden: true })
     setOpenMenuId(null)
+    showToast("ラベルを非表示にしました", () => updateLabel(labelId, { hidden: false }))
   }
 
   return (
@@ -78,7 +88,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
               <List size={20} className="flex-shrink-0" />
               <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>タスク一覧</span>
             </Link>
-            {!collapsed && isLoaded && labels.map(label => {
+            {!collapsed && isLoaded && visibleLabels.map(label => {
               const count = incompleteCountByLabel[label.id] ?? 0
               const menuOpen = openMenuId === label.id
               return (
@@ -148,6 +158,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
       </aside>
 
       <LogoutModal isOpen={showLogoutModal} onClose={() => setShowLogoutModal(false)} />
+      <ToastStack toasts={toasts} onDismiss={dismiss} />
     </>
   )
 }
