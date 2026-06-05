@@ -196,7 +196,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      {/* <ToastStack toasts={toasts} onDismiss={dismiss} /> */}
+      <ToastStack toasts={toasts} onDismiss={dismiss} />
     </PageContainer>
   )
 }

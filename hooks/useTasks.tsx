@@ -1,12 +1,11 @@
 "use client"
 
-import { useReducer, useEffect, useRef } from "react"
+import { createContext, useContext, useReducer, useEffect, useRef, useState, ReactNode } from "react"
 import { Task, Priority } from "../types"
 import { generateDummyTasks } from "../lib/dummyData"
 
 const STORAGE_KEY = "task-board-tasks"
 
-// ─── アクション定義 ───────────────────────────────────────
 type TaskAction =
   | { type: "INIT"; payload: Task[] }
   | { type: "ADD_TASK"; payload: Task }
@@ -14,7 +13,6 @@ type TaskAction =
   | { type: "DELETE_TASK"; payload: string }
   | { type: "TOGGLE_COMPLETED"; payload: string }
 
-// ─── reducer ─────────────────────────────────────────────
 function taskReducer(state: Task[], action: TaskAction): Task[] {
   switch (action.type) {
     case "INIT":
@@ -34,10 +32,22 @@ function taskReducer(state: Task[], action: TaskAction): Task[] {
   }
 }
 
-// ─── フック ───────────────────────────────────────────────
-export function useTasks() {
+type TasksContextType = {
+  tasks: Task[]
+  isLoaded: boolean
+  addTask: (title: string, priority: Priority | undefined, labelId: string, dueDate?: string) => Task
+  updateTask: (id: string, updates: Partial<Omit<Task, "id" | "createdAt">>) => void
+  deleteTask: (id: string) => void
+  toggleCompleted: (id: string) => void
+  getTaskById: (id: string) => Task | undefined
+}
+
+const TasksContext = createContext<TasksContextType | null>(null)
+
+export function TasksProvider({ children }: { children: ReactNode }) {
   const [tasks, dispatch] = useReducer(taskReducer, [])
   const isInitialized = useRef(false)
+  const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
@@ -50,10 +60,10 @@ export function useTasks() {
     } else {
       dispatch({ type: "INIT", payload: generateDummyTasks() })
     }
+    setIsLoaded(true)
   }, [])
 
   useEffect(() => {
-    // 初回レンダリング（tasks=[]）では保存しない
     if (!isInitialized.current) {
       isInitialized.current = true
       return
@@ -91,5 +101,16 @@ export function useTasks() {
     return tasks.find(t => t.id === id)
   }
 
-  return { tasks, addTask, updateTask, deleteTask, toggleCompleted, getTaskById }
+  return (
+    <TasksContext.Provider value= {{ tasks, isLoaded, addTask, updateTask, deleteTask, toggleCompleted, getTaskById }
+}>
+  { children }
+  </TasksContext.Provider>
+  )
+}
+
+export function useTasks() {
+  const ctx = useContext(TasksContext)
+  if (!ctx) throw new Error("TasksProvider未設定")
+  return ctx
 }
