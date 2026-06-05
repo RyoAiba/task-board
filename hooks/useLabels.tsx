@@ -1,18 +1,18 @@
 "use client"
 
-import { createContext, useContext, useReducer, useEffect, useRef, useState, ReactNode } from "react"
-import { Label, DEFAULT_LABELS } from "../types"
+import { createContext, useContext, useEffect, useReducer, useRef, useState, type ReactNode } from "react"
+
+import { type Label, DEFAULT_LABELS } from "../types"
 
 const STORAGE_KEY = "task-board-labels"
+const SAVE_DEBOUNCE_MS = 300
 
-// ─── アクション定義 ───────────────────────────────────────
 type LabelAction =
   | { type: "INIT"; payload: Label[] }
   | { type: "ADD_LABEL"; payload: Label }
   | { type: "UPDATE_LABEL"; payload: { id: string; name: string } }
   | { type: "DELETE_LABEL"; payload: string }
 
-// ─── reducer ─────────────────────────────────────────────
 function labelReducer(state: Label[], action: LabelAction): Label[] {
   switch (action.type) {
     case "INIT":
@@ -28,7 +28,6 @@ function labelReducer(state: Label[], action: LabelAction): Label[] {
   }
 }
 
-// ─── Context ─────────────────────────────────────────────
 type LabelsContextType = {
   labels: Label[]
   isLoaded: boolean
@@ -44,6 +43,7 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
   const isInitialized = useRef(false)
   const [isLoaded, setIsLoaded] = useState(false)
 
+  // 初期化（localStorageから復元）
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
     try {
@@ -55,12 +55,16 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
     setIsLoaded(true)
   }, [])
 
+  // 保存（debounce付き）
   useEffect(() => {
     if (!isInitialized.current) {
       isInitialized.current = true
       return
     }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(labels))
+    const timer = setTimeout(() => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(labels))
+    }, SAVE_DEBOUNCE_MS)
+    return () => clearTimeout(timer)
   }, [labels])
 
   const addLabel = (name: string): Label => {
@@ -73,11 +77,11 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
     return newLabel
   }
 
-  const updateLabel = (id: string, name: string): void => {
+  const updateLabel = (id: string, name: string) => {
     dispatch({ type: "UPDATE_LABEL", payload: { id, name } })
   }
 
-  const deleteLabel = (id: string): void => {
+  const deleteLabel = (id: string) => {
     dispatch({ type: "DELETE_LABEL", payload: id })
   }
 

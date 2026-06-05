@@ -1,10 +1,12 @@
 "use client"
 
-import { createContext, useContext, useReducer, useEffect, useRef, useState, ReactNode } from "react"
-import { Task, Priority } from "../types"
+import { createContext, useContext, useEffect, useReducer, useRef, useState, type ReactNode } from "react"
+
+import { type Priority, type Task } from "../types"
 import { generateDummyTasks } from "../lib/dummyData"
 
 const STORAGE_KEY = "task-board-tasks"
+const SAVE_DEBOUNCE_MS = 300
 
 type TaskAction =
   | { type: "INIT"; payload: Task[] }
@@ -49,6 +51,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   const isInitialized = useRef(false)
   const [isLoaded, setIsLoaded] = useState(false)
 
+  // 初期化（localStorageから復元、なければダミーデータ）
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
@@ -63,12 +66,16 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     setIsLoaded(true)
   }, [])
 
+  // 保存（debounce付き）
   useEffect(() => {
     if (!isInitialized.current) {
       isInitialized.current = true
       return
     }
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+    const timer = setTimeout(() => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
+    }, SAVE_DEBOUNCE_MS)
+    return () => clearTimeout(timer)
   }, [tasks])
 
   const addTask = (title: string, priority: Priority | undefined, labelId: string, dueDate?: string): Task => {
@@ -85,25 +92,24 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     return newTask
   }
 
-  const updateTask = (id: string, updates: Partial<Omit<Task, "id" | "createdAt">>): void => {
+  const updateTask = (id: string, updates: Partial<Omit<Task, "id" | "createdAt">>) => {
     dispatch({ type: "UPDATE_TASK", payload: { id, updates } })
   }
 
-  const deleteTask = (id: string): void => {
+  const deleteTask = (id: string) => {
     dispatch({ type: "DELETE_TASK", payload: id })
   }
 
-  const toggleCompleted = (id: string): void => {
+  const toggleCompleted = (id: string) => {
     dispatch({ type: "TOGGLE_COMPLETED", payload: id })
   }
 
-  const getTaskById = (id: string): Task | undefined => {
+  const getTaskById = (id: string) => {
     return tasks.find(t => t.id === id)
   }
 
   return (
-    <TasksContext.Provider value={{ tasks, isLoaded, addTask, updateTask, deleteTask, toggleCompleted, getTaskById }
-    }>
+    <TasksContext.Provider value={{ tasks, isLoaded, addTask, updateTask, deleteTask, toggleCompleted, getTaskById }}>
       {children}
     </TasksContext.Provider>
   )
