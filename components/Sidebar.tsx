@@ -1,10 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import Link from "next/link"
-import { Home, Plus, Settings, LogOut, List, PanelLeft, Tag } from "lucide-react"
-import { LogoutModal } from "./LogoutModal"
+import { Home, List, LogOut, PanelLeft, Plus, Settings, Tag } from "lucide-react"
+
 import { useLabels } from "../hooks/useLabels"
+import { useTasks } from "../hooks/useTasks"
+import { LogoutModal } from "./LogoutModal"
 
 type Props = {
   collapsed: boolean
@@ -16,6 +18,17 @@ const ITEM_CLASS = "flex items-center gap-2 pl-4 py-2 text-sm text-gray-600 hove
 export function Sidebar({ collapsed, onToggle }: Props) {
   const [showLogoutModal, setShowLogoutModal] = useState(false)
   const { labels, isLoaded } = useLabels()
+  const { tasks } = useTasks()
+
+  // ラベルごとの未完了タスク数
+  const incompleteCountByLabel = useMemo(() => {
+    const counts: Record<string, number> = {}
+    for (const task of tasks) {
+      if (task.completed) continue
+      counts[task.labelId] = (counts[task.labelId] ?? 0) + 1
+    }
+    return counts
+  }, [tasks])
 
   return (
     <>
@@ -45,20 +58,22 @@ export function Sidebar({ collapsed, onToggle }: Props) {
               <List size={20} className="flex-shrink-0" />
               <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>タスク一覧</span>
             </Link>
-            {!collapsed && (
-              <div>
-                {isLoaded && labels.map(label => (
-                  <Link
-                    key={label.id}
-                    href={`/tasks?label=${label.id}`}
-                    className="flex items-center gap-2 py-2 pl-12 pr-2 text-sm text-gray-600 hover:text-brand-500 transition-colors"
-                  >
-                    <Tag size={14} className="flex-shrink-0 text-gray-400" />
-                    <span className="whitespace-nowrap">{label.name}</span>
-                  </Link>
-                ))}
-              </div>
-            )}
+            {!collapsed && isLoaded && labels.map(label => {
+              const count = incompleteCountByLabel[label.id] ?? 0
+              return (
+                <Link
+                  key={label.id}
+                  href={`/tasks?label=${label.id}`}
+                  className="flex items-center gap-2 py-2 pl-12 pr-4 text-sm text-gray-600 hover:text-brand-500 transition-colors"
+                >
+                  <Tag size={14} className="flex-shrink-0 text-gray-400" />
+                  <span className="whitespace-nowrap flex-1">{label.name}</span>
+                  {count > 0 && (
+                    <span className="text-xs text-gray-400">{count}</span>
+                  )}
+                </Link>
+              )
+            })}
           </div>
         </div>
 
