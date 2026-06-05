@@ -10,7 +10,7 @@ const SAVE_DEBOUNCE_MS = 300
 type LabelAction =
   | { type: "INIT"; payload: Label[] }
   | { type: "ADD_LABEL"; payload: Label }
-  | { type: "UPDATE_LABEL"; payload: { id: string; name: string } }
+  | { type: "UPDATE_LABEL"; payload: { id: string; updates: Partial<Pick<Label, "name" | "hidden" | "order">> } }
   | { type: "DELETE_LABEL"; payload: string }
 
 function labelReducer(state: Label[], action: LabelAction): Label[] {
@@ -21,7 +21,7 @@ function labelReducer(state: Label[], action: LabelAction): Label[] {
       return [...state, action.payload]
     case "UPDATE_LABEL":
       return state.map(label =>
-        label.id === action.payload.id ? { ...label, name: action.payload.name } : label
+        label.id === action.payload.id ? { ...label, ...action.payload.updates } : label
       )
     case "DELETE_LABEL":
       return state.filter(label => label.id !== action.payload)
@@ -32,7 +32,7 @@ type LabelsContextType = {
   labels: Label[]
   isLoaded: boolean
   addLabel: (name: string) => Label
-  updateLabel: (id: string, name: string) => void
+  updateLabel: (id: string, updates: Partial<Pick<Label, "name" | "hidden" | "order">>) => void
   deleteLabel: (id: string) => void
 }
 
@@ -77,8 +77,8 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
     return newLabel
   }
 
-  const updateLabel = (id: string, name: string) => {
-    dispatch({ type: "UPDATE_LABEL", payload: { id, name } })
+  const updateLabel = (id: string, updates: Partial<Pick<Label, "name" | "hidden" | "order">>) => {
+    dispatch({ type: "UPDATE_LABEL", payload: { id, updates } })
   }
 
   const deleteLabel = (id: string) => {

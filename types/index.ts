@@ -4,6 +4,7 @@ export type Label = {
   id: string
   name: string
   order: number
+  hidden?: boolean
 }
 
 export type Task = {
@@ -46,7 +47,7 @@ export const PRIORITY_PRIMARY: Record<Priority, string> = {
 export const PRIORITY_MIDDLE: Record<Priority, string> = {
   high: "bg-priority-high/10 text-priority-high",
   medium: "bg-priority-medium/5 text-priority-medium",
-  low: "bg-priority-low/10 text-priority-low",
+  low: "bg-priority-low/5 text-priority-low",
 }
 
 export const PRIORITY_SOFT: Record<Priority, string> = {

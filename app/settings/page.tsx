@@ -27,7 +27,7 @@ export default function SettingsPage() {
 
   const saveEdit = () => {
     if (!editingId || !editingName.trim()) return
-    updateLabel(editingId, editingName.trim())
+    updateLabel(editingId, { name: editingName.trim() })
     setEditingId(null)
     setEditingName("")
   }
@@ -99,8 +99,8 @@ export default function SettingsPage() {
                     type="button"
                     onClick={() => setTooltipOpen(prev => !prev)}
                     className={`w-4 h-4 rounded-full border text-xs flex items-center justify-center leading-none transition-colors ${tooltipOpen
-                        ? "bg-brand-500 border-brand-500 text-white"
-                        : "border-gray-400 text-gray-400 hover:bg-brand-500 hover:border-brand-500 hover:text-white"
+                      ? "bg-brand-500 border-brand-500 text-white"
+                      : "border-gray-400 text-gray-400 hover:bg-brand-500 hover:border-brand-500 hover:text-white"
                       }`}
                   >
                     ?
