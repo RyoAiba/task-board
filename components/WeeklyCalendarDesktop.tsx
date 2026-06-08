@@ -13,7 +13,7 @@ type Props = {
 
 const DAY_NAMES = ["日", "月", "火", "水", "木", "金", "土"]
 
-// 週数ごとの最大表示タスク数（後から調整可能）
+// 週数ごとの最大表示タスク数
 const MAX_VISIBLE_TASKS_BY_WEEKS: Record<number, number> = {
   4: 4,
   5: 3,
@@ -25,6 +25,14 @@ function formatDate(date: Date): string {
   const m = String(date.getMonth() + 1).padStart(2, "0")
   const d = String(date.getDate()).padStart(2, "0")
   return `${y}-${m}-${d}`
+}
+
+function getDayColor(dayOfWeek: number, isCurrentMonth: boolean, isToday: boolean): string {
+  if (!isCurrentMonth) return "text-gray-300"
+  if (isToday) return "text-brand-500 font-semibold"
+  if (dayOfWeek === 0) return "text-red-500"
+  if (dayOfWeek === 6) return "text-blue-500"
+  return "text-gray-600"
 }
 
 export function WeeklyCalendarDesktop({ tasks }: Props) {
@@ -134,16 +142,13 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
       </div>
 
       {/* カレンダー本体 */}
-      <div className="border-t border-l border-gray-200 flex flex-col h-[600px]">
-        {/* 曜日ヘッダー（罫線なし） */}
+      <div className="border border-gray-200 rounded-lg overflow-hidden flex flex-col h-[600px]">
+        {/* 曜日ヘッダー */}
         <div className="grid grid-cols-7 flex-shrink-0">
           {DAY_NAMES.map((day, i) => (
             <div
               key={day}
-              className={`px-2 py-1.5 text-xs text-center border-r border-gray-200 ${i === 0 ? "text-red-500" :
-                  i === 6 ? "text-blue-500" :
-                    "text-gray-500"
-                }`}
+              className={`px-2 py-1.5 text-xs text-center ${i < 6 ? "border-r border-gray-200" : ""} ${getDayColor(i, true, false)}`}
             >
               {day}
             </div>
@@ -151,30 +156,28 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
         </div>
 
         {/* 週ごとのグリッド */}
-        <div className="flex-1 flex flex-col border-t border-gray-200">
+        <div className="flex-1 flex flex-col">
           {weeks.map((week, weekIndex) => (
             <div key={weekIndex} className="grid grid-cols-7 flex-1 min-h-0">
-              {week.map(date => {
+              {week.map((date, dayIndex) => {
                 const dateStr = formatDate(date)
                 const isToday = dateStr === todayStr
                 const isCurrentMonth = date.getMonth() === viewMonth
-                const dayOfWeek = date.getDay()
+                const dayColor = getDayColor(date.getDay(), isCurrentMonth, isToday)
                 const allTasks = getTasksForDate(dateStr)
                 const visibleTasks = allTasks.slice(0, maxVisibleTasks)
                 const remainingCount = allTasks.length - maxVisibleTasks
 
+                const borderTop = weekIndex > 0 ? "border-t border-gray-200" : ""
+                const borderRight = dayIndex < 6 ? "border-r border-gray-200" : ""
+                const bgToday = isToday ? "bg-brand-100/40" : ""
+
                 return (
                   <div
                     key={dateStr}
-                    className={`p-1.5 border-r border-b border-gray-200 overflow-hidden ${isToday ? "bg-brand-100/40" : ""
-                      }`}
+                    className={`p-1.5 overflow-hidden ${borderTop} ${borderRight} ${bgToday}`}
                   >
-                    <div className={`text-xs text-center mb-1 ${!isCurrentMonth ? "text-gray-300" :
-                        isToday ? "text-brand-500 font-semibold" :
-                          dayOfWeek === 0 ? "text-red-500" :
-                            dayOfWeek === 6 ? "text-blue-500" :
-                              "text-gray-600"
-                      }`}>
+                    <div className={`text-xs text-center mb-1 ${dayColor}`}>
                       {date.getDate()}
                     </div>
 
@@ -186,8 +189,7 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
                           className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-gray-50 transition-colors ${task.completed ? "opacity-40" : ""}`}
                         >
                           <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${task.priority ? PRIORITY_PRIMARY[task.priority] : "bg-gray-300"}`} />
-                          <span className={`text-xs truncate ${!isCurrentMonth ? "text-gray-300" : "text-gray-600"
-                            } ${task.completed ? "line-through" : ""}`}>
+                          <span className={`text-xs truncate ${isCurrentMonth ? "text-gray-600" : "text-gray-300"} ${task.completed ? "line-through" : ""}`}>
                             {task.title}
                           </span>
                         </Link>
