@@ -1,14 +1,12 @@
 import { useCallback, useEffect, useRef } from "react"
 
-import { type Task } from "../types"
+import { useToast } from "../contexts/ToastContext"
+import { useTasks } from "./useTasks"
 
-type ShowToast = (message: string, onUndo?: () => void) => void
+export function useTaskToggle() {
+  const { tasks, toggleCompleted } = useTasks()
+  const { showToast } = useToast()
 
-export function useTaskToggle(
-  tasks: Task[],
-  toggleCompleted: (id: string) => void,
-  showToast: ShowToast,
-) {
   const tasksRef = useRef(tasks)
   useEffect(() => {
     tasksRef.current = tasks

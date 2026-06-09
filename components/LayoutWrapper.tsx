@@ -3,9 +3,10 @@
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 
+import { ToastProvider } from "@/contexts/ToastContext"
+import { TaskModalProvider } from "@/contexts/TaskModalContext"
 import { LabelsProvider } from "@/hooks/useLabels"
 import { TasksProvider } from "@/hooks/useTasks"
-import { TaskModalProvider } from "@/contexts/TaskModalContext"
 import { Sidebar } from "./Sidebar"
 import { BottomNav } from "./BottomNav"
 
@@ -29,19 +30,21 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <LabelsProvider>
-      <TasksProvider>
-        <TaskModalProvider>
-          <div className="flex flex-col h-[100dvh] overscroll-none">
-            {!isLoginPage && <Sidebar collapsed={collapsed} onToggle={toggleCollapsed} />}
-            <main className={`flex-1 overflow-hidden flex flex-col transition-[margin] duration-300 ease-in-out ${isLoginPage ? "" : collapsed ? "md:ml-13" : "md:ml-64"
-              }`}>
-              {children}
-            </main>
-            {!isLoginPage && <BottomNav />}
-          </div>
-        </TaskModalProvider>
-      </TasksProvider>
-    </LabelsProvider>
+    <ToastProvider>
+      <LabelsProvider>
+        <TasksProvider>
+          <TaskModalProvider>
+            <div className="flex flex-col h-[100dvh] overscroll-none">
+              {!isLoginPage && <Sidebar collapsed={collapsed} onToggle={toggleCollapsed} />}
+              <main className={`flex-1 overflow-hidden flex flex-col transition-[margin] duration-300 ease-in-out ${isLoginPage ? "" : collapsed ? "md:ml-13" : "md:ml-64"
+                }`}>
+                {children}
+              </main>
+              {!isLoginPage && <BottomNav />}
+            </div>
+          </TaskModalProvider>
+        </TasksProvider>
+      </LabelsProvider>
+    </ToastProvider>
   )
 }

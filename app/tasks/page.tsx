@@ -8,12 +8,11 @@ import { type PageSize, type Priority, PRIORITY_LABELS, PRIORITY_ORDER } from ".
 import { useLabels } from "../../hooks/useLabels"
 import { useTasks } from "../../hooks/useTasks"
 import { useTaskToggle } from "../../hooks/useTaskToggle"
-import { useToast } from "../../hooks/useToast"
+import { useToast } from "../../contexts/ToastContext"
 import { FilterChip } from "../../components/FilterChip"
 import { Pagination } from "../../components/Pagination"
 import { TaskCard } from "../../components/TaskCard"
 import { TaskFilterPopup } from "../../components/TaskFilterPopup"
-import { ToastStack } from "../../components/Toast"
 import { truncate } from "../../utils/string"
 
 type Status = "incomplete" | "completed"
@@ -45,10 +44,10 @@ const TOAST_MESSAGES: Record<string, string> = {
 function TasksPageContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { tasks, toggleCompleted } = useTasks()
+  const { tasks } = useTasks()
   const { labels } = useLabels()
-  const { toasts, showToast, dismiss } = useToast()
-  const { handleToggle } = useTaskToggle(tasks, toggleCompleted, showToast)
+  const { showToast } = useToast()
+  const { handleToggle } = useTaskToggle()
   const processedToastRef = useRef<string | null>(null)
 
   const urlLabel = searchParams.get("label") || ""
@@ -347,8 +346,6 @@ function TasksPageContent() {
           </div>
         )}
       </div>
-
-      <ToastStack toasts={toasts} onDismiss={dismiss} />
     </div>
   )
 }

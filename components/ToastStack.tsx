@@ -1,5 +1,6 @@
 import { X } from "lucide-react"
-import { ToastItem } from "../hooks/useToast"
+
+import { type ToastItem } from "../contexts/ToastContext"
 
 type Props = {
   toasts: ToastItem[]

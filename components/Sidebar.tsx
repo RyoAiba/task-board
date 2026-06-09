@@ -4,11 +4,10 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { EyeOff, Home, List, LogOut, MoreVertical, PanelLeft, Plus, Settings, Tag } from "lucide-react"
 
+import { useToast } from "../contexts/ToastContext"
 import { useLabels } from "../hooks/useLabels"
 import { useTasks } from "../hooks/useTasks"
-import { useToast } from "../hooks/useToast"
 import { LogoutModal } from "./LogoutModal"
-import { ToastStack } from "./Toast"
 
 type Props = {
   collapsed: boolean
@@ -23,7 +22,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
   const menuRef = useRef<HTMLDivElement>(null)
   const { labels, isLoaded, updateLabel } = useLabels()
   const { tasks } = useTasks()
-  const { toasts, showToast, dismiss } = useToast()
+  const { showToast } = useToast()
 
   // 表示するラベル（非表示ではないもの）
   const visibleLabels = useMemo(() =>
@@ -158,7 +157,6 @@ export function Sidebar({ collapsed, onToggle }: Props) {
       </aside>
 
       <LogoutModal isOpen={showLogoutModal} onClose={() => setShowLogoutModal(false)} />
-      <ToastStack toasts={toasts} onDismiss={dismiss} />
     </>
   )
 }

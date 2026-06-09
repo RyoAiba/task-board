@@ -8,10 +8,8 @@ import { type Priority, PRIORITY_LABELS } from "../types"
 import { useLabels } from "../hooks/useLabels"
 import { useTasks } from "../hooks/useTasks"
 import { useTaskToggle } from "../hooks/useTaskToggle"
-import { useToast } from "../hooks/useToast"
 import { PageContainer } from "../components/PageContainer"
 import { TaskCard } from "../components/TaskCard"
-import { ToastStack } from "../components/Toast"
 import { WeeklyCalendar } from "../components/WeeklyCalendar"
 
 const PRIORITY_ITEMS = (Object.entries(PRIORITY_LABELS) as [Priority, string][]).map(
@@ -19,10 +17,9 @@ const PRIORITY_ITEMS = (Object.entries(PRIORITY_LABELS) as [Priority, string][])
 )
 
 export default function Dashboard() {
-  const { tasks, toggleCompleted } = useTasks()
+  const { tasks } = useTasks()
   const { labels } = useLabels()
-  const { toasts, showToast, dismiss } = useToast()
-  const { handleToggle } = useTaskToggle(tasks, toggleCompleted, showToast)
+  const { handleToggle } = useTaskToggle()
 
   // 今日 / 期限切れ
   const { todayIncomplete, allTodayCompleted, overdueTasks } = useMemo(() => {
@@ -203,8 +200,6 @@ export default function Dashboard() {
           ))}
         </div>
       </section>
-
-      <ToastStack toasts={toasts} onDismiss={dismiss} />
     </PageContainer>
   )
 }
