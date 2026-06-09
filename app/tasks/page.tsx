@@ -311,14 +311,16 @@ function TasksPageContent() {
       <div className="flex-1 overflow-y-auto overflow-x-hidden px-4 md:px-6 py-6">
         {pagedTasks.length > 0 ? (
           <>
-            <Pagination
-              currentPage={safePage}
-              totalPages={totalPages}
-              pageSize={pageSize}
-              totalCount={filteredAndSortedTasks.length}
-              onPageChange={setCurrentPage}
-              onPageSizeChange={handlePageSizeChange}
-            />
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={safePage}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                totalCount={filteredAndSortedTasks.length}
+                onPageChange={setCurrentPage}
+                onPageSizeChange={handlePageSizeChange}
+              />
+            )}
             <div className="divide-y divide-gray-200 my-4">
               {pagedTasks.map(task => (
                 <TaskCard
@@ -329,14 +331,16 @@ function TasksPageContent() {
                 />
               ))}
             </div>
-            <Pagination
-              currentPage={safePage}
-              totalPages={totalPages}
-              pageSize={pageSize}
-              totalCount={filteredAndSortedTasks.length}
-              onPageChange={setCurrentPage}
-              onPageSizeChange={handlePageSizeChange}
-            />
+            {totalPages > 1 && (
+              <Pagination
+                currentPage={safePage}
+                totalPages={totalPages}
+                pageSize={pageSize}
+                totalCount={filteredAndSortedTasks.length}
+                onPageChange={setCurrentPage}
+                onPageSizeChange={handlePageSizeChange}
+              />
+            )}
           </>
         ) : (
           <div className="text-center py-12">
