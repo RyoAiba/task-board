@@ -1,14 +1,13 @@
 "use client"
 
-import { useState, useMemo, useEffect, useRef, Suspense } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useState, useMemo, useEffect, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import { Search, SlidersHorizontal } from "lucide-react"
 
 import { type PageSize, type Priority, PRIORITY_LABELS, PRIORITY_ORDER } from "../../types"
 import { useLabels } from "../../contexts/LabelsContext"
 import { useTasks } from "../../contexts/TasksContext"
 import { useTaskToggle } from "../../hooks/useTaskToggle"
-import { useToast } from "../../contexts/ToastContext"
 import { FilterChip } from "../../components/FilterChip"
 import { Pagination } from "../../components/Pagination"
 import { TaskCard } from "../../components/TaskCard"
@@ -35,20 +34,11 @@ const SORT_OPTIONS: { label: string; key: SortKey; order: SortOrder }[] = [
   { label: "期限：新しい順", key: "dueDate", order: "desc" },
 ]
 
-const TOAST_MESSAGES: Record<string, string> = {
-  created: "タスクを作成しました",
-  saved: "タスクを保存しました",
-  deleted: "タスクを削除しました",
-}
-
 function TasksPageContent() {
-  const router = useRouter()
   const searchParams = useSearchParams()
   const { tasks } = useTasks()
   const { labels } = useLabels()
-  const { showToast } = useToast()
   const { handleToggle } = useTaskToggle()
-  const processedToastRef = useRef<string | null>(null)
 
   const urlLabel = searchParams.get("label") || ""
   const urlPriority = searchParams.get("priority") as Priority | null
@@ -85,18 +75,6 @@ function TasksPageContent() {
   useEffect(() => {
     setFilterPopupOpen(false)
   }, [searchParams])
-
-  useEffect(() => {
-    const toastParam = searchParams.get("toast")
-    if (toastParam && TOAST_MESSAGES[toastParam] && processedToastRef.current !== toastParam) {
-      processedToastRef.current = toastParam
-      showToast(TOAST_MESSAGES[toastParam])
-      const params = new URLSearchParams(searchParams.toString())
-      params.delete("toast")
-      const newUrl = params.toString() ? `/tasks?${params.toString()}` : "/tasks"
-      router.replace(newUrl)
-    }
-  }, [searchParams, router, showToast])
 
   const resetPage = () => setCurrentPage(1)
 
