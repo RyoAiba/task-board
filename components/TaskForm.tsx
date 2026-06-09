@@ -1,12 +1,14 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import { CalendarDays, CheckCircle, Circle } from "lucide-react"
+
 import { Priority } from "../types"
 import { useLabels } from "../hooks/useLabels"
-import { PrioritySelector } from "./PrioritySelector"
-import { LabelSelector } from "./LabelSelector"
+import { ConfirmDialog } from "./ConfirmDialog"
 import { DatePickerModal } from "./DatePickerModal"
-import { CalendarDays, CheckCircle, Circle } from "lucide-react"
+import { LabelSelector } from "./LabelSelector"
+import { PrioritySelector } from "./PrioritySelector"
 
 const TITLE_MAX_LENGTH = 50
 
@@ -220,34 +222,15 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
       )}
 
       {/* 削除確認ダイアログ */}
-      {showDeleteDialog && (
-        <div
-          className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-          onClick={() => setShowDeleteDialog(false)}
-        >
-          <div
-            className="bg-white rounded-lg p-6 max-w-sm w-full mx-4"
-            onClick={e => e.stopPropagation()}
-          >
-            <h2 className="text-lg font-bold  mb-2">タスクを削除しますか？</h2>
-            <p className="text-sm text-gray-400 mb-6">この操作は取り消せません。</p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowDeleteDialog(false)}
-                className="flex-1 py-2 border border-gray-300 text-gray-600 font-semibold rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                キャンセル
-              </button>
-              <button
-                onClick={onDelete}
-                className="flex-1 py-2 bg-red-500 text-white font-semibold rounded-lg hover:bg-red-600 transition-colors"
-              >
-                削除する
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmDialog
+        isOpen={showDeleteDialog}
+        title="タスクを削除しますか？"
+        message="この操作は取り消せません。"
+        confirmLabel="削除する"
+        variant="danger"
+        onConfirm={() => onDelete?.()}
+        onCancel={() => setShowDeleteDialog(false)}
+      />
     </div>
   )
 }

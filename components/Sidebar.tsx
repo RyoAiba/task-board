@@ -62,7 +62,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
 
   return (
     <>
-      <aside className={`hidden md:flex flex-col h-screen fixed left-0 top-0 bg-white border-r border-gray-200 overflow-hidden transition-[width] duration-300 ease-in-out ${collapsed ? "w-13" : "w-64"
+      <aside className={`hidden md:flex flex-col fixed top-0 left-0 z-30 h-screen bg-white border-r border-gray-200 overflow-hidden transition-[width] duration-300 ease-in-out ${collapsed ? "w-13" : "w-64"
         }`}>
         <div className={`flex p-2 ${collapsed ? "justify-center" : "justify-end"}`}>
           <button
@@ -125,7 +125,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
                     </div>
 
                     {menuOpen && (
-                      <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-50 whitespace-nowrap min-w-32">
+                      <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-10 whitespace-nowrap min-w-32">
                         <button
                           onClick={() => handleHide(label.id)}
                           className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:bg-gray-50 transition-colors cursor-pointer"

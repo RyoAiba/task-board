@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight, X } from "lucide-react"
+import { Overlay } from "./Overlay"
 
 type Props = {
   selectedDate: string
@@ -10,7 +11,6 @@ type Props = {
 }
 
 export function DatePickerModal({ selectedDate, onSelect, onClose }: Props) {
-  const ref = useRef<HTMLDivElement>(null)
   const [displayDate, setDisplayDate] = useState(new Date())
 
   useEffect(() => {
@@ -61,14 +61,10 @@ export function DatePickerModal({ selectedDate, onSelect, onClose }: Props) {
   const dayNames = ["日", "月", "火", "水", "木", "金", "土"]
 
   return (
-    <>
-      {/* 透明オーバーレイ：サイドバー・ボトムナビも覆う */}
-      <div className="fixed inset-0 z-[200]" onClick={onClose} />
-
-      {/* カレンダー本体：画面中央 */}
+    <Overlay onBackdropClick={onClose} level="above">
       <div
-        ref={ref}
-        className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[201] bg-white rounded-xl shadow-xl w-80 p-4"
+        className="bg-white rounded-xl shadow-xl w-80 p-4"
+        onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-gray-600">
@@ -130,6 +126,6 @@ export function DatePickerModal({ selectedDate, onSelect, onClose }: Props) {
           </button>
         )}
       </div>
-    </>
+    </Overlay>
   )
 }

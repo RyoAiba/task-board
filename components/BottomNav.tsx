@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, List, Plus, Settings, LogOut } from "lucide-react"
+
 import { LogoutModal } from "./LogoutModal"
 
 const NAV_ITEM_CLASS = "flex flex-col items-center justify-center flex-1 transition-colors"
@@ -17,7 +18,7 @@ export function BottomNav() {
 
   return (
     <>
-      <nav className="md:hidden flex items-center border-t border-gray-200 justify-between bg-white z-40 h-20 pt-2 px-2 pb-6">
+      <nav className="md:hidden flex items-center border-t border-gray-200 justify-between bg-white z-30 h-20 pt-2 px-2 pb-6">
         <Link href="/" className={navClass("/")}>
           <Home size={24} strokeWidth={1.5} />
           <span className="text-[10px]">ホーム</span>
