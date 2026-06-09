@@ -5,6 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, List, Plus, Settings, LogOut } from "lucide-react"
 
+import { useTaskModal } from "../contexts/TaskModalContext"
 import { LogoutModal } from "./LogoutModal"
 
 const NAV_ITEM_CLASS = "flex flex-col items-center justify-center flex-1 transition-colors"
@@ -12,6 +13,7 @@ const NAV_ITEM_CLASS = "flex flex-col items-center justify-center flex-1 transit
 export function BottomNav() {
   const [showLogoutModal, setShowLogoutModal] = useState(false)
   const pathname = usePathname()
+  const { openCreate } = useTaskModal()
 
   const navClass = (href: string) =>
     `${NAV_ITEM_CLASS} ${pathname === href ? "text-brand-500" : "text-gray-400"}`
@@ -27,12 +29,12 @@ export function BottomNav() {
           <List size={24} strokeWidth={1.5} />
           <span className="text-[10px]">タスク</span>
         </Link>
-        <Link
-          href="/tasks/new"
-          className="flex items-center justify-center w-14 h-14 rounded-full bg-brand-500 text-white transition-colors -mt-4 shadow-md flex-shrink-0"
+        <button
+          onClick={() => openCreate()}
+          className="flex items-center justify-center w-14 h-14 rounded-full bg-brand-500 text-white transition-colors -mt-4 shadow-md flex-shrink-0 cursor-pointer"
         >
           <Plus size={28} />
-        </Link>
+        </button>
         <Link href="/settings" className={`${navClass("/settings")} ml-2`}>
           <Settings size={24} strokeWidth={1.5} />
           <span className="text-[10px]">設定</span>

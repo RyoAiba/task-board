@@ -63,7 +63,7 @@ export function DatePickerModal({ selectedDate, onSelect, onClose }: Props) {
   return (
     <Overlay onBackdropClick={onClose} level="above">
       <div
-        className="bg-white rounded-xl shadow-xl w-80 p-4"
+        className="bg-white rounded-xl shadow-modal w-80 p-4"
         onClick={e => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">

@@ -45,7 +45,7 @@ export function LabelSelector({ labels, value, onChange }: Props) {
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-1 z-50 w-full bg-white rounded-xl shadow-xl p-2">
+        <div className="absolute top-full left-0 mt-1 z-50 w-full bg-white rounded-xl shadow-modal p-2">
           {labels.map(label => (
             <button
               key={label.id}

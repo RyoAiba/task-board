@@ -6,6 +6,7 @@ import { EyeOff, Home, List, LogOut, MoreVertical, PanelLeft, Plus, Settings, Ta
 
 import { useToast } from "../contexts/ToastContext"
 import { useLabels } from "../contexts/LabelsContext"
+import { useTaskModal } from "../contexts/TaskModalContext"
 import { useTasks } from "../contexts/TasksContext"
 import { LogoutModal } from "./LogoutModal"
 
@@ -23,6 +24,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
   const { labels, isLoaded, updateLabel } = useLabels()
   const { tasks } = useTasks()
   const { showToast } = useToast()
+  const { openCreate } = useTaskModal()
 
   // 表示するラベル（非表示ではないもの）
   const visibleLabels = useMemo(() =>
@@ -78,10 +80,10 @@ export function Sidebar({ collapsed, onToggle }: Props) {
             <Home size={20} className="flex-shrink-0" />
             <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>ホーム</span>
           </Link>
-          <Link href="/tasks/new" className={ITEM_CLASS}>
+          <button onClick={() => openCreate()} className={`${ITEM_CLASS} w-full cursor-pointer`}>
             <Plus size={20} className="flex-shrink-0" />
             <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>新規作成</span>
-          </Link>
+          </button>
           <div>
             <Link href="/tasks" className={ITEM_CLASS}>
               <List size={20} className="flex-shrink-0" />

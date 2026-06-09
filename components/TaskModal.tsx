@@ -74,7 +74,7 @@ export function TaskModal() {
   return (
     <Overlay onBackdropClick={close}>
       <div
-        className="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[90dvh] overflow-y-auto"
+        className="bg-white rounded-lg shadow-modal p-6 max-w-2xl w-full mx-4 max-h-[90dvh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
         <TaskForm

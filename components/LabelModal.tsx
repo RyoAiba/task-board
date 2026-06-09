@@ -26,7 +26,7 @@ export function LabelModal({
   }, [onClose])
 
   return (
-    <div ref={ref} className="absolute top-full left-0 mt-1 z-50 bg-white rounded-xl shadow-xl w-64 p-4">
+    <div ref={ref} className="absolute top-full left-0 mt-1 z-50 bg-white rounded-xl shadow-modal w-64 p-4">
       <div className="flex items-center justify-between mb-3">
         <h2 className="text-sm font-semibold text-gray-600">ラベルを選択</h2>
         <button onClick={onClose} className="text-gray-400 hover:text-gray-600">

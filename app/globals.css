@@ -31,6 +31,9 @@
   --color-due-overdue: #E05A67;
   --color-due-today: #E09A3A;
   --color-due-soon: #4AAF9A;
+
+  /* shadow */
+  --shadow-modal: 0 0 30px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes slide-up {

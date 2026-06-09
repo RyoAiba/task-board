@@ -1,9 +1,9 @@
 "use client"
 
 import { memo } from "react"
-import Link from "next/link"
 import { CalendarDays, CheckCircle, Circle } from "lucide-react"
 
+import { useTaskModal } from "../contexts/TaskModalContext"
 import { type Label, type Task } from "../types"
 import { getDueDateInfo } from "../utils/dueDate"
 import { getPriorityCircleClass } from "../utils/priority"
@@ -16,6 +16,7 @@ type TaskCardProps = {
 }
 
 export const TaskCard = memo(function TaskCard({ task, label, onToggle }: TaskCardProps) {
+  const { openEdit } = useTaskModal()
   const dueDateInfo = getDueDateInfo(task.dueDate, task.completed)
   const priorityClass = getPriorityCircleClass(task.priority)
 
@@ -38,7 +39,11 @@ export const TaskCard = memo(function TaskCard({ task, label, onToggle }: TaskCa
           </span>
         </button>
 
-        <Link href={`/tasks/${task.id}`} className="absolute inset-0" />
+        <button
+          onClick={() => openEdit(task.id)}
+          className="absolute inset-0 cursor-pointer"
+          aria-label={`${task.title}を編集`}
+        />
 
         <div className="flex-1 min-w-0">
           <span className={`block text-sm truncate ${task.completed ? "text-gray-400 line-through" : ""}`}>
