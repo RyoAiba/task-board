@@ -2,6 +2,8 @@
 
 import { createContext, useContext, useState, type ReactNode } from "react"
 
+import { TaskModal } from "../components/TaskModal"
+
 import type { Task } from "../types"
 
 export type TaskModalState =
@@ -36,6 +38,7 @@ export function TaskModalProvider({ children }: { children: ReactNode }) {
   return (
     <TaskModalContext.Provider value={{ state, openCreate, openEdit, close }}>
       {children}
+      <TaskModal />
     </TaskModalContext.Provider>
   )
 }
