@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import Link from "next/link"
 import { X } from "lucide-react"
-import { Task, PRIORITY_ORDER, PRIORITY_PRIMARY } from "../types"
+
+import { useTaskModal } from "../contexts/TaskModalContext"
+import { type Task, PRIORITY_ORDER, PRIORITY_PRIMARY } from "../types"
 import { useSettings } from "../hooks/useSettings"
 
 type Props = {
@@ -25,6 +26,7 @@ const MAX_VISIBLE_TASKS = 3
 
 export function WeeklyCalendarMobile({ tasks }: Props) {
   const { settings } = useSettings()
+  const { openEdit } = useTaskModal()
   const [displayDays, setDisplayDays] = useState(INITIAL_DAYS)
   const [popupDate, setPopupDate] = useState<string | null>(null)
   const popupRef = useRef<HTMLDivElement>(null)
@@ -63,6 +65,11 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
     return () => document.removeEventListener("mousedown", handleClick)
   }, [])
 
+  const handleTaskClick = (taskId: string) => {
+    setPopupDate(null)
+    openEdit(taskId)
+  }
+
   return (
     <>
       <h2 className="text-section-title mb-4">カレンダー</h2>
@@ -99,19 +106,20 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
                     {visibleTasks.length > 0 ? (
                       <>
                         {visibleTasks.map(task => (
-                          <Link
+                          <button
                             key={task.id}
-                            href={`/tasks/${task.id}`}
-                            className={`flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors ${task.completed ? "opacity-40" : ""}`}
+                            type="button"
+                            onClick={() => openEdit(task.id)}
+                            className={`w-full text-left flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer ${task.completed ? "opacity-40" : ""}`}
                           >
                             <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${task.priority ? PRIORITY_PRIMARY[task.priority] : "bg-gray-300"}`} />
                             <span className="text-xs text-gray-600 truncate">{task.title}</span>
-                          </Link>
+                          </button>
                         ))}
                         {remainingCount > 0 && (
                           <button
                             onClick={() => setPopupDate(dateStr)}
-                            className="w-full text-left px-2 py-1 text-xs text-brand-500 hover:bg-brand-100 rounded-lg transition-colors font-medium"
+                            className="w-full text-left px-2 py-1 text-xs text-brand-500 hover:bg-brand-100 rounded-lg transition-colors font-medium cursor-pointer"
                           >
                             +{remainingCount}件
                           </button>
@@ -141,7 +149,7 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
             <div className="fixed inset-0 z-40" onClick={() => setPopupDate(null)} />
             <div
               ref={popupRef}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-xl shadow-xl w-72 p-4"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-xl shadow-modal w-72 p-4"
             >
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-semibold text-gray-600">
@@ -156,15 +164,15 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
               </div>
               <div className="space-y-1 max-h-60 overflow-y-auto">
                 {getTasksForDate(popupDate).map(task => (
-                  <Link
+                  <button
                     key={task.id}
-                    href={`/tasks/${task.id}`}
-                    onClick={() => setPopupDate(null)}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors ${task.completed ? "opacity-40" : ""}`}
+                    type="button"
+                    onClick={() => handleTaskClick(task.id)}
+                    className={`w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer ${task.completed ? "opacity-40" : ""}`}
                   >
                     <div className={`w-2 h-2 rounded-full flex-shrink-0 ${task.priority ? PRIORITY_PRIMARY[task.priority] : "bg-gray-300"}`} />
                     <span className="text-sm text-gray-600">{task.title}</span>
-                  </Link>
+                  </button>
                 ))}
               </div>
             </div>

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
+import { useTaskModal } from "../contexts/TaskModalContext"
 import { type Task, PRIORITY_ORDER, PRIORITY_PRIMARY } from "../types"
 import { useSettings } from "../hooks/useSettings"
 
@@ -13,7 +14,6 @@ type Props = {
 
 const DAY_NAMES = ["日", "月", "火", "水", "木", "金", "土"]
 
-// 週数ごとの最大表示タスク数
 const MAX_VISIBLE_TASKS_BY_WEEKS: Record<number, number> = {
   4: 4,
   5: 3,
@@ -37,6 +37,7 @@ function getDayColor(dayOfWeek: number, isCurrentMonth: boolean, isToday: boolea
 
 export function WeeklyCalendarDesktop({ tasks }: Props) {
   const { settings } = useSettings()
+  const { openEdit } = useTaskModal()
 
   const today = useMemo(() => {
     const d = new Date()
@@ -116,7 +117,6 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
     <section className="mb-8">
       <h2 className="text-section-title mb-4">カレンダー</h2>
 
-      {/* 月ナビゲーション */}
       <div className="flex items-center gap-2 mb-3">
         <button
           onClick={goToToday}
@@ -141,9 +141,7 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
         </h3>
       </div>
 
-      {/* カレンダー本体 */}
       <div className="border border-gray-200 rounded-lg overflow-hidden flex flex-col h-[600px]">
-        {/* 曜日ヘッダー */}
         <div className="grid grid-cols-7 flex-shrink-0">
           {DAY_NAMES.map((day, i) => (
             <div
@@ -155,7 +153,6 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
           ))}
         </div>
 
-        {/* 週ごとのグリッド */}
         <div className="flex-1 flex flex-col">
           {weeks.map((week, weekIndex) => (
             <div key={weekIndex} className="grid grid-cols-7 flex-1 min-h-0">
@@ -183,16 +180,17 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
 
                     <div className="space-y-0.5">
                       {visibleTasks.map(task => (
-                        <Link
+                        <button
                           key={task.id}
-                          href={`/tasks/${task.id}`}
-                          className={`flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-gray-50 transition-colors ${task.completed ? "opacity-40" : ""}`}
+                          type="button"
+                          onClick={() => openEdit(task.id)}
+                          className={`w-full text-left flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-gray-50 transition-colors cursor-pointer ${task.completed ? "opacity-40" : ""}`}
                         >
                           <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${task.priority ? PRIORITY_PRIMARY[task.priority] : "bg-gray-300"}`} />
                           <span className={`text-xs truncate ${isCurrentMonth ? "text-gray-600" : "text-gray-300"} ${task.completed ? "line-through" : ""}`}>
                             {task.title}
                           </span>
-                        </Link>
+                        </button>
                       ))}
                       {remainingCount > 0 && (
                         <Link

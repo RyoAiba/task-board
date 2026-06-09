@@ -1,12 +1,16 @@
 "use client"
 
-import { useTaskModal } from "../contexts/TaskModalContext"
+import { useEffect, useState } from "react"
+
+import { type TaskModalState, useTaskModal } from "../contexts/TaskModalContext"
 import { useTasks } from "../contexts/TasksContext"
 import { useToast } from "../contexts/ToastContext"
 import { Overlay } from "./Overlay"
 import { TaskForm } from "./TaskForm"
 
 import type { Task } from "../types"
+
+const ANIMATION_DURATION_MS = 200
 
 type FormValues = {
   title: string
@@ -31,24 +35,62 @@ export function TaskModal() {
   const { addTask, updateTask, deleteTask, getTaskById } = useTasks()
   const { showToast } = useToast()
 
-  if (state.mode === "closed") return null
+  const isOpen = state.mode !== "closed"
+  const [mounted, setMounted] = useState(false)
+  const [animateIn, setAnimateIn] = useState(false)
+
+  // 退場アニメーション中も最後のopen状態をrenderするため、別state で保持
+  const [renderState, setRenderState] = useState<TaskModalState>(state)
+  if (state.mode !== "closed" && state !== renderState) {
+    setRenderState(state)
+  }
+
+  useEffect(() => {
+    if (isOpen) {
+      setMounted(true)
+      let raf2: number | undefined
+      const raf1 = requestAnimationFrame(() => {
+        raf2 = requestAnimationFrame(() => setAnimateIn(true))
+      })
+      return () => {
+        cancelAnimationFrame(raf1)
+        if (raf2 !== undefined) cancelAnimationFrame(raf2)
+      }
+    } else {
+      setAnimateIn(false)
+      const t = setTimeout(() => setMounted(false), ANIMATION_DURATION_MS)
+      return () => clearTimeout(t)
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) return
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close()
+    }
+    document.addEventListener("keydown", handleKey)
+    return () => document.removeEventListener("keydown", handleKey)
+  }, [isOpen, close])
+
+  if (!mounted) return null
+  if (renderState.mode === "closed") return null
 
   let initialValues: FormValues | undefined = undefined
 
-  if (state.mode === "edit") {
-    const task = getTaskById(state.taskId)
+  if (renderState.mode === "edit") {
+    const task = getTaskById(renderState.taskId)
     if (!task) {
       close()
       return null
     }
     initialValues = toFormValues(task)
-  } else if (state.initialValues) {
-    initialValues = toFormValues(state.initialValues)
+  } else if (renderState.initialValues) {
+    initialValues = toFormValues(renderState.initialValues)
   }
 
   const handleSave = (data: FormValues) => {
-    if (state.mode === "edit") {
-      updateTask(state.taskId, {
+    if (renderState.mode === "edit") {
+      updateTask(renderState.taskId, {
         title: data.title,
         priority: data.priority,
         labelId: data.labelId,
@@ -63,22 +105,27 @@ export function TaskModal() {
     close()
   }
 
-  const handleDelete = state.mode === "edit"
+  const handleDelete = renderState.mode === "edit"
     ? () => {
-      deleteTask(state.taskId)
+      deleteTask(renderState.taskId)
       showToast("タスクを削除しました")
       close()
     }
     : undefined
 
   return (
-    <Overlay onBackdropClick={close}>
+    <Overlay onBackdropClick={close} bottomSheetOnMobile>
       <div
-        className="bg-white rounded-lg shadow-modal p-6 max-w-2xl w-full mx-4 max-h-[90dvh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        className={`bg-white shadow-modal max-h-[90dvh] overflow-y-auto w-full md:max-w-2xl md:mx-4 rounded-t-lg md:rounded-lg p-6 will-change-transform transition-all duration-200 ease-out ${animateIn
+          ? "opacity-100 [transform:translateY(0)_scale(1)]"
+          : "[transform:translateY(100%)_scale(1)] md:[transform:translateY(0)_scale(0.95)] md:opacity-0"
+          }`}
       >
         <TaskForm
-          mode={state.mode}
+          mode={renderState.mode}
           initialValues={initialValues}
           onSave={handleSave}
           onDelete={handleDelete}
