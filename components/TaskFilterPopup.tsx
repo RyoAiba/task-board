@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react"
 import { Label, Priority } from "../types"
+import { FilterChip } from "./FilterChip"
 
 type Status = "incomplete" | "completed"
 
@@ -75,55 +76,46 @@ export function TaskFilterPopup({
         className="absolute right-0 top-full mt-2 z-50 w-72 bg-white rounded-xl shadow-xl border border-gray-200 p-4"
       >
         <div className="mb-4">
-          <p className="text-xs font-semibold text-gray-400 mb-2">ラベル</p>
+          <p className="text-xs font-semibold text-gray-400 mb-2 cursor-default">ラベル</p>
           <div className="flex flex-wrap gap-2">
             {labels.map(label => (
-              <button
+              <FilterChip
                 key={label.id}
+                selected={pendingLabels.includes(label.id)}
                 onClick={() => toggle(setPendingLabels, label.id)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingLabels.includes(label.id)
-                    ? "bg-brand-100 border border-brand-500 text-brand-500"
-                    : "bg-gray-100 text-gray-400 hover:bg-gray-200"
-                  }`}
               >
                 {label.name}
-              </button>
+              </FilterChip>
             ))}
           </div>
         </div>
 
         <div className="mb-4">
-          <p className="text-xs font-semibold text-gray-400 mb-2">優先度</p>
+          <p className="text-xs font-semibold text-gray-400 mb-2 cursor-default">優先度</p>
           <div className="flex gap-2">
             {PRIORITY_OPTIONS.map(({ label, value }) => (
-              <button
+              <FilterChip
                 key={value}
+                selected={pendingPriorities.includes(value)}
                 onClick={() => toggle(setPendingPriorities, value)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingPriorities.includes(value)
-                    ? "bg-brand-100 border border-brand-500 text-brand-500"
-                    : "bg-gray-100 text-gray-400 hover:bg-gray-200"
-                  }`}
               >
                 {label}
-              </button>
+              </FilterChip>
             ))}
           </div>
         </div>
 
         <div className="mb-4">
-          <p className="text-xs font-semibold text-gray-400 mb-2">ステータス</p>
+          <p className="text-xs font-semibold text-gray-400 mb-2 cursor-default">ステータス</p>
           <div className="flex gap-2">
             {STATUS_OPTIONS.map(({ label, value }) => (
-              <button
+              <FilterChip
                 key={value}
+                selected={pendingStatuses.includes(value)}
                 onClick={() => toggle(setPendingStatuses, value)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${pendingStatuses.includes(value)
-                    ? "bg-brand-100 border border-brand-500 text-brand-500"
-                    : "bg-gray-100 text-gray-400 hover:bg-gray-200"
-                  }`}
               >
                 {label}
-              </button>
+              </FilterChip>
             ))}
           </div>
         </div>
@@ -131,13 +123,13 @@ export function TaskFilterPopup({
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
           <button
             onClick={handleReset}
-            className="text-xs text-gray-400 hover:text-gray-600 underline"
+            className="text-xs text-gray-400 hover:text-gray-600 underline cursor-pointer"
           >
             リセット
           </button>
           <button
             onClick={handleApply}
-            className="px-4 py-2 bg-brand-500 text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity"
+            className="px-4 py-2 bg-brand-500 text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
           >
             適用する
           </button>

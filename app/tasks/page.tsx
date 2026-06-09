@@ -2,13 +2,14 @@
 
 import { useState, useMemo, useEffect, useRef, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Search, SlidersHorizontal, X } from "lucide-react"
+import { Search, SlidersHorizontal } from "lucide-react"
 
 import { type PageSize, type Priority, PRIORITY_LABELS, PRIORITY_ORDER } from "../../types"
 import { useLabels } from "../../hooks/useLabels"
 import { useTasks } from "../../hooks/useTasks"
 import { useTaskToggle } from "../../hooks/useTaskToggle"
 import { useToast } from "../../hooks/useToast"
+import { FilterChip } from "../../components/FilterChip"
 import { Pagination } from "../../components/Pagination"
 import { TaskCard } from "../../components/TaskCard"
 import { TaskFilterPopup } from "../../components/TaskFilterPopup"
@@ -149,7 +150,6 @@ function TasksPageContent() {
     resetPage()
   }
 
-  // フィルタ・ソート
   const filteredAndSortedTasks = useMemo(() => {
     const filtered = tasks.filter(task => {
       const matchesSearch = task.title.toLowerCase().includes(searchText.toLowerCase())
@@ -189,7 +189,6 @@ function TasksPageContent() {
     })
   }, [searchText, selectedLabels, selectedPriorities, selectedStatuses, sortKey, sortOrder, tasks, labels])
 
-  // ページネーション
   const totalPages = Math.max(1, Math.ceil(filteredAndSortedTasks.length / pageSize))
   const safePage = Math.min(currentPage, totalPages)
   const pagedTasks = filteredAndSortedTasks.slice(
@@ -220,7 +219,7 @@ function TasksPageContent() {
             <select
               value={currentSortValue}
               onChange={handleSortChange}
-              className="flex-1 md:flex-none px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-brand-500"
+              className="flex-1 md:flex-none px-3 py-1.5 border border-gray-300 rounded-lg text-sm text-gray-400 focus:outline-none focus:ring-1 focus:ring-brand-500 cursor-pointer"
             >
               <option value="">並び替え</option>
               {SORT_OPTIONS.map(opt => (
@@ -232,7 +231,7 @@ function TasksPageContent() {
             <div className="relative">
               <button
                 onClick={() => setFilterPopupOpen(prev => !prev)}
-                className={`h-full flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-semibold transition-colors whitespace-nowrap ${activeFilterCount > 0
+                className={`h-full flex items-center gap-2 px-4 py-2 border rounded-lg text-sm font-semibold transition-colors whitespace-nowrap cursor-pointer ${activeFilterCount > 0
                   ? "border-brand-500 bg-brand-100 text-brand-500"
                   : "border-gray-300 text-gray-400 hover:border-gray-400"
                   }`}
@@ -265,40 +264,40 @@ function TasksPageContent() {
               const label = labels.find(l => l.id === labelId)
               if (!label) return null
               return (
-                <button
+                <FilterChip
                   key={labelId}
+                  selected
+                  removable
                   onClick={() => { setSelectedLabels(prev => prev.filter(id => id !== labelId)); resetPage() }}
-                  className="flex items-center gap-1 px-3 py-1 bg-brand-100 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
                 >
                   {truncate(label.name, 6)}
-                  <X size={11} />
-                </button>
+                </FilterChip>
               )
             })}
             {selectedPriorities.map(p => (
-              <button
+              <FilterChip
                 key={p}
+                selected
+                removable
                 onClick={() => { setSelectedPriorities(prev => prev.filter(v => v !== p)); resetPage() }}
-                className="flex items-center gap-1 px-3 py-1 bg-brand-100 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
               >
                 {PRIORITY_LABELS[p]}
-                <X size={11} />
-              </button>
+              </FilterChip>
             ))}
             {selectedStatuses.map(s => (
-              <button
+              <FilterChip
                 key={s}
+                selected
+                removable
                 onClick={() => { setSelectedStatuses(prev => prev.filter(v => v !== s)); resetPage() }}
-                className="flex items-center gap-1 px-3 py-1 bg-brand-100 border border-brand-500 text-brand-500 text-xs font-semibold rounded-full hover:bg-orange-100 transition-colors"
               >
                 {STATUS_LABELS[s]}
-                <X size={11} />
-              </button>
+              </FilterChip>
             ))}
             {activeFilterCount > 0 && (
               <button
                 onClick={resetAllFilters}
-                className="text-xs text-gray-400 hover:text-gray-600 underline px-1"
+                className="text-xs text-gray-400 hover:text-gray-600 underline px-1 cursor-pointer"
               >
                 すべて解除
               </button>
