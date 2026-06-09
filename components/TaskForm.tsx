@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react"
 import { CalendarDays, CheckCircle, Circle } from "lucide-react"
 
 import { Priority } from "../types"
-import { useLabels } from "../hooks/useLabels"
+import { useLabels } from "../contexts/LabelsContext"
 import { ConfirmDialog } from "./ConfirmDialog"
 import { DatePickerModal } from "./DatePickerModal"
 import { LabelSelector } from "./LabelSelector"

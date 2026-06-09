@@ -5,8 +5,8 @@ import Link from "next/link"
 import { EyeOff, Home, List, LogOut, MoreVertical, PanelLeft, Plus, Settings, Tag } from "lucide-react"
 
 import { useToast } from "../contexts/ToastContext"
-import { useLabels } from "../hooks/useLabels"
-import { useTasks } from "../hooks/useTasks"
+import { useLabels } from "../contexts/LabelsContext"
+import { useTasks } from "../contexts/TasksContext"
 import { LogoutModal } from "./LogoutModal"
 
 type Props = {

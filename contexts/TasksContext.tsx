@@ -51,7 +51,6 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   const isInitialized = useRef(false)
   const [isLoaded, setIsLoaded] = useState(false)
 
-  // 初期化（localStorageから復元、なければダミーデータ）
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
@@ -66,7 +65,6 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     setIsLoaded(true)
   }, [])
 
-  // 保存（debounce付き）
   useEffect(() => {
     if (!isInitialized.current) {
       isInitialized.current = true
@@ -117,6 +115,6 @@ export function TasksProvider({ children }: { children: ReactNode }) {
 
 export function useTasks() {
   const ctx = useContext(TasksContext)
-  if (!ctx) throw new Error("TasksProvider未設定")
+  if (!ctx) throw new Error("useTasks は TasksProvider の内側で呼んでください")
   return ctx
 }

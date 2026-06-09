@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useTasks } from "../../../hooks/useTasks"
+import { useTasks } from "../../../contexts/TasksContext"
 import { TaskForm } from "../../../components/TaskForm"
 import { PageContainer } from "../../../components/PageContainer"
 

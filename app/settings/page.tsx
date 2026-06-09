@@ -4,7 +4,7 @@ import { useState } from "react"
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core"
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
 
-import { useLabels } from "../../hooks/useLabels"
+import { useLabels } from "../../contexts/LabelsContext"
 import { useSettings } from "../../hooks/useSettings"
 import { LabelRow } from "../../components/LabelRow"
 import { PageContainer } from "../../components/PageContainer"

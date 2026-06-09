@@ -2,7 +2,7 @@
 
 import { useRouter, useParams } from "next/navigation"
 import Link from "next/link"
-import { useTasks } from "../../../hooks/useTasks"
+import { useTasks } from "../../../contexts/TasksContext"
 import { TaskForm } from "../../../components/TaskForm"
 import { PageContainer } from "../../../components/PageContainer"
 

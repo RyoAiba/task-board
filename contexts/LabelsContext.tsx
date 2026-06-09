@@ -43,7 +43,6 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
   const isInitialized = useRef(false)
   const [isLoaded, setIsLoaded] = useState(false)
 
-  // 初期化（localStorageから復元）
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY)
     try {
@@ -55,7 +54,6 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
     setIsLoaded(true)
   }, [])
 
-  // 保存（debounce付き）
   useEffect(() => {
     if (!isInitialized.current) {
       isInitialized.current = true
@@ -67,7 +65,6 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer)
   }, [labels])
 
-  // orderでソートして提供
   const sortedLabels = useMemo(
     () => [...labels].sort((a, b) => a.order - b.order),
     [labels]
@@ -100,6 +97,6 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
 
 export function useLabels() {
   const ctx = useContext(LabelsContext)
-  if (!ctx) throw new Error("LabelsProvider未設定")
+  if (!ctx) throw new Error("useLabels は LabelsProvider の内側で呼んでください")
   return ctx
 }

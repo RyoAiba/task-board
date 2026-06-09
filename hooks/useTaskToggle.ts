@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from "react"
 
 import { useToast } from "../contexts/ToastContext"
-import { useTasks } from "./useTasks"
+import { useTasks } from "../contexts/TasksContext"
 
 export function useTaskToggle() {
   const { tasks, toggleCompleted } = useTasks()

@@ -42,6 +42,6 @@ export function TaskModalProvider({ children }: { children: ReactNode }) {
 
 export function useTaskModal() {
   const ctx = useContext(TaskModalContext)
-  if (!ctx) throw new Error("useTaskModal must be used within TaskModalProvider")
+  if (!ctx) throw new Error("useTaskModal は TaskModalProvider の内側で呼んでください")
   return ctx
 }

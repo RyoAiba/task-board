@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation"
 
 import { ToastProvider } from "@/contexts/ToastContext"
 import { TaskModalProvider } from "@/contexts/TaskModalContext"
-import { LabelsProvider } from "@/hooks/useLabels"
-import { TasksProvider } from "@/hooks/useTasks"
+import { LabelsProvider } from "@/contexts/LabelsContext"
+import { TasksProvider } from "@/contexts/TasksContext"
 import { Sidebar } from "./Sidebar"
 import { BottomNav } from "./BottomNav"
 
