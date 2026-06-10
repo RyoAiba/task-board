@@ -1,6 +1,6 @@
 "use client"
 
-import { type Task } from "../types"
+import { type Task } from "../../types"
 import { WeeklyCalendarDesktop } from "./WeeklyCalendarDesktop"
 import { WeeklyCalendarMobile } from "./WeeklyCalendarMobile"
 

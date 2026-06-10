@@ -4,27 +4,19 @@ import { useMemo, useState } from "react"
 import Link from "next/link"
 import { ChevronLeft, ChevronRight, Flame } from "lucide-react"
 
-import { useTaskModal } from "../contexts/TaskModalContext"
-import { type Task, PRIORITY_ORDER, PRIORITY_TEXT } from "../types"
-import { useSettings } from "../hooks/useSettings"
+import { useTaskModal } from "../../contexts/TaskModalContext"
+import { useSettings } from "../../hooks/useSettings"
+import { type Task, PRIORITY_TEXT } from "../../types"
+import { DAY_NAMES, formatDate, getTasksForDate } from "../../utils/calendar"
 
 type Props = {
   tasks: Task[]
 }
 
-const DAY_NAMES = ["日", "月", "火", "水", "木", "金", "土"]
-
 const MAX_VISIBLE_TASKS_BY_WEEKS: Record<number, number> = {
   4: 4,
   5: 3,
   6: 2,
-}
-
-function formatDate(date: Date): string {
-  const y = date.getFullYear()
-  const m = String(date.getMonth() + 1).padStart(2, "0")
-  const d = String(date.getDate()).padStart(2, "0")
-  return `${y}-${m}-${d}`
 }
 
 function getDayColor(dayOfWeek: number, isCurrentMonth: boolean, isToday: boolean): string {
@@ -72,21 +64,6 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
   }, [viewYear, viewMonth])
 
   const maxVisibleTasks = MAX_VISIBLE_TASKS_BY_WEEKS[weeks.length] ?? 3
-
-  const getTasksForDate = (dateStr: string): Task[] => {
-    return tasks
-      .filter(t => {
-        if (t.dueDate !== dateStr) return false
-        if (!settings.showCompletedInCalendar && t.completed) return false
-        return true
-      })
-      .sort((a, b) => {
-        if (a.completed !== b.completed) return Number(a.completed) - Number(b.completed)
-        const orderA = a.priority ? PRIORITY_ORDER[a.priority] : 99
-        const orderB = b.priority ? PRIORITY_ORDER[b.priority] : 99
-        return orderA - orderB
-      })
-  }
 
   const goToPrevMonth = () => {
     if (viewMonth === 0) {
@@ -161,7 +138,7 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
                 const isToday = dateStr === todayStr
                 const isCurrentMonth = date.getMonth() === viewMonth
                 const dayColor = getDayColor(date.getDay(), isCurrentMonth, isToday)
-                const allTasks = getTasksForDate(dateStr)
+                const allTasks = getTasksForDate(tasks, dateStr, settings.showCompletedInCalendar)
                 const visibleTasks = allTasks.slice(0, maxVisibleTasks)
                 const remainingCount = allTasks.length - maxVisibleTasks
 
@@ -179,29 +156,29 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
                     </div>
 
                     <div className="space-y-0.5">
-                      {visibleTasks.map(task => {
-                        const titleColor = !task.title
-                          ? "text-gray-300"
-                          : isCurrentMonth
-                            ? "text-gray-600"
-                            : "text-gray-300"
-                        return (
-                          <button
-                            key={task.id}
-                            type="button"
-                            onClick={() => openEdit(task.id)}
-                            className={`w-full text-left flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-gray-50 transition-colors cursor-pointer ${task.completed ? "opacity-40" : ""}`}
-                          >
-                            <Flame
-                              size={10}
-                              className={`flex-shrink-0 ${task.priority ? PRIORITY_TEXT[task.priority] : "text-gray-300"}`}
-                            />
-                            <span className={`text-xs truncate ${titleColor} ${task.completed ? "line-through" : ""}`}>
-                              {task.title || "(タイトルなし)"}
-                            </span>
-                          </button>
-                        )
-                      })}
+                      {visibleTasks.map(task => (
+                        <button
+                          key={task.id}
+                          type="button"
+                          onClick={() => openEdit(task.id)}
+                          className="w-full text-left flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-gray-50 transition-colors cursor-pointer"
+                        >
+                          <Flame
+                            size={10}
+                            className={`flex-shrink-0 ${task.priority ? PRIORITY_TEXT[task.priority] : "text-gray-300"}`}
+                          />
+                          <span className={`text-xs truncate ${task.completed
+                            ? "text-gray-400 line-through"
+                            : !task.title
+                              ? "text-gray-300"
+                              : isCurrentMonth
+                                ? "text-gray-600"
+                                : "text-gray-300"
+                            }`}>
+                            {task.title || "(タイトルなし)"}
+                          </span>
+                        </button>
+                      ))}
                       {remainingCount > 0 && (
                         <Link
                           href={`/tasks?dueDate=${dateStr}`}
