@@ -2,10 +2,10 @@
 
 import { useMemo, useState } from "react"
 import Link from "next/link"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, Flame } from "lucide-react"
 
 import { useTaskModal } from "../contexts/TaskModalContext"
-import { type Task, PRIORITY_ORDER, PRIORITY_PRIMARY } from "../types"
+import { type Task, PRIORITY_ORDER, PRIORITY_TEXT } from "../types"
 import { useSettings } from "../hooks/useSettings"
 
 type Props = {
@@ -179,19 +179,29 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
                     </div>
 
                     <div className="space-y-0.5">
-                      {visibleTasks.map(task => (
-                        <button
-                          key={task.id}
-                          type="button"
-                          onClick={() => openEdit(task.id)}
-                          className={`w-full text-left flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-gray-50 transition-colors cursor-pointer ${task.completed ? "opacity-40" : ""}`}
-                        >
-                          <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${task.priority ? PRIORITY_PRIMARY[task.priority] : "bg-gray-300"}`} />
-                          <span className={`text-xs truncate ${isCurrentMonth ? "text-gray-600" : "text-gray-300"} ${task.completed ? "line-through" : ""}`}>
-                            {task.title}
-                          </span>
-                        </button>
-                      ))}
+                      {visibleTasks.map(task => {
+                        const titleColor = !task.title
+                          ? "text-gray-300"
+                          : isCurrentMonth
+                            ? "text-gray-600"
+                            : "text-gray-300"
+                        return (
+                          <button
+                            key={task.id}
+                            type="button"
+                            onClick={() => openEdit(task.id)}
+                            className={`w-full text-left flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-gray-50 transition-colors cursor-pointer ${task.completed ? "opacity-40" : ""}`}
+                          >
+                            <Flame
+                              size={10}
+                              className={`flex-shrink-0 ${task.priority ? PRIORITY_TEXT[task.priority] : "text-gray-300"}`}
+                            />
+                            <span className={`text-xs truncate ${titleColor} ${task.completed ? "line-through" : ""}`}>
+                              {task.title || "(タイトルなし)"}
+                            </span>
+                          </button>
+                        )
+                      })}
                       {remainingCount > 0 && (
                         <Link
                           href={`/tasks?dueDate=${dateStr}`}

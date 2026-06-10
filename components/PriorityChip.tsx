@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { Rocket } from "lucide-react"
+import { Flame } from "lucide-react"
 
 import { type Priority, PRIORITY_LABELS, PRIORITY_TEXT } from "../types"
 import { Chip } from "./Chip"
@@ -27,7 +27,7 @@ export function PriorityChip({ value, onChange }: Props) {
     <>
       <div ref={triggerRef} className="inline-block">
         <Chip
-          icon={Rocket}
+          icon={Flame}
           iconClassName={value ? PRIORITY_TEXT[value] : "text-gray-400"}
           label={value ? PRIORITY_LABELS[value] : "優先度"}
           labelClassName={value ? "text-gray-600" : "text-gray-400"}
@@ -47,7 +47,7 @@ export function PriorityChip({ value, onChange }: Props) {
                 onClick={() => { onChange(opt.value); setOpen(false) }}
                 className={`w-full flex items-center gap-2 px-3 py-1.5 rounded text-sm text-left transition-colors ${selected ? "bg-gray-50" : "hover:bg-gray-50"}`}
               >
-                <Rocket size={14} className={opt.value ? PRIORITY_TEXT[opt.value] : "text-gray-300"} />
+                <Flame size={14} className={opt.value ? PRIORITY_TEXT[opt.value] : "text-gray-300"} />
                 <span className={`text-gray-600 ${selected ? "font-medium" : ""}`}>{opt.label}</span>
               </button>
             )

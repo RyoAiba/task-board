@@ -1,10 +1,10 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
-import { X } from "lucide-react"
+import { Flame, X } from "lucide-react"
 
 import { useTaskModal } from "../contexts/TaskModalContext"
-import { type Task, PRIORITY_ORDER, PRIORITY_PRIMARY } from "../types"
+import { type Task, PRIORITY_ORDER, PRIORITY_TEXT } from "../types"
 import { useSettings } from "../hooks/useSettings"
 
 type Props = {
@@ -112,8 +112,13 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
                             onClick={() => openEdit(task.id)}
                             className={`w-full text-left flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer ${task.completed ? "opacity-40" : ""}`}
                           >
-                            <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${task.priority ? PRIORITY_PRIMARY[task.priority] : "bg-gray-300"}`} />
-                            <span className="text-xs text-gray-600 truncate">{task.title}</span>
+                            <Flame
+                              size={10}
+                              className={`flex-shrink-0 ${task.priority ? PRIORITY_TEXT[task.priority] : "text-gray-300"}`}
+                            />
+                            <span className={`text-xs truncate ${task.title ? "text-gray-600" : "text-gray-400"}`}>
+                              {task.title || "(タイトルなし)"}
+                            </span>
                           </button>
                         ))}
                         {remainingCount > 0 && (
@@ -155,7 +160,7 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
                 <h3 className="text-sm font-semibold text-gray-600">
                   {(() => {
                     const d = new Date(`${popupDate}T00:00:00`)
-                    return `${d.getMonth() + 1}/${d.getDate()}（${DAY_NAMES[d.getDay()]}）`
+                    return `${d.getMonth() + 1}/${d.getDate()}(${DAY_NAMES[d.getDay()]})`
                   })()}
                 </h3>
                 <button onClick={() => setPopupDate(null)} className="text-gray-400 hover:text-gray-600">
@@ -170,8 +175,13 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
                     onClick={() => handleTaskClick(task.id)}
                     className={`w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer ${task.completed ? "opacity-40" : ""}`}
                   >
-                    <div className={`w-2 h-2 rounded-full flex-shrink-0 ${task.priority ? PRIORITY_PRIMARY[task.priority] : "bg-gray-300"}`} />
-                    <span className="text-sm text-gray-600">{task.title}</span>
+                    <Flame
+                      size={12}
+                      className={`flex-shrink-0 ${task.priority ? PRIORITY_TEXT[task.priority] : "text-gray-300"}`}
+                    />
+                    <span className={`text-sm ${task.title ? "text-gray-600" : "text-gray-400"}`}>
+                      {task.title || "(タイトルなし)"}
+                    </span>
                   </button>
                 ))}
               </div>

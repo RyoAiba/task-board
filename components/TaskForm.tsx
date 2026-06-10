@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Trash2, X } from "lucide-react"
+import { Copy, Trash2, X } from "lucide-react"
 
 import { useLabels } from "../contexts/LabelsContext"
 import { type Priority } from "../types"
@@ -26,10 +26,11 @@ type Props = {
   initialValues?: FormValues
   onSave: (data: FormValues) => void
   onDelete?: () => void
+  onDuplicate?: () => void
   onCancel: () => void
 }
 
-export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Props) {
+export function TaskForm({ mode, initialValues, onSave, onDelete, onDuplicate, onCancel }: Props) {
   const { labels } = useLabels()
 
   const [title, setTitle] = useState(initialValues?.title ?? "")
@@ -38,6 +39,8 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
   const [dueDate, setDueDate] = useState(initialValues?.dueDate ?? "")
   const [completed, setCompleted] = useState(initialValues?.completed ?? false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
+
+  const submitLabel = mode === "create" ? "追加" : "保存"
 
   const handleSave = () => {
     onSave({ title: title.trim(), priority, labelId, dueDate, completed })
@@ -55,6 +58,16 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
             aria-label="削除"
           >
             <Trash2 size={20} />
+          </button>
+        )}
+        {mode === "edit" && onDuplicate && (
+          <button
+            type="button"
+            onClick={onDuplicate}
+            className="text-gray-400 hover:text-brand-500 transition-colors cursor-pointer"
+            aria-label="複製"
+          >
+            <Copy size={20} />
           </button>
         )}
         <button
@@ -102,7 +115,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
           onClick={handleSave}
           className="md:hidden flex-shrink-0 py-1.5 px-4 bg-brand-500 text-white text-sm font-semibold rounded-lg hover:opacity-90 transition-colors cursor-pointer"
         >
-          保存
+          {submitLabel}
         </button>
       </div>
 
@@ -113,7 +126,7 @@ export function TaskForm({ mode, initialValues, onSave, onDelete, onCancel }: Pr
           onClick={handleSave}
           className="py-2 px-6 bg-brand-500 text-white font-semibold rounded-lg hover:opacity-90 transition-colors cursor-pointer"
         >
-          保存する
+          {submitLabel}
         </button>
       </div>
 

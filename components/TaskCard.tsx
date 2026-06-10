@@ -1,12 +1,11 @@
 "use client"
 
 import { memo } from "react"
-import { CalendarDays, CheckCircle, Circle } from "lucide-react"
+import { CalendarDays, CheckCircle, Circle, Flame } from "lucide-react"
 
 import { useTaskModal } from "../contexts/TaskModalContext"
-import { type Label, type Task } from "../types"
+import { type Label, type Task, PRIORITY_TEXT } from "../types"
 import { getDueDateInfo } from "../utils/dueDate"
-import { getPriorityCircleClass } from "../utils/priority"
 import { LabelBadge } from "./LabelBadge"
 
 type TaskCardProps = {
@@ -18,7 +17,7 @@ type TaskCardProps = {
 export const TaskCard = memo(function TaskCard({ task, label, onToggle }: TaskCardProps) {
   const { openEdit } = useTaskModal()
   const dueDateInfo = getDueDateInfo(task.dueDate, task.completed)
-  const priorityClass = getPriorityCircleClass(task.priority)
+  const displayTitle = task.title || "(タイトルなし)"
 
   return (
     <div className="group/card relative px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
@@ -27,27 +26,30 @@ export const TaskCard = memo(function TaskCard({ task, label, onToggle }: TaskCa
           onClick={() => onToggle(task.id)}
           className="group/toggle relative z-10 flex-shrink-0 flex items-center justify-center p-1 -m-1 cursor-pointer bg-transparent"
         >
-          <span className={`flex items-center rounded-full transition-colors ${priorityClass}`}>
-            {task.completed ? (
-              <CheckCircle size={22} />
-            ) : (
-              <>
-                <Circle size={22} className="block group-hover/toggle:hidden" />
-                <CheckCircle size={22} className="hidden group-hover/toggle:block" />
-              </>
-            )}
-          </span>
+          {task.completed ? (
+            <CheckCircle size={22} className="text-gray-400" />
+          ) : (
+            <span className="flex items-center text-gray-300 group-hover/toggle:text-gray-400 transition-colors">
+              <Circle size={22} className="block group-hover/toggle:hidden" />
+              <CheckCircle size={22} className="hidden group-hover/toggle:block" />
+            </span>
+          )}
         </button>
 
         <button
           onClick={() => openEdit(task.id)}
           className="absolute inset-0 cursor-pointer"
-          aria-label={`${task.title}を編集`}
+          aria-label={`${displayTitle}を編集`}
         />
 
         <div className="flex-1 min-w-0">
-          <span className={`block text-sm truncate ${task.completed ? "text-gray-400 line-through" : ""}`}>
-            {task.title}
+          <span className={`block text-sm truncate ${task.completed
+            ? "text-gray-400 line-through"
+            : !task.title
+              ? "text-gray-400"
+              : ""
+            }`}>
+            {displayTitle}
           </span>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
             {dueDateInfo && (
@@ -55,6 +57,9 @@ export const TaskCard = memo(function TaskCard({ task, label, onToggle }: TaskCa
                 <CalendarDays size={11} />
                 {dueDateInfo.label}
               </span>
+            )}
+            {task.priority && (
+              <Flame size={11} className={PRIORITY_TEXT[task.priority]} />
             )}
             {label && <LabelBadge label={label} />}
           </div>

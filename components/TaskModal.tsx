@@ -11,6 +11,7 @@ import { TaskForm } from "./TaskForm"
 import type { Task } from "../types"
 
 const ANIMATION_DURATION_MS = 200
+const DUPLICATE_DELAY_MS = 100
 
 type FormValues = {
   title: string
@@ -31,7 +32,7 @@ function toFormValues(task: Partial<Task>): FormValues {
 }
 
 export function TaskModal() {
-  const { state, close } = useTaskModal()
+  const { state, close, openCreate } = useTaskModal()
   const { addTask, updateTask, deleteTask, getTaskById } = useTasks()
   const { showToast } = useToast()
 
@@ -39,7 +40,6 @@ export function TaskModal() {
   const [mounted, setMounted] = useState(false)
   const [animateIn, setAnimateIn] = useState(false)
 
-  // 退場アニメーション中も最後のopen状態をrenderするため、別state で保持
   const [renderState, setRenderState] = useState<TaskModalState>(state)
   if (state.mode !== "closed" && state !== renderState) {
     setRenderState(state)
@@ -113,6 +113,24 @@ export function TaskModal() {
     }
     : undefined
 
+  const handleDuplicate = renderState.mode === "edit"
+    ? () => {
+      const task = getTaskById(renderState.taskId)
+      if (!task) return
+      close()
+      setTimeout(() => {
+        openCreate({
+          initialValues: {
+            title: task.title,
+            priority: task.priority,
+            labelId: task.labelId,
+            dueDate: task.dueDate,
+          },
+        })
+      }, DUPLICATE_DELAY_MS)
+    }
+    : undefined
+
   return (
     <Overlay onBackdropClick={close} bottomSheetOnMobile>
       <div
@@ -129,6 +147,7 @@ export function TaskModal() {
           initialValues={initialValues}
           onSave={handleSave}
           onDelete={handleDelete}
+          onDuplicate={handleDuplicate}
           onCancel={close}
         />
       </div>

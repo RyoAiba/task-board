@@ -23,6 +23,7 @@ export const DEFAULT_LABELS: Label[] = [
   { id: "cat_3", name: "その他", order: 3 },
 ]
 
+// Priority
 export const PRIORITY_LABELS: Record<Priority, string> = {
   high: "高",
   medium: "中",
@@ -35,23 +36,18 @@ export const PRIORITY_ORDER: Record<Priority, number> = {
   low: 2,
 }
 
-export const PRIORITY_TEXT: Record<Priority, string> = {
-  high: "text-priority-high",
-  medium: "text-priority-medium",
-  low: "text-priority-low",
-}
-
-export const PAGE_SIZE_OPTIONS = [10, 30] as const
-export type PageSize = typeof PAGE_SIZE_OPTIONS[number]
-
 export const PRIORITY_PRIMARY: Record<Priority, string> = {
   high: "bg-priority-high",
   medium: "bg-priority-medium",
   low: "bg-priority-low",
 }
 
-export const PRIORITY_SOFT: Record<Priority, string> = {
-  high: "bg-priority-high/5 text-priority-high/80",
-  medium: "bg-priority-medium/5 text-priority-medium/80",
-  low: "bg-priority-low/5 text-priority-low/80",
+export const PRIORITY_TEXT: Record<Priority, string> = {
+  high: "text-priority-high",
+  medium: "text-priority-medium",
+  low: "text-priority-low",
 }
+
+// Pagination
+export const PAGE_SIZE_OPTIONS = [10, 30] as const
+export type PageSize = typeof PAGE_SIZE_OPTIONS[number]
