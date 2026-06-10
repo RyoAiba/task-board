@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { ChevronLeft, ChevronRight, X } from "lucide-react"
-import { Overlay } from "./Overlay"
 
 type Props = {
   selectedDate: string
@@ -10,7 +9,11 @@ type Props = {
   onClose: () => void
 }
 
-export function DatePickerModal({ selectedDate, onSelect, onClose }: Props) {
+export function DatePickerModal({
+  selectedDate,
+  onSelect,
+  onClose,
+}: Props) {
   const [displayDate, setDisplayDate] = useState(new Date())
 
   useEffect(() => {
@@ -36,18 +39,31 @@ export function DatePickerModal({ selectedDate, onSelect, onClose }: Props) {
   }
 
   const handleDateClick = (day: number) => {
-    const newDate = new Date(displayDate.getFullYear(), displayDate.getMonth(), day)
+    const newDate = new Date(
+      displayDate.getFullYear(),
+      displayDate.getMonth(),
+      day,
+    )
+
     onSelect(formatDate(newDate))
-    onClose()
   }
 
   const daysInMonth = getDaysInMonth(displayDate)
   const firstDay = getFirstDayOfMonth(displayDate)
-  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1)
-  const emptyDays = Array.from({ length: firstDay }, (_, i) => i)
+
+  const days = Array.from(
+    { length: daysInMonth },
+    (_, i) => i + 1,
+  )
+
+  const emptyDays = Array.from(
+    { length: firstDay },
+    (_, i) => i,
+  )
 
   const isToday = (day: number) => {
     const today = new Date()
+
     return (
       day === today.getDate() &&
       displayDate.getMonth() === today.getMonth() &&
@@ -56,76 +72,105 @@ export function DatePickerModal({ selectedDate, onSelect, onClose }: Props) {
   }
 
   const isSelected = (day: number) =>
-    selectedDate === formatDate(new Date(displayDate.getFullYear(), displayDate.getMonth(), day))
+    selectedDate ===
+    formatDate(
+      new Date(
+        displayDate.getFullYear(),
+        displayDate.getMonth(),
+        day,
+      ),
+    )
 
   const dayNames = ["日", "月", "火", "水", "木", "金", "土"]
 
   return (
-    <Overlay onBackdropClick={onClose} level="above">
-      <div
-        className="bg-white rounded-xl shadow-modal w-80 p-4"
-        onClick={e => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-gray-600">
-            {displayDate.getFullYear()}年{displayDate.getMonth() + 1}月
-          </h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <X size={16} />
-          </button>
-        </div>
+    <div className="bg-white rounded-xl shadow-modal w-80 p-4">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-sm font-semibold text-gray-600">
+          {displayDate.getFullYear()}年
+          {displayDate.getMonth() + 1}月
+        </h2>
 
-        <div className="flex items-center justify-between mb-4">
-          <button
-            onClick={() => setDisplayDate(new Date(displayDate.getFullYear(), displayDate.getMonth() - 1))}
-            className="p-1 hover:bg-gray-100 rounded transition-colors"
+        <button
+          onClick={onClose}
+          className="text-gray-400 hover:text-gray-600"
+        >
+          <X size={16} />
+        </button>
+      </div>
+
+      <div className="flex items-center justify-between mb-4">
+        <button
+          onClick={() =>
+            setDisplayDate(
+              new Date(
+                displayDate.getFullYear(),
+                displayDate.getMonth() - 1,
+              ),
+            )}
+          className="p-1 hover:bg-gray-100 rounded transition-colors"
+        >
+          <ChevronLeft size={18} className="text-gray-600" />
+        </button>
+
+        <div className="flex-1" />
+
+        <button
+          onClick={() =>
+            setDisplayDate(
+              new Date(
+                displayDate.getFullYear(),
+                displayDate.getMonth() + 1,
+              ),
+            )}
+          className="p-1 hover:bg-gray-100 rounded transition-colors"
+        >
+          <ChevronRight size={18} className="text-gray-600" />
+        </button>
+      </div>
+
+      <div className="grid grid-cols-7 gap-1 mb-2">
+        {dayNames.map(day => (
+          <div
+            key={day}
+            className="text-xs text-center font-semibold text-gray-400 py-2"
           >
-            <ChevronLeft size={18} className="text-gray-600" />
-          </button>
-          <div className="flex-1" />
+            {day}
+          </div>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-7 gap-1">
+        {emptyDays.map((_, i) => (
+          <div key={`empty-${i}`} />
+        ))}
+
+        {days.map(day => (
           <button
-            onClick={() => setDisplayDate(new Date(displayDate.getFullYear(), displayDate.getMonth() + 1))}
-            className="p-1 hover:bg-gray-100 rounded transition-colors"
-          >
-            <ChevronRight size={18} className="text-gray-600" />
-          </button>
-        </div>
-
-        <div className="grid grid-cols-7 gap-1 mb-2">
-          {dayNames.map(day => (
-            <div key={day} className="text-xs text-center font-semibold text-gray-400 py-2">
-              {day}
-            </div>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-7 gap-1">
-          {emptyDays.map((_, i) => <div key={`empty-${i}`} />)}
-          {days.map(day => (
-            <button
-              key={day}
-              onClick={() => handleDateClick(day)}
-              className={`w-8 h-8 text-sm rounded transition-colors mx-auto flex items-center justify-center ${isSelected(day)
+            key={day}
+            onClick={() => handleDateClick(day)}
+            className={`w-8 h-8 text-sm rounded transition-colors mx-auto flex items-center justify-center ${isSelected(day)
                 ? "bg-brand-500 text-white font-semibold"
                 : isToday(day)
                   ? "border border-brand-500 text-brand-500 font-semibold"
                   : "text-gray-600 hover:bg-gray-100"
-                }`}
-            >
-              {day}
-            </button>
-          ))}
-        </div>
-
-        {selectedDate && (
-          <button
-            onClick={() => { onSelect(""); onClose() }}
-            className="mt-3 w-full text-xs text-gray-400 hover:text-gray-600 underline py-1"
+              }`}
           >
-            期限を削除
+            {day}
           </button>
-        )}
+        ))}
       </div>
-    </Overlay>
+
+      {selectedDate && (
+        <button
+          onClick={() => {
+            onSelect("")
+          }}
+          className="mt-3 w-full text-xs text-gray-400 hover:text-gray-600 underline py-1"
+        >
+          期限を削除
+        </button>
+      )}
+    </div>
   )
 }

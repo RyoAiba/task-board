@@ -23,10 +23,15 @@ export function Chip({
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer text-sm bg-white ${className}`}
+      className={`relative inline-flex items-center px-3 py-1 rounded-full border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer text-sm bg-white ${className}`}
     >
-      <Icon size={14} className={iconClassName} />
-      <span className={labelClassName}>{label}</span>
+      <span className="absolute left-3 flex items-center">
+        <Icon size={14} className={iconClassName} />
+      </span>
+
+      <span className={`w-full text-center pl-4 ${labelClassName}`}>
+        {label}
+      </span>
     </button>
   )
 }
