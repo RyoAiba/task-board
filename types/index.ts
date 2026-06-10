@@ -35,6 +35,12 @@ export const PRIORITY_ORDER: Record<Priority, number> = {
   low: 2,
 }
 
+export const PRIORITY_TEXT: Record<Priority, string> = {
+  high: "text-priority-high",
+  medium: "text-priority-medium",
+  low: "text-priority-low",
+}
+
 export const PAGE_SIZE_OPTIONS = [10, 30] as const
 export type PageSize = typeof PAGE_SIZE_OPTIONS[number]
 
@@ -42,12 +48,6 @@ export const PRIORITY_PRIMARY: Record<Priority, string> = {
   high: "bg-priority-high",
   medium: "bg-priority-medium",
   low: "bg-priority-low",
-}
-
-export const PRIORITY_MIDDLE: Record<Priority, string> = {
-  high: "bg-priority-high/10 text-priority-high",
-  medium: "bg-priority-medium/5 text-priority-medium",
-  low: "bg-priority-low/5 text-priority-low",
 }
 
 export const PRIORITY_SOFT: Record<Priority, string> = {

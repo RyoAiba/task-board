@@ -1,6 +1,7 @@
 "use client"
 
-import type { ReactNode } from "react"
+import { useEffect, useState, type ReactNode } from "react"
+import { createPortal } from "react-dom"
 
 type Props = {
   children: ReactNode
@@ -10,10 +11,7 @@ type Props = {
   bottomSheetOnMobile?: boolean
 }
 
-const LEVEL_Z = {
-  base: "z-40",
-  above: "z-50",
-} as const
+const LEVEL_Z = { base: "z-40", above: "z-50" }
 
 export function Overlay({
   children,
@@ -22,14 +20,23 @@ export function Overlay({
   level = "base",
   bottomSheetOnMobile = false,
 }: Props) {
-  const align = bottomSheetOnMobile ? "items-end md:items-center" : "items-center"
+  const [mounted, setMounted] = useState(false)
 
-  return (
+  useEffect(() => setMounted(true), [])
+
+  if (!mounted) return null
+
+  const alignment = bottomSheetOnMobile ? "items-end md:items-center" : "items-center"
+
+  return createPortal(
     <div
-      className={`fixed inset-0 ${LEVEL_Z[level]} flex ${align} justify-center ${dim ? "bg-black/50" : ""}`}
-      onClick={onBackdropClick}
+      className={`fixed inset-0 ${LEVEL_Z[level]} flex ${alignment} justify-center ${dim ? "bg-black/50" : ""}`}
+      onClick={onBackdropClick ? (e) => {
+        if (e.target === e.currentTarget) onBackdropClick()
+      } : undefined}
     >
       {children}
-    </div>
+    </div>,
+    document.body
   )
 }
