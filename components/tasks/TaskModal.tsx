@@ -52,7 +52,7 @@ function isFormDirty(values: FormValues, initial: FormValues): boolean {
 
 export function TaskModal() {
   const { state, close, openCreate } = useTaskModal()
-  const { addTask, updateTask, deleteTask, getTaskById } = useTasks()
+  const { addTask, updateTask, deleteTask, restoreTask, getTaskById } = useTasks()
   const { showToast } = useToast()
 
   const isOpen = state.mode !== "closed"
@@ -80,6 +80,14 @@ export function TaskModal() {
     setValues(initial)
     setInitialValues(initial)
   }
+
+  // 編集対象のタスクが消えてたらモーダルを閉じる
+  const editingTaskMissing =
+    renderState.mode === "edit" && !getTaskById(renderState.taskId)
+
+  useEffect(() => {
+    if (editingTaskMissing) close()
+  }, [editingTaskMissing, close])
 
   // 開閉アニメーション
   useEffect(() => {
@@ -117,14 +125,7 @@ export function TaskModal() {
 
   if (!mounted) return null
   if (renderState.mode === "closed") return null
-
-  if (renderState.mode === "edit") {
-    const task = getTaskById(renderState.taskId)
-    if (!task) {
-      close()
-      return null
-    }
-  }
+  if (editingTaskMissing) return null
 
   const requestClose = () => {
     if (isFormDirty(values, initialValues)) {
@@ -162,8 +163,11 @@ export function TaskModal() {
 
   const handleDeleteConfirmed = () => {
     if (renderState.mode !== "edit") return
+    const task = getTaskById(renderState.taskId)
+    if (!task) return
+
     deleteTask(renderState.taskId)
-    showToast("タスクを削除しました")
+    showToast("タスクを削除しました", () => restoreTask(task))
     setShowDeleteConfirm(false)
     close()
   }

@@ -42,6 +42,7 @@ type TasksContextType = {
   deleteTask: (id: string) => void
   toggleCompleted: (id: string) => void
   getTaskById: (id: string) => Task | undefined
+  restoreTask: (task: Task) => void   // ← 追加
 }
 
 const TasksContext = createContext<TasksContextType | null>(null)
@@ -90,6 +91,10 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     return newTask
   }
 
+  const restoreTask = (task: Task) => {
+    dispatch({ type: "ADD_TASK", payload: task })
+  }
+
   const updateTask = (id: string, updates: Partial<Omit<Task, "id" | "createdAt">>) => {
     dispatch({ type: "UPDATE_TASK", payload: { id, updates } })
   }
@@ -107,7 +112,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <TasksContext.Provider value={{ tasks, isLoaded, addTask, updateTask, deleteTask, toggleCompleted, getTaskById }}>
+    <TasksContext.Provider value={{ tasks, isLoaded, addTask, updateTask, deleteTask, toggleCompleted, getTaskById, restoreTask }}>
       {children}
     </TasksContext.Provider>
   )
