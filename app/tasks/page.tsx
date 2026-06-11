@@ -47,7 +47,7 @@ function TasksPageContent() {
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc")
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState<PageSize>(10)
-  const [searchOpenSP, setSearchOpenSP] = useState(false)
+  const [searchOpenSP, setSearchOpenSP] = useState(true)
 
   useEffect(() => { setSelectedLabels(urlLabel ? [urlLabel] : []) }, [urlLabel])
   useEffect(() => { setSelectedPriorities(urlPriority ? [urlPriority] : []) }, [urlPriority])
