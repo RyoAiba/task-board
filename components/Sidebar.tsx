@@ -8,7 +8,7 @@ import { useToast } from "../contexts/ToastContext"
 import { useLabels } from "../contexts/LabelsContext"
 import { useTaskModal } from "../contexts/TaskModalContext"
 import { useTasks } from "../contexts/TasksContext"
-import { LogoutModal } from "./LogoutModal"
+import { LogoutDialog } from "./LogoutDialog"
 
 type Props = {
   collapsed: boolean
@@ -18,7 +18,7 @@ type Props = {
 const ITEM_CLASS = "flex items-center gap-2 pl-4 py-2 text-sm text-gray-600 hover:text-brand-500 transition-colors"
 
 export function Sidebar({ collapsed, onToggle }: Props) {
-  const [showLogoutModal, setShowLogoutModal] = useState(false)
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const { labels, isLoaded, updateLabel } = useLabels()
@@ -149,7 +149,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
             <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>設定</span>
           </Link>
           <button
-            onClick={() => setShowLogoutModal(true)}
+            onClick={() => setShowLogoutDialog(true)}
             className={`${ITEM_CLASS} w-full cursor-pointer`}
           >
             <LogOut size={20} className="flex-shrink-0" />
@@ -158,7 +158,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
         </div>
       </aside>
 
-      <LogoutModal isOpen={showLogoutModal} onClose={() => setShowLogoutModal(false)} />
+      <LogoutDialog isOpen={showLogoutDialog} onClose={() => setShowLogoutDialog(false)} />
     </>
   )
 }

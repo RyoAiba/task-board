@@ -2,18 +2,19 @@
 
 import { useRouter } from "next/navigation"
 
+import { logout } from "../utils/auth"
 import { ConfirmDialog } from "./ConfirmDialog"
 
-type LogoutModalProps = {
+type LogoutDialogProps = {
   isOpen: boolean
   onClose: () => void
 }
 
-export function LogoutModal({ isOpen, onClose }: LogoutModalProps) {
+export function LogoutDialog({ isOpen, onClose }: LogoutDialogProps) {
   const router = useRouter()
 
   const handleLogout = () => {
-    document.cookie = "auth=; path=/; max-age=0"
+    logout()
     router.push("/login")
   }
 

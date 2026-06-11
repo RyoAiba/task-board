@@ -6,12 +6,12 @@ import { usePathname } from "next/navigation"
 import { Home, List, Plus, Settings, LogOut } from "lucide-react"
 
 import { useTaskModal } from "../contexts/TaskModalContext"
-import { LogoutModal } from "./LogoutModal"
+import { LogoutDialog } from "./LogoutDialog"
 
 const NAV_ITEM_CLASS = "flex flex-col items-center justify-center flex-1 transition-colors"
 
 export function BottomNav() {
-  const [showLogoutModal, setShowLogoutModal] = useState(false)
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const pathname = usePathname()
   const { openCreate } = useTaskModal()
 
@@ -40,7 +40,7 @@ export function BottomNav() {
           <span className="text-[10px]">設定</span>
         </Link>
         <button
-          onClick={() => setShowLogoutModal(true)}
+          onClick={() => setShowLogoutDialog(true)}
           className={`${NAV_ITEM_CLASS} text-gray-400`}
         >
           <LogOut size={24} strokeWidth={1.5} />
@@ -48,7 +48,7 @@ export function BottomNav() {
         </button>
       </nav>
 
-      <LogoutModal isOpen={showLogoutModal} onClose={() => setShowLogoutModal(false)} />
+      <LogoutDialog isOpen={showLogoutDialog} onClose={() => setShowLogoutDialog(false)} />
     </>
   )
 }

@@ -1,56 +1,57 @@
-import { Task, Priority, PRIORITY_LABELS } from "../types"
+import { type Priority, type Task } from "../types"
 
 const TASK_TITLES = {
   仕事: [
-    "企画書を作成する",
-    "クライアント会議の準備",
-    "レポート作成",
-    "メール対応",
-    "プレゼンテーション資料作成",
-    "バグ修正",
-    "コードレビュー",
-    "ドキュメント更新",
-    "営業資料準備",
-    "市場分析レポート",
-    "契約書確認",
-    "チームミーティング参加",
-    "提案書作成",
-    "データ分析",
-    "システムアップデート",
+    "田中さんと1on1 14時",
+    "採用面談（フロントエンド）",
+    "9月リリースの仕様書レビュー",
+    "山田さんに見積もり共有",
+    "Slack通知設定の見直し",
+    "ログイン画面のドキュメント整理",
+    "月次レポート提出",
+    "新人さんのコードレビュー",
+    "経費精算（5月分）",
+    "Figmaのコンポーネント命名統一",
+    "API仕様書のレビュー",
+    "セキュリティ研修受講",
+    "スプリント振り返りの準備",
+    "鈴木部長と中間報告MTG",
+    "バックエンドのバグ調査",
+    "田町オフィス出社",
   ],
   趣味: [
-    "ジョギング",
-    "読書（技術書）",
-    "ブログ記事を書く",
-    "ゲームをプレイ",
-    "YouTubeを観る",
-    "写真撮影",
-    "料理を作る",
-    "映画鑑賞",
-    "運動する",
-    "瞑想",
-    "ギター練習",
-    "イラスト描く",
-    "散歩",
-    "音楽鑑賞",
-    "旅行計画",
+    "駒沢公園でランニング",
+    "中目黒スタバで読書",
+    "Netflixで沈黙の艦隊の続き",
+    "ブログ「Reactの再レンダリング」執筆",
+    "ジムでベンチプレス",
+    "自由が丘のヴィレッジヴァンガード",
+    "二子玉川を散歩",
+    "渋谷シネクイントで映画",
+    "朝ヨガ（YouTube）",
+    "お気に入りカフェで作業",
+    "三軒茶屋の銭湯",
+    "蔦屋書店代官山で本探す",
+    "ギター練習（オアシス）",
+    "中目黒で桜の写真撮影",
+    "学芸大学のラーメン屋開拓",
   ],
   その他: [
-    "買い物に行く",
-    "部屋の掃除",
-    "洗濯をする",
-    "病院予約",
-    "銀行に行く",
-    "床掃除",
-    "冷蔵庫整理",
-    "請求書確認",
-    "パソコン整理",
-    "靴の修理",
-    "ガス代支払い",
-    "髪切る",
-    "車の点検",
-    "荷物整理",
-    "植物に水やり",
+    "三軒茶屋のスーパーで買い物",
+    "恵比寿の歯医者予約",
+    "自由が丘のドンキで日用品",
+    "ふるさと納税の手続き",
+    "クリーニング受け取り",
+    "渋谷ロフトで文房具",
+    "銀行で振込",
+    "部屋の掃除機がけ",
+    "観葉植物に水やり",
+    "アマプラ解約検討",
+    "中目黒の郵便局で書留",
+    "Suicaチャージ",
+    "ユニクロ自由が丘で部屋着",
+    "美容院予約",
+    "健康診断の予約",
   ],
 }
 
@@ -69,33 +70,53 @@ export function generateDummyTasks(): Task[] {
   const now = new Date()
   let taskId = 1
 
-  const dueDatePatterns = [
+  // 期限のバリエーション（過去2週間〜未来1ヶ月、約2割が期限なし）
+  const dueDatePatterns: (Date | undefined)[] = [
+    addDays(now, -14),
+    addDays(now, -7),
     addDays(now, -3),
     addDays(now, -1),
     now,
+    now,
     addDays(now, 1),
+    addDays(now, 2),
     addDays(now, 3),
     addDays(now, 7),
     addDays(now, 14),
+    addDays(now, 30),
     undefined,
     undefined,
     undefined,
   ]
 
-  const priorities = Object.keys(PRIORITY_LABELS) as Priority[]
+  // 優先度パターン（高:中:低:なし ≒ 2:4:2:3 くらい）
+  const priorityPatterns: (Priority | undefined)[] = [
+    "high",
+    "high",
+    "medium",
+    "medium",
+    "medium",
+    "medium",
+    "low",
+    "low",
+    undefined,
+    undefined,
+    undefined,
+  ]
 
-  Object.entries(TASK_TITLES).forEach(([labelName, titles]) => {
+  Object.entries(TASK_TITLES).forEach(([labelName, titles], labelIndex) => {
     const labelId =
       labelName === "仕事" ? "cat_1" : labelName === "趣味" ? "cat_2" : "cat_3"
 
     titles.forEach((title, index) => {
-      const daysAgo = Math.floor(Math.random() * 5)
+      const daysAgo = Math.floor(Math.random() * 14)
       const createdDate = new Date(now)
       createdDate.setDate(createdDate.getDate() - daysAgo)
 
-      const priority = priorities[index % priorities.length]
-      const completed = Math.random() < 0.4
-      const dueDateBase = dueDatePatterns[index % dueDatePatterns.length]
+      // ラベルごとにパターンをずらして同じ並びにならないように
+      const dueDate = dueDatePatterns[(index + labelIndex) % dueDatePatterns.length]
+      const priority = priorityPatterns[(index + labelIndex * 2) % priorityPatterns.length]
+      const completed = Math.random() < 0.3
 
       tasks.push({
         id: `task_${taskId++}`,
@@ -104,7 +125,7 @@ export function generateDummyTasks(): Task[] {
         labelId,
         completed,
         createdAt: createdDate.toISOString(),
-        dueDate: dueDateBase ? formatDate(dueDateBase) : undefined,
+        dueDate: dueDate ? formatDate(dueDate) : undefined,
       })
     })
   })
