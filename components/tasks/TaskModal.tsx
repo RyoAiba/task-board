@@ -154,9 +154,10 @@ export function TaskModal() {
   }
 
   const handleSave = () => {
+    const finalTitle = values.title.trim() || "(タイトルなし)"
     if (renderState.mode === "edit") {
       updateTask(renderState.taskId, {
-        title: values.title.trim(),
+        title: finalTitle,
         priority: values.priority,
         labelId: values.labelId,
         dueDate: values.dueDate || undefined,
@@ -165,7 +166,7 @@ export function TaskModal() {
       showToast("タスクを保存しました")
     } else {
       addTask(
-        values.title.trim(),
+        finalTitle,
         values.priority,
         values.labelId,
         values.dueDate || undefined,

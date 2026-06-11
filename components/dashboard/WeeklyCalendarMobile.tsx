@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { Flame, X } from "lucide-react"
 
 import { useTaskModal } from "../../contexts/TaskModalContext"
-import { useSettings } from "../../hooks/useSettings"
+import { useSettings } from "../../contexts/SettingsContext"
 import { type Task, PRIORITY_TEXT } from "../../types"
 import { DAY_NAMES, formatDate, getTasksForDate } from "../../utils/calendar"
 
@@ -142,12 +142,7 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
                             size={10}
                             className={`flex-shrink-0 ${task.priority ? PRIORITY_TEXT[task.priority] : "text-gray-300"}`}
                           />
-                          <span className={`text-xs truncate ${task.completed
-                            ? "text-gray-400 line-through"
-                            : task.title
-                              ? "text-gray-600"
-                              : "text-gray-400"
-                            }`}>
+                          <span className={`text-xs truncate ${task.completed ? "text-gray-400 line-through" : "text-gray-600"}`}>
                             {task.title || "(タイトルなし)"}
                           </span>
                         </button>
@@ -204,12 +199,7 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
                     size={12}
                     className={`flex-shrink-0 ${task.priority ? PRIORITY_TEXT[task.priority] : "text-gray-300"}`}
                   />
-                  <span className={`text-sm ${task.completed
-                    ? "text-gray-400 line-through"
-                    : task.title
-                      ? "text-gray-600"
-                      : "text-gray-400"
-                    }`}>
+                  <span className={`text-sm ${task.completed ? "text-gray-400 line-through" : "text-gray-600"}`}>
                     {task.title || "(タイトルなし)"}
                   </span>
                 </button>

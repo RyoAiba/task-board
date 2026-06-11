@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { ChevronLeft, ChevronRight, Flame, X } from "lucide-react"
 
 import { useTaskModal } from "../../contexts/TaskModalContext"
-import { useSettings } from "../../hooks/useSettings"
+import { useSettings } from "../../contexts/SettingsContext"
 import { type Task, PRIORITY_TEXT } from "../../types"
 import { DAY_NAMES, formatDate, getTasksForDate } from "../../utils/calendar"
 
@@ -195,11 +195,9 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
                           />
                           <span className={`text-xs truncate ${task.completed
                             ? "text-gray-400 line-through"
-                            : !task.title
-                              ? "text-gray-300"
-                              : isCurrentMonth
-                                ? "text-gray-600"
-                                : "text-gray-300"
+                            : isCurrentMonth
+                              ? "text-gray-600"
+                              : "text-gray-300"
                             }`}>
                             {task.title || "(タイトルなし)"}
                           </span>

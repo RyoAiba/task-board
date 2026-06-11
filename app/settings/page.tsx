@@ -4,7 +4,7 @@ import dynamic from "next/dynamic"
 import { useState } from "react"
 
 import { useLabels } from "../../contexts/LabelsContext"
-import { useSettings } from "../../hooks/useSettings"
+import { useSettings } from "../../contexts/SettingsContext"
 import { Toggle } from "../../components/settings/Toggle"
 import { PageContainer } from "../../components/PageContainer"
 

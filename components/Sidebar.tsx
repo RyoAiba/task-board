@@ -82,7 +82,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
           </Link>
           <button onClick={() => openCreate()} className={`${ITEM_CLASS} w-full cursor-pointer`}>
             <Plus size={20} className="flex-shrink-0" />
-            <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>新規作成</span>
+            <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>タスクを追加</span>
           </button>
           <div>
             <Link href="/tasks" className={ITEM_CLASS}>

@@ -47,12 +47,7 @@ export const TaskCard = memo(function TaskCard({ task, label, exiting = false, o
           />
 
           <div className="flex-1 min-w-0">
-            <span className={`block text-sm truncate ${task.completed
-              ? "text-gray-400 line-through"
-              : !task.title
-                ? "text-gray-400"
-                : ""
-              }`}>
+            <span className={`block text-sm truncate ${task.completed ? "text-gray-400 line-through" : ""}`}>
               {displayTitle}
             </span>
             <div className="flex items-center gap-2 mt-1 flex-wrap">

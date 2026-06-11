@@ -1,7 +1,7 @@
 import { ChevronLeft, ChevronRight } from "lucide-react"
+
 import { PageSize, PAGE_SIZE_OPTIONS } from "../types"
 
-// ─── ページ番号生成 ──────────────────────────────────────
 function getPageNumbers(currentPage: number, totalPages: number): (number | "...")[] {
   if (totalPages <= 7) {
     return Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -15,7 +15,6 @@ function getPageNumbers(currentPage: number, totalPages: number): (number | "...
   return [1, "...", currentPage - 1, currentPage, currentPage + 1, "...", totalPages]
 }
 
-// ─── コンポーネント ──────────────────────────────────────
 interface PaginationProps {
   currentPage: number
   totalPages: number
@@ -37,13 +36,15 @@ export function Pagination({
   const endItem = Math.min(currentPage * pageSize, totalCount)
   const pageNumbers = getPageNumbers(currentPage, totalPages)
 
+  const navButtonClass = "p-1.5 rounded text-gray-400 transition-colors disabled:opacity-30 disabled:cursor-default enabled:cursor-pointer enabled:hover:text-gray-600 enabled:hover:bg-gray-100"
+
   return (
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
       <div className="flex items-center justify-center md:justify-start gap-1">
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="p-1.5 rounded text-gray-400 hover:text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className={navButtonClass}
         >
           <ChevronLeft size={16} />
         </button>
@@ -60,7 +61,7 @@ export function Pagination({
             <button
               key={page}
               onClick={() => onPageChange(page)}
-              className={`w-8 h-8 text-sm rounded transition-colors ${page === currentPage
+              className={`w-8 h-8 text-sm rounded transition-colors cursor-pointer ${page === currentPage
                 ? "bg-brand-500 text-white font-semibold"
                 : "text-gray-400 hover:bg-gray-100"
                 }`}
@@ -73,7 +74,7 @@ export function Pagination({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="p-1.5 rounded text-gray-400 hover:text-gray-600 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+          className={navButtonClass}
         >
           <ChevronRight size={16} />
         </button>
@@ -86,7 +87,7 @@ export function Pagination({
         <select
           value={pageSize}
           onChange={e => onPageSizeChange(Number(e.target.value) as PageSize)}
-          className="text-xs px-2 py-1 border border-gray-200 rounded text-gray-400 focus:outline-none focus:ring-1 focus:ring-brand-500"
+          className="text-xs px-2 py-1 border border-gray-200 rounded text-gray-400 focus:outline-none focus:ring-1 focus:ring-brand-500 cursor-pointer"
         >
           {PAGE_SIZE_OPTIONS.map(size => (
             <option key={size} value={size}>{size}件表示</option>
