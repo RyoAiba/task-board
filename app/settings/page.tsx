@@ -1,56 +1,22 @@
 "use client"
 
+import dynamic from "next/dynamic"
 import { useState } from "react"
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  TouchSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core"
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable"
 
 import { useLabels } from "../../contexts/LabelsContext"
 import { useSettings } from "../../hooks/useSettings"
-import { LabelRow } from "../../components/settings/LabelRow"
 import { Toggle } from "../../components/settings/Toggle"
 import { PageContainer } from "../../components/PageContainer"
+
+const LabelRowList = dynamic(() => import("../../components/settings/LabelRowList"), {
+  ssr: false,
+  loading: () => <div className="text-sm text-gray-400">読み込み中...</div>,
+})
 
 export default function SettingsPage() {
   const { labels, updateLabel } = useLabels()
   const { settings, updateSetting, isLoaded } = useSettings()
   const [tooltipOpen, setTooltipOpen] = useState(false)
-
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
-    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
-  )
-
-  const handleDragEnd = (e: DragEndEvent) => {
-    const { active, over } = e
-    if (!over || active.id === over.id) return
-
-    const oldIndex = labels.findIndex(l => l.id === active.id)
-    const newIndex = labels.findIndex(l => l.id === over.id)
-    if (oldIndex === -1 || newIndex === -1) return
-
-    const reordered = [...labels]
-    const [moved] = reordered.splice(oldIndex, 1)
-    reordered.splice(newIndex, 0, moved)
-    reordered.forEach((label, index) => {
-      if (label.order !== index + 1) {
-        updateLabel(label.id, { order: index + 1 })
-      }
-    })
-  }
 
   return (
     <PageContainer>
@@ -65,20 +31,7 @@ export default function SettingsPage() {
             <span className="hidden md:inline">サイドバーに表示</span>
           </div>
 
-          <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={labels.map(l => l.id)} strategy={verticalListSortingStrategy}>
-              <div className="space-y-1">
-                {labels.map(label => (
-                  <LabelRow
-                    key={label.id}
-                    label={label}
-                    onUpdateName={(id, name) => updateLabel(id, { name })}
-                    onToggleVisible={(id, hidden) => updateLabel(id, { hidden })}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </DndContext>
+          <LabelRowList labels={labels} onUpdateLabel={updateLabel} />
         </div>
       </section>
 
