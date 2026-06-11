@@ -4,24 +4,26 @@ import { useState, useMemo, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { ArrowUpDown, ChevronDown, Search, SlidersHorizontal } from "lucide-react"
 
-import { type PageSize, type Priority, PRIORITY_LABELS, PRIORITY_ORDER } from "../../types"
-import { useLabels } from "../../contexts/LabelsContext"
-import { useTasks } from "../../contexts/TasksContext"
-import { useTaskToggle } from "../../hooks/useTaskToggle"
-import { Pagination } from "../../components/Pagination"
-import { FilterChip } from "../../components/tasks/FilterChip"
-import { SortPopup, type SortKey, type SortOrder } from "../../components/tasks/SortPopup"
-import { TaskCard } from "../../components/tasks/TaskCard"
-import { TaskFilterPopup, type DateFilter, DATE_FILTER_LABELS } from "../../components/tasks/TaskFilterPopup"
-import { formatDate } from "../../utils/calendar"
-import { truncate } from "../../utils/string"
-
-type Status = "incomplete" | "completed"
-
-const STATUS_LABELS: Record<Status, string> = {
-  incomplete: "未完了",
-  completed: "完了済",
-}
+import { useLabels } from "@/contexts/LabelsContext"
+import { useTasks } from "@/contexts/TasksContext"
+import { useTaskToggle } from "@/hooks/useTaskToggle"
+import {
+  type DateFilter,
+  DATE_FILTER_LABELS,
+  type PageSize,
+  type Priority,
+  PRIORITY_LABELS,
+  PRIORITY_ORDER,
+  type Status,
+  STATUS_LABELS,
+} from "@/types"
+import { formatDate } from "@/utils/calendar"
+import { truncate } from "@/utils/string"
+import { Pagination } from "@/components/Pagination"
+import { FilterChip } from "@/components/tasks/FilterChip"
+import { SortPopup, type SortKey, type SortOrder } from "@/components/tasks/SortPopup"
+import { TaskCard } from "@/components/tasks/TaskCard"
+import { TaskFilterPopup } from "@/components/tasks/TaskFilterPopup"
 
 function TasksPageContent() {
   const searchParams = useSearchParams()
@@ -45,7 +47,7 @@ function TasksPageContent() {
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc")
   const [currentPage, setCurrentPage] = useState(1)
   const [pageSize, setPageSize] = useState<PageSize>(10)
-  const [searchOpenSP, setSearchOpenSP] = useState(true)
+  const [searchOpenSP, setSearchOpenSP] = useState(false)
 
   useEffect(() => { setSelectedLabels(urlLabel ? [urlLabel] : []) }, [urlLabel])
   useEffect(() => { setSelectedPriorities(urlPriority ? [urlPriority] : []) }, [urlPriority])
@@ -171,7 +173,6 @@ function TasksPageContent() {
   return (
     <div className="flex flex-col h-full">
 
-      {/* ヘッダー（SPはアコーディオン、PCは常時表示） */}
       <div className="flex-shrink-0 bg-white border-b border-gray-200 relative">
         <div className={`grid md:!grid-rows-[1fr] transition-[grid-template-rows] duration-300 ease-in-out ${searchOpenSP ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
           }`}>
@@ -239,6 +240,7 @@ function TasksPageContent() {
                   </div>
                 </div>
               </div>
+
               {hasActiveFilters && (
                 <div className="flex gap-2 flex-wrap items-center pt-3">
                   {selectedDateFilters.map(f => (
@@ -284,10 +286,8 @@ function TasksPageContent() {
           </div>
         </div>
 
-        {/* SP用 タブ周りのスペーサー */}
         <div className="md:hidden h-3" />
 
-        {/* SP用 開閉タブ */}
         <button
           type="button"
           onClick={() => setSearchOpenSP(prev => !prev)}

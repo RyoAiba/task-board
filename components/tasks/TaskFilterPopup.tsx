@@ -1,20 +1,17 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 
-import { type Label, type Priority } from "../../types"
+import { useClickOutside } from "@/hooks/useClickOutside"
+import {
+  type DateFilter,
+  DATE_FILTER_LABELS,
+  type Label,
+  type Priority,
+  type Status,
+  STATUS_LABELS,
+} from "@/types"
 import { FilterChip } from "./FilterChip"
-
-type Status = "incomplete" | "completed"
-
-export type DateFilter = "overdue" | "today" | "thisWeek" | "noDueDate"
-
-export const DATE_FILTER_LABELS: Record<DateFilter, string> = {
-  overdue: "期限切れ",
-  today: "今日",
-  thisWeek: "今週",
-  noDueDate: "期限なし",
-}
 
 const DATE_FILTER_OPTIONS: { label: string; value: DateFilter }[] = [
   { label: DATE_FILTER_LABELS.overdue, value: "overdue" },
@@ -24,8 +21,8 @@ const DATE_FILTER_OPTIONS: { label: string; value: DateFilter }[] = [
 ]
 
 const STATUS_OPTIONS: { label: string; value: Status }[] = [
-  { label: "未完了", value: "incomplete" },
-  { label: "完了済", value: "completed" },
+  { label: STATUS_LABELS.incomplete, value: "incomplete" },
+  { label: STATUS_LABELS.completed, value: "completed" },
 ]
 
 const PRIORITY_OPTIONS: { label: string; value: Priority }[] = [
@@ -64,19 +61,11 @@ export function TaskFilterPopup({
   const [pendingDateFilters, setPendingDateFilters] = useState(selectedDateFilters)
   const ref = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose()
-      }
-    }
-    document.addEventListener("mousedown", handleClick)
-    return () => document.removeEventListener("mousedown", handleClick)
-  }, [onClose])
+  useClickOutside(ref, onClose)
 
   const toggle = <T extends string>(
     setter: React.Dispatch<React.SetStateAction<T[]>>,
-    value: T
+    value: T,
   ) => {
     setter(prev =>
       prev.includes(value) ? prev.filter(v => v !== value) : [...prev, value]

@@ -67,7 +67,6 @@ export function TaskModal() {
   const [showCancelConfirm, setShowCancelConfirm] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
-  // モーダルが開く度にフォーム値を初期化
   if (state.mode !== "closed" && state !== renderState) {
     setRenderState(state)
 
@@ -89,7 +88,6 @@ export function TaskModal() {
     if (editingTaskMissing) close()
   }, [editingTaskMissing, close])
 
-  // isOpenの変化に応じてphase遷移
   useEffect(() => {
     if (isOpen && phase === "closed") {
       setPhase("opening")
@@ -98,7 +96,6 @@ export function TaskModal() {
     }
   }, [isOpen, phase])
 
-  // opening → open（次フレームで切替えて開きアニメ起動）
   useEffect(() => {
     if (phase !== "opening") return
     let raf2: number | undefined
@@ -111,14 +108,12 @@ export function TaskModal() {
     }
   }, [phase])
 
-  // closing → closed の保険タイマー（transitionendが拾えない場合用）
   useEffect(() => {
     if (phase !== "closing") return
     const t = setTimeout(() => setPhase("closed"), ANIMATION_DURATION_MS + 50)
     return () => clearTimeout(t)
   }, [phase])
 
-  // Escapeキー
   useEffect(() => {
     if (!isOpen) return
     const handleKey = (e: KeyboardEvent) => {

@@ -1,12 +1,13 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import { ChevronLeft, ChevronRight, Flame, X } from "lucide-react"
 
-import { useTaskModal } from "../../contexts/TaskModalContext"
-import { useSettings } from "../../contexts/SettingsContext"
-import { type Task, PRIORITY_TEXT } from "../../types"
-import { DAY_NAMES, formatDate, getTasksForDate } from "../../utils/calendar"
+import { useSettings } from "@/contexts/SettingsContext"
+import { useTaskModal } from "@/contexts/TaskModalContext"
+import { useClickOutside } from "@/hooks/useClickOutside"
+import { type Task, PRIORITY_TEXT } from "@/types"
+import { DAY_NAMES, formatDate, getTasksForDate } from "@/utils/calendar"
 
 type Props = {
   tasks: Task[]
@@ -41,15 +42,7 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
   const [popupDate, setPopupDate] = useState<string | null>(null)
   const popupRef = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
-        setPopupDate(null)
-      }
-    }
-    document.addEventListener("mousedown", handleClick)
-    return () => document.removeEventListener("mousedown", handleClick)
-  }, [])
+  useClickOutside(popupRef, () => setPopupDate(null), popupDate !== null)
 
   const weeks = useMemo(() => {
     const firstDay = new Date(viewYear, viewMonth, 1)
@@ -254,12 +247,7 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
                     size={12}
                     className={`flex-shrink-0 ${task.priority ? PRIORITY_TEXT[task.priority] : "text-gray-300"}`}
                   />
-                  <span className={`text-sm ${task.completed
-                    ? "text-gray-400 line-through"
-                    : task.title
-                      ? "text-gray-600"
-                      : "text-gray-400"
-                    }`}>
+                  <span className={`text-sm ${task.completed ? "text-gray-400 line-through" : "text-gray-600"}`}>
                     {task.title || "(タイトルなし)"}
                   </span>
                 </button>

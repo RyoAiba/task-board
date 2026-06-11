@@ -48,6 +48,24 @@ export const PRIORITY_TEXT: Record<Priority, string> = {
   low: "text-priority-low",
 }
 
+// Status
+export type Status = "incomplete" | "completed"
+
+export const STATUS_LABELS: Record<Status, string> = {
+  incomplete: "未完了",
+  completed: "完了済",
+}
+
+// DateFilter
+export type DateFilter = "overdue" | "today" | "thisWeek" | "noDueDate"
+
+export const DATE_FILTER_LABELS: Record<DateFilter, string> = {
+  overdue: "期限切れ",
+  today: "今日",
+  thisWeek: "今週",
+  noDueDate: "期限なし",
+}
+
 // Pagination
 export const PAGE_SIZE_OPTIONS = [10, 30] as const
 export type PageSize = typeof PAGE_SIZE_OPTIONS[number]

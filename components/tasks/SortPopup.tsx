@@ -1,7 +1,9 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useRef } from "react"
 import { Check } from "lucide-react"
+
+import { useClickOutside } from "@/hooks/useClickOutside"
 
 export type SortKey = "label" | "priority" | "status" | "dueDate"
 export type SortOrder = "asc" | "desc"
@@ -19,8 +21,8 @@ export const SORT_OPTIONS: SortOption[] = [
   { label: "優先度：低い順", key: "priority", order: "desc" },
   { label: "未完了を先に", key: "status", order: "asc" },
   { label: "完了済を先に", key: "status", order: "desc" },
-  { label: "期限：古い順", key: "dueDate", order: "asc" },
-  { label: "期限：新しい順", key: "dueDate", order: "desc" },
+  { label: "期限:古い順", key: "dueDate", order: "asc" },
+  { label: "期限:新しい順", key: "dueDate", order: "desc" },
 ]
 
 type Props = {
@@ -33,15 +35,7 @@ type Props = {
 export function SortPopup({ currentKey, currentOrder, onSelect, onClose }: Props) {
   const ref = useRef<HTMLDivElement>(null)
 
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        onClose()
-      }
-    }
-    document.addEventListener("mousedown", handleClick)
-    return () => document.removeEventListener("mousedown", handleClick)
-  }, [onClose])
+  useClickOutside(ref, onClose)
 
   const handleSelect = (key: SortKey, order: SortOrder) => {
     onSelect(key, order)

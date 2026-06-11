@@ -3,10 +3,11 @@
 import { useEffect, useRef, useState } from "react"
 import { Flame, X } from "lucide-react"
 
-import { useTaskModal } from "../../contexts/TaskModalContext"
-import { useSettings } from "../../contexts/SettingsContext"
-import { type Task, PRIORITY_TEXT } from "../../types"
-import { DAY_NAMES, formatDate, getTasksForDate } from "../../utils/calendar"
+import { useSettings } from "@/contexts/SettingsContext"
+import { useTaskModal } from "@/contexts/TaskModalContext"
+import { useClickOutside } from "@/hooks/useClickOutside"
+import { type Task, PRIORITY_TEXT } from "@/types"
+import { DAY_NAMES, formatDate, getTasksForDate } from "@/utils/calendar"
 
 type Props = {
   tasks: Task[]
@@ -25,6 +26,8 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const previousDaysRef = useRef(INITIAL_DAYS)
 
+  useClickOutside(popupRef, () => setPopupDate(null), popupDate !== null)
+
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
@@ -33,16 +36,6 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
     d.setDate(d.getDate() + i)
     return d
   })
-
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
-        setPopupDate(null)
-      }
-    }
-    document.addEventListener("mousedown", handleClick)
-    return () => document.removeEventListener("mousedown", handleClick)
-  }, [])
 
   useEffect(() => {
     if (displayDays > previousDaysRef.current) {

@@ -1,13 +1,14 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { EyeOff, Home, List, LogOut, MoreVertical, PanelLeft, Plus, Settings, Tag } from "lucide-react"
 
-import { useToast } from "../contexts/ToastContext"
-import { useLabels } from "../contexts/LabelsContext"
-import { useTaskModal } from "../contexts/TaskModalContext"
-import { useTasks } from "../contexts/TasksContext"
+import { useLabels } from "@/contexts/LabelsContext"
+import { useTaskModal } from "@/contexts/TaskModalContext"
+import { useTasks } from "@/contexts/TasksContext"
+import { useToast } from "@/contexts/ToastContext"
+import { useClickOutside } from "@/hooks/useClickOutside"
 import { LogoutDialog } from "./LogoutDialog"
 
 type Props = {
@@ -26,13 +27,13 @@ export function Sidebar({ collapsed, onToggle }: Props) {
   const { showToast } = useToast()
   const { openCreate } = useTaskModal()
 
-  // 表示するラベル（非表示ではないもの）
-  const visibleLabels = useMemo(() =>
-    labels.filter(label => !label.hidden),
-    [labels]
+  useClickOutside(menuRef, () => setOpenMenuId(null), openMenuId !== null)
+
+  const visibleLabels = useMemo(
+    () => labels.filter(label => !label.hidden),
+    [labels],
   )
 
-  // ラベルごとの未完了タスク数
   const incompleteCountByLabel = useMemo(() => {
     const counts: Record<string, number> = {}
     for (const task of tasks) {
@@ -41,19 +42,6 @@ export function Sidebar({ collapsed, onToggle }: Props) {
     }
     return counts
   }, [tasks])
-
-  // メニュー外クリックで閉じる
-  useEffect(() => {
-    const handleClick = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpenMenuId(null)
-      }
-    }
-    if (openMenuId) {
-      document.addEventListener("mousedown", handleClick)
-      return () => document.removeEventListener("mousedown", handleClick)
-    }
-  }, [openMenuId])
 
   const handleHide = (labelId: string) => {
     updateLabel(labelId, { hidden: true })
