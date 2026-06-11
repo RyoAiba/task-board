@@ -1,10 +1,9 @@
 "use client"
 
-import { DueDateChip } from "../DueDateChip"
-import { PriorityChip } from "../PriorityChip"
-import { StatusChip } from "../StatusChip"
-
 import type { Priority } from "../../types"
+import { DueDateChip } from "./DueDateChip"
+import { PriorityChip } from "./PriorityChip"
+import { StatusChip } from "./StatusChip"
 
 type Props = {
   mode: "create" | "edit"

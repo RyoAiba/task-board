@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
 import { ChevronLeft, ChevronRight, X } from "lucide-react"
 
 type Props = {
@@ -38,32 +38,28 @@ export function DatePickerModal({
     return `${y}-${m}-${d}`
   }
 
+  const handleSelect = (date: string) => {
+    onSelect(date)
+    onClose()
+  }
+
   const handleDateClick = (day: number) => {
     const newDate = new Date(
       displayDate.getFullYear(),
       displayDate.getMonth(),
       day,
     )
-
-    onSelect(formatDate(newDate))
+    handleSelect(formatDate(newDate))
   }
 
   const daysInMonth = getDaysInMonth(displayDate)
   const firstDay = getFirstDayOfMonth(displayDate)
 
-  const days = Array.from(
-    { length: daysInMonth },
-    (_, i) => i + 1,
-  )
-
-  const emptyDays = Array.from(
-    { length: firstDay },
-    (_, i) => i,
-  )
+  const days = Array.from({ length: daysInMonth }, (_, i) => i + 1)
+  const emptyDays = Array.from({ length: firstDay }, (_, i) => i)
 
   const isToday = (day: number) => {
     const today = new Date()
-
     return (
       day === today.getDate() &&
       displayDate.getMonth() === today.getMonth() &&
@@ -150,10 +146,10 @@ export function DatePickerModal({
             key={day}
             onClick={() => handleDateClick(day)}
             className={`w-8 h-8 text-sm rounded transition-colors mx-auto flex items-center justify-center ${isSelected(day)
-                ? "bg-brand-500 text-white font-semibold"
-                : isToday(day)
-                  ? "border border-brand-500 text-brand-500 font-semibold"
-                  : "text-gray-600 hover:bg-gray-100"
+              ? "bg-brand-500 text-white font-semibold"
+              : isToday(day)
+                ? "border border-brand-500 text-brand-500 font-semibold"
+                : "text-gray-600 hover:bg-gray-100"
               }`}
           >
             {day}
@@ -163,9 +159,7 @@ export function DatePickerModal({
 
       {selectedDate && (
         <button
-          onClick={() => {
-            onSelect("")
-          }}
+          onClick={() => handleSelect("")}
           className="mt-3 w-full text-xs text-gray-400 hover:text-gray-600 underline py-1"
         >
           期限を削除

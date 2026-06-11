@@ -1,7 +1,8 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
-import { Label, Priority } from "../types"
+import { useEffect, useRef, useState } from "react"
+
+import { type Label, type Priority } from "../../types"
 import { FilterChip } from "./FilterChip"
 
 type Status = "incomplete" | "completed"

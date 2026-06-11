@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react"
 
-import { TaskModal } from "../components/TaskModal"
+import { TaskModal } from "../components/tasks/TaskModal"
 
 import type { Task } from "../types"
 

@@ -3,7 +3,7 @@
 import Link from "next/link"
 
 import { type Label, type Task } from "../../types"
-import { TaskCard } from "../TaskCard"
+import { TaskCard } from "../tasks/TaskCard"
 
 const VISIBLE_LIMIT = 5
 

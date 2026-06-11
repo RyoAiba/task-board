@@ -3,10 +3,10 @@
 import { memo } from "react"
 import { CalendarDays, CheckCircle, Circle, Flame } from "lucide-react"
 
-import { useTaskModal } from "../contexts/TaskModalContext"
-import { type Label, type Task, PRIORITY_TEXT } from "../types"
-import { getDueDateInfo } from "../utils/dueDate"
-import { LabelBadge } from "./LabelBadge"
+import { useTaskModal } from "../../contexts/TaskModalContext"
+import { type Label, type Task, PRIORITY_TEXT } from "../../types"
+import { getDueDateInfo } from "../../utils/dueDate"
+import { LabelBadge } from "../LabelBadge"
 
 type TaskCardProps = {
   task: Task

@@ -8,10 +8,10 @@ import { type PageSize, type Priority, PRIORITY_LABELS, PRIORITY_ORDER } from ".
 import { useLabels } from "../../contexts/LabelsContext"
 import { useTasks } from "../../contexts/TasksContext"
 import { useTaskToggle } from "../../hooks/useTaskToggle"
-import { FilterChip } from "../../components/FilterChip"
 import { Pagination } from "../../components/Pagination"
-import { TaskCard } from "../../components/TaskCard"
-import { TaskFilterPopup } from "../../components/TaskFilterPopup"
+import { FilterChip } from "../../components/tasks/FilterChip"
+import { TaskCard } from "../../components/tasks/TaskCard"
+import { TaskFilterPopup } from "../../components/tasks/TaskFilterPopup"
 import { truncate } from "../../utils/string"
 
 type Status = "incomplete" | "completed"

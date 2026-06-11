@@ -3,9 +3,9 @@
 import { useRef, useState } from "react"
 import { Tag } from "lucide-react"
 
-import { type Label } from "../types"
-import { Chip } from "./Chip"
-import { Popover } from "./Popover"
+import { type Label } from "../../types"
+import { Chip } from "../Chip"
+import { Popover } from "../Popover"
 
 type Props = {
   labels: Label[]

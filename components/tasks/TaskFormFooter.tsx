@@ -1,7 +1,7 @@
 "use client"
 
 import { useLabels } from "../../contexts/LabelsContext"
-import { LabelChip } from "../LabelChip"
+import { LabelChip } from "./LabelChip"
 
 type Props = {
   mode: "create" | "edit"
