@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
-import { Noto_Sans_JP } from "next/font/google";
-import "./globals.css";
-import { LayoutWrapper } from "../components/LayoutWrapper";
+import type { Metadata, Viewport } from "next"
+import { Noto_Sans_JP } from "next/font/google"
+
+import { LayoutWrapper } from "../components/LayoutWrapper"
+import "./globals.css"
 
 const notoSansJP = Noto_Sans_JP({
   variable: "--font-noto-sans-jp",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-});
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://task-app-ts.vercel.app"),
@@ -26,10 +27,15 @@ export const metadata: Metadata = {
   },
 }
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="ja">
@@ -37,5 +43,5 @@ export default function RootLayout({
         <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>
-  );
+  )
 }
