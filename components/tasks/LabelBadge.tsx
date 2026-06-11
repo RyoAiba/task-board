@@ -1,6 +1,6 @@
 import { Tag } from "lucide-react"
-import { Label } from "../types"
-import { truncate } from "../utils/string"
+import { Label } from "../../types"
+import { truncate } from "../../utils/string"
 
 const NAME_MAX_LENGTH = 6
 

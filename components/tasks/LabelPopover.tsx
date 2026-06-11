@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import { X } from "lucide-react"
-import { Label } from "../types"
+import { Label } from "../../types"
 
 export function LabelModal({
   labels,

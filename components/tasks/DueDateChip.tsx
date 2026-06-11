@@ -5,7 +5,7 @@ import { createPortal } from "react-dom"
 import { CalendarDays } from "lucide-react"
 
 import { Chip } from "../Chip"
-import { DatePickerModal } from "../DatePickerModal"
+import { DatePickerModal } from "./DatePickerModal"
 
 type Props = {
   value: string

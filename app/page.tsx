@@ -48,7 +48,7 @@ export default function Dashboard() {
           title="今日のタスク"
           tasks={todayIncomplete}
           emptyMessage={todayEmptyMessage}
-          viewAllHref="/tasks?status=incomplete"
+          viewAllHref="/tasks?dateFilter=today"
           getLabel={getLabel}
           onToggle={handleToggle}
         />
@@ -56,7 +56,7 @@ export default function Dashboard() {
           title="期限切れのタスク"
           tasks={overdueTasks}
           emptyMessage="期限切れのタスクはありません 👍"
-          viewAllHref="/tasks?status=incomplete"
+          viewAllHref="/tasks?dateFilter=overdue"
           getLabel={getLabel}
           onToggle={handleToggle}
         />

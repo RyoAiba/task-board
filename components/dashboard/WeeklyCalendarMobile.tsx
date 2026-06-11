@@ -18,7 +18,7 @@ const MAX_VISIBLE_TASKS = 3
 
 export function WeeklyCalendarMobile({ tasks }: Props) {
   const { settings } = useSettings()
-  const { openEdit } = useTaskModal()
+  const { openCreate, openEdit } = useTaskModal()
   const [displayDays, setDisplayDays] = useState(INITIAL_DAYS)
   const [popupDate, setPopupDate] = useState<string | null>(null)
   const popupRef = useRef<HTMLDivElement>(null)
@@ -44,7 +44,6 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
     return () => document.removeEventListener("mousedown", handleClick)
   }, [])
 
-  // 「次の7日」読み込み後にスクロールして新しい日付を表示
   useEffect(() => {
     if (displayDays > previousDaysRef.current) {
       requestAnimationFrame(() => {
@@ -79,12 +78,18 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
     <section className="mb-8">
       <h2 className="text-section-title mb-4">カレンダー</h2>
 
-      <div className="mb-3">
+      <div className="mb-3 flex items-center justify-between">
         <button
           onClick={handleGoToToday}
           className="px-3 py-1 text-sm text-gray-600 border border-gray-300 rounded hover:bg-gray-50 active:scale-95 transition-all cursor-pointer"
         >
           今日
+        </button>
+        <button
+          onClick={handleLoadMore}
+          className="text-sm text-gray-400 hover:text-brand-500 active:text-brand-500 active:scale-95 transition-all"
+        >
+          次の7日を読み込む →
         </button>
       </div>
 
@@ -104,7 +109,8 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
             return (
               <div
                 key={dateStr}
-                className="flex-shrink-0 w-32 sm:w-36 rounded-xl border border-gray-200 bg-white overflow-hidden"
+                onClick={() => openCreate({ initialValues: { dueDate: dateStr } })}
+                className="flex-shrink-0 w-32 sm:w-36 rounded-xl border border-gray-200 bg-white overflow-hidden cursor-pointer hover:border-brand-300 transition-colors"
               >
                 <div className={`px-3 py-2 text-center ${isToday ? "bg-brand-500" : "bg-gray-50 border-b border-gray-200"}`}>
                   <div className={`text-xs font-medium ${isToday ? "text-white" :
@@ -126,7 +132,10 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
                         <button
                           key={task.id}
                           type="button"
-                          onClick={() => openEdit(task.id)}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            openEdit(task.id)
+                          }}
                           className="w-full text-left flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                         >
                           <Flame
@@ -145,7 +154,10 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
                       ))}
                       {remainingCount > 0 && (
                         <button
-                          onClick={() => setPopupDate(dateStr)}
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setPopupDate(dateStr)
+                          }}
                           className="w-full text-left px-2 py-1 text-xs text-brand-500 hover:bg-brand-100 rounded-lg transition-colors font-medium cursor-pointer"
                         >
                           +{remainingCount}件
@@ -160,15 +172,6 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
             )
           })}
         </div>
-      </div>
-
-      <div className="mt-1 flex justify-end">
-        <button
-          onClick={handleLoadMore}
-          className="text-sm text-gray-400 hover:text-brand-500 active:text-brand-500 active:scale-95 transition-all"
-        >
-          次の7日を読み込む →
-        </button>
       </div>
 
       {popupDate && (

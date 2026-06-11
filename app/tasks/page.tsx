@@ -11,7 +11,8 @@ import { useTaskToggle } from "../../hooks/useTaskToggle"
 import { Pagination } from "../../components/Pagination"
 import { FilterChip } from "../../components/tasks/FilterChip"
 import { TaskCard } from "../../components/tasks/TaskCard"
-import { TaskFilterPopup } from "../../components/tasks/TaskFilterPopup"
+import { TaskFilterPopup, type DateFilter, DATE_FILTER_LABELS } from "../../components/tasks/TaskFilterPopup"
+import { formatDate } from "../../utils/calendar"
 import { truncate } from "../../utils/string"
 
 type Status = "incomplete" | "completed"
@@ -43,6 +44,7 @@ function TasksPageContent() {
   const urlLabel = searchParams.get("label") || ""
   const urlPriority = searchParams.get("priority") as Priority | null
   const urlStatus = searchParams.get("status") as Status | null
+  const urlDateFilter = searchParams.get("dateFilter") as DateFilter | null
 
   const [searchText, setSearchText] = useState("")
   const [selectedLabels, setSelectedLabels] = useState<string[]>(
@@ -53,6 +55,9 @@ function TasksPageContent() {
   )
   const [selectedStatuses, setSelectedStatuses] = useState<Status[]>(
     urlStatus ? [urlStatus] : ["incomplete"]
+  )
+  const [selectedDateFilters, setSelectedDateFilters] = useState<DateFilter[]>(
+    urlDateFilter ? [urlDateFilter] : []
   )
   const [filterPopupOpen, setFilterPopupOpen] = useState(false)
   const [sortKey, setSortKey] = useState<SortKey | null>(urlStatus ? null : "dueDate")
@@ -73,13 +78,28 @@ function TasksPageContent() {
   }, [urlStatus])
 
   useEffect(() => {
+    setSelectedDateFilters(urlDateFilter ? [urlDateFilter] : [])
+  }, [urlDateFilter])
+
+  useEffect(() => {
     setFilterPopupOpen(false)
   }, [searchParams])
+
+  const { todayStr, weekEndStr } = useMemo(() => {
+    const t = new Date()
+    t.setHours(0, 0, 0, 0)
+    const w = new Date(t)
+    w.setDate(w.getDate() + 6)
+    return { todayStr: formatDate(t), weekEndStr: formatDate(w) }
+  }, [])
 
   const resetPage = () => setCurrentPage(1)
 
   const activeFilterCount =
-    selectedLabels.length + selectedPriorities.length + selectedStatuses.length
+    selectedLabels.length +
+    selectedPriorities.length +
+    selectedStatuses.length +
+    selectedDateFilters.length
 
   const hasActiveFilters = searchText !== "" || activeFilterCount > 0
 
@@ -87,6 +107,7 @@ function TasksPageContent() {
     setSelectedLabels([])
     setSelectedPriorities([])
     setSelectedStatuses([])
+    setSelectedDateFilters([])
     setSearchText("")
     resetPage()
   }
@@ -118,11 +139,13 @@ function TasksPageContent() {
   const handleFilterApply = (
     labelIds: string[],
     priorities: Priority[],
-    statuses: Status[]
+    statuses: Status[],
+    dateFilters: DateFilter[],
   ) => {
     setSelectedLabels(labelIds)
     setSelectedPriorities(priorities)
     setSelectedStatuses(statuses)
+    setSelectedDateFilters(dateFilters)
     setFilterPopupOpen(false)
     resetPage()
   }
@@ -139,7 +162,17 @@ function TasksPageContent() {
         selectedStatuses.length === 0 ||
         (selectedStatuses.includes("incomplete") && !task.completed) ||
         (selectedStatuses.includes("completed") && task.completed)
-      return matchesSearch && matchesLabel && matchesPriority && matchesStatus
+      const matchesDateFilter =
+        selectedDateFilters.length === 0 ||
+        selectedDateFilters.some(f => {
+          if (f === "noDueDate") return !task.dueDate
+          if (!task.dueDate) return false
+          if (f === "overdue") return task.dueDate < todayStr
+          if (f === "today") return task.dueDate === todayStr
+          if (f === "thisWeek") return task.dueDate >= todayStr && task.dueDate <= weekEndStr
+          return false
+        })
+      return matchesSearch && matchesLabel && matchesPriority && matchesStatus && matchesDateFilter
     })
 
     if (!sortKey) return filtered
@@ -164,7 +197,7 @@ function TasksPageContent() {
       }
       return sortOrder === "asc" ? result : -result
     })
-  }, [searchText, selectedLabels, selectedPriorities, selectedStatuses, sortKey, sortOrder, tasks, labels])
+  }, [searchText, selectedLabels, selectedPriorities, selectedStatuses, selectedDateFilters, sortKey, sortOrder, tasks, labels, todayStr, weekEndStr])
 
   const totalPages = Math.max(1, Math.ceil(filteredAndSortedTasks.length / pageSize))
   const safePage = Math.min(currentPage, totalPages)
@@ -227,6 +260,7 @@ function TasksPageContent() {
                   selectedLabels={selectedLabels}
                   selectedPriorities={selectedPriorities}
                   selectedStatuses={selectedStatuses}
+                  selectedDateFilters={selectedDateFilters}
                   onApply={handleFilterApply}
                   onClose={() => setFilterPopupOpen(false)}
                 />
@@ -237,6 +271,16 @@ function TasksPageContent() {
 
         {hasActiveFilters && (
           <div className="flex gap-2 flex-wrap items-center pt-3">
+            {selectedDateFilters.map(f => (
+              <FilterChip
+                key={f}
+                selected
+                removable
+                onClick={() => { setSelectedDateFilters(prev => prev.filter(v => v !== f)); resetPage() }}
+              >
+                {DATE_FILTER_LABELS[f]}
+              </FilterChip>
+            ))}
             {selectedLabels.map(labelId => {
               const label = labels.find(l => l.id === labelId)
               if (!label) return null

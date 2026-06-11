@@ -7,6 +7,22 @@ import { FilterChip } from "./FilterChip"
 
 type Status = "incomplete" | "completed"
 
+export type DateFilter = "overdue" | "today" | "thisWeek" | "noDueDate"
+
+export const DATE_FILTER_LABELS: Record<DateFilter, string> = {
+  overdue: "期限切れ",
+  today: "今日",
+  thisWeek: "今週",
+  noDueDate: "期限なし",
+}
+
+const DATE_FILTER_OPTIONS: { label: string; value: DateFilter }[] = [
+  { label: DATE_FILTER_LABELS.overdue, value: "overdue" },
+  { label: DATE_FILTER_LABELS.today, value: "today" },
+  { label: DATE_FILTER_LABELS.thisWeek, value: "thisWeek" },
+  { label: DATE_FILTER_LABELS.noDueDate, value: "noDueDate" },
+]
+
 const STATUS_OPTIONS: { label: string; value: Status }[] = [
   { label: "未完了", value: "incomplete" },
   { label: "完了済", value: "completed" },
@@ -23,7 +39,13 @@ type Props = {
   selectedLabels: string[]
   selectedPriorities: Priority[]
   selectedStatuses: Status[]
-  onApply: (labelIds: string[], priorities: Priority[], statuses: Status[]) => void
+  selectedDateFilters: DateFilter[]
+  onApply: (
+    labelIds: string[],
+    priorities: Priority[],
+    statuses: Status[],
+    dateFilters: DateFilter[],
+  ) => void
   onClose: () => void
 }
 
@@ -32,12 +54,14 @@ export function TaskFilterPopup({
   selectedLabels,
   selectedPriorities,
   selectedStatuses,
+  selectedDateFilters,
   onApply,
   onClose,
 }: Props) {
   const [pendingLabels, setPendingLabels] = useState(selectedLabels)
   const [pendingPriorities, setPendingPriorities] = useState(selectedPriorities)
   const [pendingStatuses, setPendingStatuses] = useState(selectedStatuses)
+  const [pendingDateFilters, setPendingDateFilters] = useState(selectedDateFilters)
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -63,10 +87,11 @@ export function TaskFilterPopup({
     setPendingLabels([])
     setPendingPriorities([])
     setPendingStatuses([])
+    setPendingDateFilters([])
   }
 
   const handleApply = () => {
-    onApply(pendingLabels, pendingPriorities, pendingStatuses)
+    onApply(pendingLabels, pendingPriorities, pendingStatuses, pendingDateFilters)
   }
 
   return (
@@ -76,6 +101,21 @@ export function TaskFilterPopup({
         ref={ref}
         className="absolute right-0 top-full mt-2 z-50 w-72 bg-white rounded-xl shadow-xl border border-gray-200 p-4"
       >
+        <div className="mb-4">
+          <p className="text-xs font-semibold text-gray-400 mb-2 cursor-default">期限</p>
+          <div className="flex flex-wrap gap-2">
+            {DATE_FILTER_OPTIONS.map(({ label, value }) => (
+              <FilterChip
+                key={value}
+                selected={pendingDateFilters.includes(value)}
+                onClick={() => toggle(setPendingDateFilters, value)}
+              >
+                {label}
+              </FilterChip>
+            ))}
+          </div>
+        </div>
+
         <div className="mb-4">
           <p className="text-xs font-semibold text-gray-400 mb-2 cursor-default">ラベル</p>
           <div className="flex flex-wrap gap-2">

@@ -1,8 +1,7 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import Link from "next/link"
-import { ChevronLeft, ChevronRight, Flame } from "lucide-react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { ChevronLeft, ChevronRight, Flame, X } from "lucide-react"
 
 import { useTaskModal } from "../../contexts/TaskModalContext"
 import { useSettings } from "../../hooks/useSettings"
@@ -29,7 +28,7 @@ function getDayColor(dayOfWeek: number, isCurrentMonth: boolean, isToday: boolea
 
 export function WeeklyCalendarDesktop({ tasks }: Props) {
   const { settings } = useSettings()
-  const { openEdit } = useTaskModal()
+  const { openCreate, openEdit } = useTaskModal()
 
   const today = useMemo(() => {
     const d = new Date()
@@ -39,6 +38,18 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
 
   const [viewYear, setViewYear] = useState(today.getFullYear())
   const [viewMonth, setViewMonth] = useState(today.getMonth())
+  const [popupDate, setPopupDate] = useState<string | null>(null)
+  const popupRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (popupRef.current && !popupRef.current.contains(e.target as Node)) {
+        setPopupDate(null)
+      }
+    }
+    document.addEventListener("mousedown", handleClick)
+    return () => document.removeEventListener("mousedown", handleClick)
+  }, [])
 
   const weeks = useMemo(() => {
     const firstDay = new Date(viewYear, viewMonth, 1)
@@ -88,7 +99,13 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
     setViewMonth(today.getMonth())
   }
 
+  const handlePopupTaskClick = (taskId: string) => {
+    setPopupDate(null)
+    openEdit(taskId)
+  }
+
   const todayStr = formatDate(today)
+  const firstWeek = weeks[0]
 
   return (
     <section className="mb-8">
@@ -120,14 +137,18 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
 
       <div className="border border-gray-200 rounded-lg overflow-hidden flex flex-col h-[600px]">
         <div className="grid grid-cols-7 flex-shrink-0">
-          {DAY_NAMES.map((day, i) => (
-            <div
-              key={day}
-              className={`px-2 py-1.5 text-xs text-center ${i < 6 ? "border-r border-gray-200" : ""} ${getDayColor(i, true, false)}`}
-            >
-              {day}
-            </div>
-          ))}
+          {DAY_NAMES.map((day, i) => {
+            const headerDate = firstWeek?.[i]
+            return (
+              <div
+                key={day}
+                onClick={() => headerDate && openCreate({ initialValues: { dueDate: formatDate(headerDate) } })}
+                className={`px-2 py-1.5 text-xs text-center cursor-pointer ${i < 6 ? "border-r border-gray-200" : ""} ${getDayColor(i, true, false)}`}
+              >
+                {day}
+              </div>
+            )
+          })}
         </div>
 
         <div className="flex-1 flex flex-col">
@@ -145,11 +166,13 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
                 const borderTop = weekIndex > 0 ? "border-t border-gray-200" : ""
                 const borderRight = dayIndex < 6 ? "border-r border-gray-200" : ""
                 const bgToday = isToday ? "bg-brand-100/40" : ""
+                const taskHover = isToday ? "hover:bg-brand-150" : "hover:bg-gray-50"
 
                 return (
                   <div
                     key={dateStr}
-                    className={`p-1.5 overflow-hidden ${borderTop} ${borderRight} ${bgToday}`}
+                    onClick={() => openCreate({ initialValues: { dueDate: dateStr } })}
+                    className={`p-1.5 overflow-hidden cursor-pointer ${borderTop} ${borderRight} ${bgToday}`}
                   >
                     <div className={`text-xs text-center mb-1 ${dayColor}`}>
                       {date.getDate()}
@@ -160,8 +183,11 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
                         <button
                           key={task.id}
                           type="button"
-                          onClick={() => openEdit(task.id)}
-                          className="w-full text-left flex items-center gap-1.5 px-1.5 py-0.5 rounded hover:bg-gray-50 transition-colors cursor-pointer"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            openEdit(task.id)
+                          }}
+                          className={`w-full text-left flex items-center gap-1.5 px-1.5 py-0.5 rounded transition-colors cursor-pointer ${taskHover}`}
                         >
                           <Flame
                             size={10}
@@ -180,12 +206,16 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
                         </button>
                       ))}
                       {remainingCount > 0 && (
-                        <Link
-                          href={`/tasks?dueDate=${dateStr}`}
-                          className="block px-1.5 py-0.5 text-xs text-brand-500 hover:bg-brand-100 rounded transition-colors font-medium"
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            setPopupDate(dateStr)
+                          }}
+                          className="block w-full text-left px-1.5 py-0.5 text-xs text-brand-500 hover:bg-brand-100 rounded transition-colors font-medium cursor-pointer"
                         >
                           他{remainingCount}件
-                        </Link>
+                        </button>
                       )}
                     </div>
                   </div>
@@ -195,6 +225,51 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
           ))}
         </div>
       </div>
+
+      {popupDate && (
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setPopupDate(null)} />
+          <div
+            ref={popupRef}
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 bg-white rounded-xl shadow-modal w-120 p-4"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-gray-600">
+                {(() => {
+                  const d = new Date(`${popupDate}T00:00:00`)
+                  return `${d.getMonth() + 1}/${d.getDate()}(${DAY_NAMES[d.getDay()]})`
+                })()}
+              </h3>
+              <button onClick={() => setPopupDate(null)} className="text-gray-400 hover:text-gray-600 cursor-pointer">
+                <X size={16} />
+              </button>
+            </div>
+            <div className="space-y-1 max-h-72 overflow-y-auto">
+              {getTasksForDate(tasks, popupDate, settings.showCompletedInCalendar).map(task => (
+                <button
+                  key={task.id}
+                  type="button"
+                  onClick={() => handlePopupTaskClick(task.id)}
+                  className="w-full text-left flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
+                >
+                  <Flame
+                    size={12}
+                    className={`flex-shrink-0 ${task.priority ? PRIORITY_TEXT[task.priority] : "text-gray-300"}`}
+                  />
+                  <span className={`text-sm ${task.completed
+                    ? "text-gray-400 line-through"
+                    : task.title
+                      ? "text-gray-600"
+                      : "text-gray-400"
+                    }`}>
+                    {task.title || "(タイトルなし)"}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </section>
   )
 }
