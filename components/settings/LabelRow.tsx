@@ -5,7 +5,8 @@ import { useSortable } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { GripVertical } from "lucide-react"
 
-import { type Label } from "../types"
+import { type Label } from "../../types"
+import { Toggle } from "./Toggle"
 
 const LABEL_NAME_MAX = 10
 
@@ -74,14 +75,11 @@ export function LabelRow({ label, onUpdateName, onToggleVisible }: Props) {
         />
       </div>
 
-      <button
-        onClick={() => onToggleVisible(label.id, !label.hidden)}
-        className={`hidden md:block relative w-11 h-6 rounded-full transition-colors flex-shrink-0 cursor-pointer ${!label.hidden ? "bg-brand-500" : "bg-gray-200"
-          }`}
-      >
-        <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${!label.hidden ? "translate-x-5" : "translate-x-0"
-          }`} />
-      </button>
+      <Toggle
+        checked={!label.hidden}
+        onChange={hidden => onToggleVisible(label.id, !hidden)}
+        className="hidden md:block"
+      />
     </div>
   )
 }

@@ -1,12 +1,26 @@
 "use client"
 
 import { useState } from "react"
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core"
-import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core"
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable"
 
 import { useLabels } from "../../contexts/LabelsContext"
 import { useSettings } from "../../hooks/useSettings"
-import { LabelRow } from "../../components/LabelRow"
+import { LabelRow } from "../../components/settings/LabelRow"
+import { Toggle } from "../../components/settings/Toggle"
 import { PageContainer } from "../../components/PageContainer"
 
 export default function SettingsPage() {
@@ -16,6 +30,7 @@ export default function SettingsPage() {
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 4 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 200, tolerance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   )
 
@@ -94,14 +109,10 @@ export default function SettingsPage() {
                   )}
                 </div>
               </div>
-              <button
-                onClick={() => updateSetting("showCompletedInCalendar", !settings.showCompletedInCalendar)}
-                className={`relative w-11 h-6 rounded-full transition-colors flex-shrink-0 cursor-pointer ${settings.showCompletedInCalendar ? "bg-brand-500" : "bg-gray-200"
-                  }`}
-              >
-                <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${settings.showCompletedInCalendar ? "translate-x-5" : "translate-x-0"
-                  }`} />
-              </button>
+              <Toggle
+                checked={settings.showCompletedInCalendar}
+                onChange={v => updateSetting("showCompletedInCalendar", v)}
+              />
             </div>
           </div>
         </section>
