@@ -37,7 +37,7 @@ const SORT_OPTIONS: { label: string; key: SortKey; order: SortOrder }[] = [
 
 function TasksPageContent() {
   const searchParams = useSearchParams()
-  const { tasks } = useTasks()
+  const { tasks, isExiting } = useTasks()
   const { labels } = useLabels()
   const { handleToggle } = useTaskToggle()
 
@@ -172,7 +172,15 @@ function TasksPageContent() {
           if (f === "thisWeek") return task.dueDate >= todayStr && task.dueDate <= weekEndStr
           return false
         })
-      return matchesSearch && matchesLabel && matchesPriority && matchesStatus && matchesDateFilter
+
+      if (matchesSearch && matchesLabel && matchesPriority && matchesStatus && matchesDateFilter) {
+        return true
+      }
+      // 退場アニメ中はステータスのミスマッチを許容（フェード完了まで残す）
+      if (isExiting(task.id) && matchesSearch && matchesLabel && matchesPriority && matchesDateFilter) {
+        return true
+      }
+      return false
     })
 
     if (!sortKey) return filtered
@@ -197,7 +205,7 @@ function TasksPageContent() {
       }
       return sortOrder === "asc" ? result : -result
     })
-  }, [searchText, selectedLabels, selectedPriorities, selectedStatuses, selectedDateFilters, sortKey, sortOrder, tasks, labels, todayStr, weekEndStr])
+  }, [searchText, selectedLabels, selectedPriorities, selectedStatuses, selectedDateFilters, sortKey, sortOrder, tasks, labels, todayStr, weekEndStr, isExiting])
 
   const totalPages = Math.max(1, Math.ceil(filteredAndSortedTasks.length / pageSize))
   const safePage = Math.min(currentPage, totalPages)
@@ -212,7 +220,7 @@ function TasksPageContent() {
   return (
     <div className="flex flex-col h-full">
 
-      {/* ヘッダー（スクロールしない） */}
+      {/* ヘッダー */}
       <div className="flex-shrink-0 p-4 md:p-5 bg-white border-b border-gray-200">
         <div className="flex flex-col md:flex-row gap-3">
           <div className="relative md:flex-1">
@@ -347,6 +355,7 @@ function TasksPageContent() {
                   key={task.id}
                   task={task}
                   label={getLabel(task.labelId)}
+                  exiting={isExiting(task.id)}
                   onToggle={handleToggle}
                 />
               ))}

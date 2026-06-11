@@ -14,6 +14,8 @@ import type { Priority, Task } from "../../types"
 const ANIMATION_DURATION_MS = 200
 const DUPLICATE_DELAY_MS = 100
 
+type Phase = "closed" | "opening" | "open" | "closing"
+
 type FormValues = {
   title: string
   priority?: Priority
@@ -56,8 +58,7 @@ export function TaskModal() {
   const { showToast } = useToast()
 
   const isOpen = state.mode !== "closed"
-  const [mounted, setMounted] = useState(false)
-  const [animateIn, setAnimateIn] = useState(false)
+  const [phase, setPhase] = useState<Phase>("closed")
 
   const [renderState, setRenderState] = useState<TaskModalState>(state)
   const [values, setValues] = useState<FormValues>(EMPTY_VALUES)
@@ -81,7 +82,6 @@ export function TaskModal() {
     setInitialValues(initial)
   }
 
-  // 編集対象のタスクが消えてたらモーダルを閉じる
   const editingTaskMissing =
     renderState.mode === "edit" && !getTaskById(renderState.taskId)
 
@@ -89,26 +89,36 @@ export function TaskModal() {
     if (editingTaskMissing) close()
   }, [editingTaskMissing, close])
 
-  // 開閉アニメーション
+  // isOpenの変化に応じてphase遷移
   useEffect(() => {
-    if (isOpen) {
-      setMounted(true)
-      let raf2: number | undefined
-      const raf1 = requestAnimationFrame(() => {
-        raf2 = requestAnimationFrame(() => setAnimateIn(true))
-      })
-      return () => {
-        cancelAnimationFrame(raf1)
-        if (raf2 !== undefined) cancelAnimationFrame(raf2)
-      }
-    } else {
-      setAnimateIn(false)
-      const t = setTimeout(() => setMounted(false), ANIMATION_DURATION_MS)
-      return () => clearTimeout(t)
+    if (isOpen && phase === "closed") {
+      setPhase("opening")
+    } else if (!isOpen && (phase === "open" || phase === "opening")) {
+      setPhase("closing")
     }
-  }, [isOpen])
+  }, [isOpen, phase])
 
-  // Escapeキー（dirtyチェック込み）
+  // opening → open（次フレームで切替えて開きアニメ起動）
+  useEffect(() => {
+    if (phase !== "opening") return
+    let raf2: number | undefined
+    const raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => setPhase("open"))
+    })
+    return () => {
+      cancelAnimationFrame(raf1)
+      if (raf2 !== undefined) cancelAnimationFrame(raf2)
+    }
+  }, [phase])
+
+  // closing → closed の保険タイマー（transitionendが拾えない場合用）
+  useEffect(() => {
+    if (phase !== "closing") return
+    const t = setTimeout(() => setPhase("closed"), ANIMATION_DURATION_MS + 50)
+    return () => clearTimeout(t)
+  }, [phase])
+
+  // Escapeキー
   useEffect(() => {
     if (!isOpen) return
     const handleKey = (e: KeyboardEvent) => {
@@ -123,9 +133,17 @@ export function TaskModal() {
     return () => document.removeEventListener("keydown", handleKey)
   }, [isOpen, values, initialValues, close])
 
-  if (!mounted) return null
+  const handleTransitionEnd = (e: React.TransitionEvent<HTMLDivElement>) => {
+    if (e.target !== e.currentTarget) return
+    if (e.propertyName !== "opacity" && e.propertyName !== "transform") return
+    if (phase === "closing") setPhase("closed")
+  }
+
+  if (phase === "closed") return null
   if (renderState.mode === "closed") return null
   if (editingTaskMissing) return null
+
+  const animateIn = phase === "open"
 
   const requestClose = () => {
     if (isFormDirty(values, initialValues)) {
@@ -195,6 +213,7 @@ export function TaskModal() {
       <Overlay onBackdropClick={requestClose} bottomSheetOnMobile>
         <div
           onClick={e => e.stopPropagation()}
+          onTransitionEnd={handleTransitionEnd}
           role="dialog"
           aria-modal="true"
           className={`bg-white shadow-modal max-h-[90dvh] overflow-y-auto w-full md:max-w-2xl md:mx-4 rounded-t-lg md:rounded-lg p-6 will-change-transform transition-all duration-200 ease-out ${animateIn

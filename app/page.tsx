@@ -11,23 +11,26 @@ import { WeeklyCalendar } from "../components/dashboard/WeeklyCalendar"
 import { PageContainer } from "../components/PageContainer"
 
 export default function Dashboard() {
-  const { tasks } = useTasks()
+  const { tasks, isExiting } = useTasks()
   const { labels } = useLabels()
   const { handleToggle } = useTaskToggle()
 
   const { todayIncomplete, todayEmptyMessage, overdueTasks } = useMemo(() => {
     const todayStr = new Date().toISOString().split("T")[0]
     const allTodayTasks = tasks.filter(t => t.dueDate === todayStr)
-    const todayIncomplete = allTodayTasks.filter(t => !t.completed)
-    const allTodayCompleted = allTodayTasks.length > 0 && todayIncomplete.length === 0
+    // 退場アニメ中のタスクも残す
+    const todayIncomplete = allTodayTasks.filter(t => !t.completed || isExiting(t.id))
+    // 「完了！🎉」判定は退場中を除いた純粋な未完了数で判断
+    const realIncompleteCount = allTodayTasks.filter(t => !t.completed).length
+    const allTodayCompleted = allTodayTasks.length > 0 && realIncompleteCount === 0
     const todayEmptyMessage = allTodayCompleted
       ? "今日のタスクは完了です！🎉"
       : "今日のタスクはありません"
     const overdueTasks = tasks.filter(t =>
-      !t.completed && t.dueDate && t.dueDate < todayStr
+      (!t.completed || isExiting(t.id)) && t.dueDate && t.dueDate < todayStr
     )
     return { todayIncomplete, todayEmptyMessage, overdueTasks }
-  }, [tasks])
+  }, [tasks, isExiting])
 
   const { completedCount, completionRate } = useMemo(() => {
     const completedCount = tasks.filter(t => t.completed).length

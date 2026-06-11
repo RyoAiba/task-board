@@ -4,7 +4,7 @@ import { useToast } from "../contexts/ToastContext"
 import { useTasks } from "../contexts/TasksContext"
 
 export function useTaskToggle() {
-  const { tasks, toggleCompleted } = useTasks()
+  const { tasks, toggleCompleted, toggleCompletedImmediate } = useTasks()
   const { showToast } = useToast()
 
   const tasksRef = useRef(tasks)
@@ -17,9 +17,9 @@ export function useTaskToggle() {
     if (!task) return
     toggleCompleted(id)
     if (!task.completed) {
-      showToast("タスクを完了しました", () => toggleCompleted(id))
+      showToast("タスクを完了しました", () => toggleCompletedImmediate(id))
     }
-  }, [toggleCompleted, showToast])
+  }, [toggleCompleted, toggleCompletedImmediate, showToast])
 
   return { handleToggle }
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 
+import { useTasks } from "../../contexts/TasksContext"
 import { type Label, type Task } from "../../types"
 import { TaskCard } from "../tasks/TaskCard"
 
@@ -24,6 +25,7 @@ export function TaskListSection({
   getLabel,
   onToggle,
 }: Props) {
+  const { isExiting } = useTasks()
   const visibleTasks = tasks.slice(0, VISIBLE_LIMIT)
   const showViewAll = viewAllHref && tasks.length > VISIBLE_LIMIT
 
@@ -44,6 +46,7 @@ export function TaskListSection({
               key={task.id}
               task={task}
               label={getLabel(task.labelId)}
+              exiting={isExiting(task.id)}
               onToggle={onToggle}
             />
           ))}
