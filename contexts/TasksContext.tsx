@@ -2,11 +2,11 @@
 
 import { createContext, useCallback, useContext, useEffect, useReducer, useRef, useState, type ReactNode } from "react"
 
-import { type Priority, type Task } from "../types"
-import { generateDummyTasks } from "../lib/dummyData"
+import { useLocalStorageSync } from "@/hooks/useLocalStorage"
+import { generateDummyTasks } from "@/lib/dummyData"
+import { type Priority, type Task } from "@/types"
 
 const STORAGE_KEY = "task-board-tasks"
-const SAVE_DEBOUNCE_MS = 300
 export const TASK_EXIT_DURATION_MS = 250
 
 type TaskAction =
@@ -52,35 +52,12 @@ const TasksContext = createContext<TasksContextType | null>(null)
 
 export function TasksProvider({ children }: { children: ReactNode }) {
   const [tasks, dispatch] = useReducer(taskReducer, [])
-  const isInitialized = useRef(false)
-  const [isLoaded, setIsLoaded] = useState(false)
   const [exitingTaskIds, setExitingTaskIds] = useState<Set<string>>(new Set())
   const exitTimeouts = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map())
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) {
-      try {
-        dispatch({ type: "INIT", payload: JSON.parse(stored) })
-      } catch {
-        dispatch({ type: "INIT", payload: generateDummyTasks() })
-      }
-    } else {
-      dispatch({ type: "INIT", payload: generateDummyTasks() })
-    }
-    setIsLoaded(true)
-  }, [])
-
-  useEffect(() => {
-    if (!isInitialized.current) {
-      isInitialized.current = true
-      return
-    }
-    const timer = setTimeout(() => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks))
-    }, SAVE_DEBOUNCE_MS)
-    return () => clearTimeout(timer)
-  }, [tasks])
+  const isLoaded = useLocalStorageSync<Task[]>(STORAGE_KEY, tasks, (data) => {
+    dispatch({ type: "INIT", payload: data ?? generateDummyTasks() })
+  })
 
   // アンマウント時の保留タイマー解放
   useEffect(() => {
@@ -134,7 +111,6 @@ export function TasksProvider({ children }: { children: ReactNode }) {
   const toggleCompleted = (id: string) => {
     dispatch({ type: "TOGGLE_COMPLETED", payload: id })
 
-    // 既存のexitタイマーがあればキャンセル（連打対策）
     const existing = exitTimeouts.current.get(id)
     if (existing) clearTimeout(existing)
 

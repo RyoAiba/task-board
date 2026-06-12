@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation"
 
-import { logout } from "../utils/auth"
-import { ConfirmDialog } from "./ConfirmDialog"
+import { logout } from "@/utils/auth"
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog"
 
 type LogoutDialogProps = {
   isOpen: boolean

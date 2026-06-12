@@ -2,7 +2,7 @@
 
 import { CheckCircle, Circle } from "lucide-react"
 
-import { Chip } from "../Chip"
+import { Chip } from "@/components/shared/Chip"
 
 type Props = {
   completed: boolean

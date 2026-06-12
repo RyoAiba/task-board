@@ -3,9 +3,9 @@
 import { useRef, useState } from "react"
 import { Flame } from "lucide-react"
 
-import { type Priority, PRIORITY_LABELS, PRIORITY_TEXT } from "../../types"
-import { Chip } from "../Chip"
-import { Popover } from "../Popover"
+import { type Priority, PRIORITY_LABELS, PRIORITY_TEXT } from "@/types"
+import { Chip } from "@/components/shared/Chip"
+import { Popover } from "@/components/shared/Popover"
 
 type Props = {
   value: Priority | undefined

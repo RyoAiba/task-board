@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 
 import { LabelsProvider } from "@/contexts/LabelsContext"
@@ -8,6 +7,7 @@ import { SettingsProvider } from "@/contexts/SettingsContext"
 import { TaskModalProvider } from "@/contexts/TaskModalContext"
 import { TasksProvider } from "@/contexts/TasksContext"
 import { ToastProvider } from "@/contexts/ToastContext"
+import { useLocalStorage } from "@/hooks/useLocalStorage"
 
 import { BottomNav } from "./BottomNav"
 import { Sidebar } from "./Sidebar"
@@ -17,19 +17,9 @@ const STORAGE_KEY = "sidebar-collapsed"
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const isLoginPage = pathname === "/login"
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useLocalStorage<boolean>(STORAGE_KEY, false)
 
-  useEffect(() => {
-    setCollapsed(localStorage.getItem(STORAGE_KEY) === "true")
-  }, [])
-
-  const toggleCollapsed = () => {
-    setCollapsed(prev => {
-      const next = !prev
-      localStorage.setItem(STORAGE_KEY, String(next))
-      return next
-    })
-  }
+  const toggleCollapsed = () => setCollapsed(prev => !prev)
 
   return (
     <ToastProvider>

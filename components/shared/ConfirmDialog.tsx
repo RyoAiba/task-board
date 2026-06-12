@@ -1,6 +1,6 @@
 "use client"
 
-import { Overlay } from "./Overlay"
+import { Overlay } from "@/components/shared/Overlay"
 
 type Props = {
   isOpen: boolean

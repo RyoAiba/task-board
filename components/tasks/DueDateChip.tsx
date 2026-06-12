@@ -4,8 +4,8 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react"
 import { createPortal } from "react-dom"
 import { CalendarDays } from "lucide-react"
 
-import { Chip } from "../Chip"
-import { DatePickerModal } from "./DatePickerModal"
+import { Chip } from "@/components/shared/Chip"
+import { DatePickerModal } from "@/components/tasks/DatePickerModal"
 
 type Props = {
   value: string

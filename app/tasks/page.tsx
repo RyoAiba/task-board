@@ -20,7 +20,7 @@ import {
 import { formatDate } from "@/utils/calendar"
 import { truncate } from "@/utils/string"
 import { Pagination } from "@/components/Pagination"
-import { FilterChip } from "@/components/tasks/FilterChip"
+import { FilterChip } from "@/components/shared/FilterChip"
 import { SortPopup, type SortKey, type SortOrder } from "@/components/tasks/SortPopup"
 import { TaskCard } from "@/components/tasks/TaskCard"
 import { TaskFilterPopup } from "@/components/tasks/TaskFilterPopup"

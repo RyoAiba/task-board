@@ -11,7 +11,7 @@ import {
   type Status,
   STATUS_LABELS,
 } from "@/types"
-import { FilterChip } from "./FilterChip"
+import { FilterChip } from "@/components/shared/FilterChip"
 
 const DATE_FILTER_OPTIONS: { label: string; value: DateFilter }[] = [
   { label: DATE_FILTER_LABELS.overdue, value: "overdue" },

@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react"
 
-import { type TaskModalState, useTaskModal } from "../../contexts/TaskModalContext"
-import { useTasks } from "../../contexts/TasksContext"
-import { useToast } from "../../contexts/ToastContext"
-import { ConfirmDialog } from "../ConfirmDialog"
-import { Overlay } from "../Overlay"
-import { TaskForm } from "./TaskForm"
+import { type TaskModalState, useTaskModal } from "@/contexts/TaskModalContext"
+import { useTasks } from "@/contexts/TasksContext"
+import { useToast } from "@/contexts/ToastContext"
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog"
+import { Overlay } from "@/components/shared/Overlay"
+import { TaskForm } from "@/components/tasks/TaskForm"
 
-import type { Priority, Task } from "../../types"
+import type { Priority, Task } from "@/types"
 
 const ANIMATION_DURATION_MS = 200
 const DUPLICATE_DELAY_MS = 100

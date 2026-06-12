@@ -1,11 +1,11 @@
 "use client"
 
-import { createContext, useContext, useEffect, useMemo, useReducer, useRef, useState, type ReactNode } from "react"
+import { createContext, useContext, useMemo, useReducer, type ReactNode } from "react"
 
-import { type Label, DEFAULT_LABELS } from "../types"
+import { useLocalStorageSync } from "@/hooks/useLocalStorage"
+import { type Label, DEFAULT_LABELS } from "@/types"
 
 const STORAGE_KEY = "task-board-labels"
-const SAVE_DEBOUNCE_MS = 300
 
 type LabelAction =
   | { type: "INIT"; payload: Label[] }
@@ -40,30 +40,10 @@ const LabelsContext = createContext<LabelsContextType | null>(null)
 
 export function LabelsProvider({ children }: { children: ReactNode }) {
   const [labels, dispatch] = useReducer(labelReducer, DEFAULT_LABELS)
-  const isInitialized = useRef(false)
-  const [isLoaded, setIsLoaded] = useState(false)
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    try {
-      const parsed = stored ? JSON.parse(stored) : DEFAULT_LABELS
-      dispatch({ type: "INIT", payload: parsed })
-    } catch {
-      dispatch({ type: "INIT", payload: DEFAULT_LABELS })
-    }
-    setIsLoaded(true)
-  }, [])
-
-  useEffect(() => {
-    if (!isInitialized.current) {
-      isInitialized.current = true
-      return
-    }
-    const timer = setTimeout(() => {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(labels))
-    }, SAVE_DEBOUNCE_MS)
-    return () => clearTimeout(timer)
-  }, [labels])
+  const isLoaded = useLocalStorageSync<Label[]>(STORAGE_KEY, labels, (data) => {
+    dispatch({ type: "INIT", payload: data ?? DEFAULT_LABELS })
+  })
 
   const sortedLabels = useMemo(
     () => [...labels].sort((a, b) => a.order - b.order),
