@@ -67,6 +67,17 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
     return result
   }, [viewYear, viewMonth])
 
+  const tasksByDate = useMemo(() => {
+    const map: Record<string, Task[]> = {}
+    for (const week of weeks) {
+      for (const date of week) {
+        const dateStr = formatDate(date)
+        map[dateStr] = getTasksForDate(tasks, dateStr, settings.showCompletedInCalendar)
+      }
+    }
+    return map
+  }, [weeks, tasks, settings.showCompletedInCalendar])
+
   const maxVisibleTasks = MAX_VISIBLE_TASKS_BY_WEEKS[weeks.length] ?? 3
 
   const goToPrevMonth = () => {
@@ -152,7 +163,7 @@ export function WeeklyCalendarDesktop({ tasks }: Props) {
                 const isToday = dateStr === todayStr
                 const isCurrentMonth = date.getMonth() === viewMonth
                 const dayColor = getDayColor(date.getDay(), isCurrentMonth, isToday)
-                const allTasks = getTasksForDate(tasks, dateStr, settings.showCompletedInCalendar)
+                const allTasks = tasksByDate[dateStr] ?? []
                 const visibleTasks = allTasks.slice(0, maxVisibleTasks)
                 const remainingCount = allTasks.length - maxVisibleTasks
 

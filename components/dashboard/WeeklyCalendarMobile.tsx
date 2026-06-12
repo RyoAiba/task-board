@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { Flame, X } from "lucide-react"
 
 import { useSettings } from "@/contexts/SettingsContext"
@@ -28,14 +28,28 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
 
   useClickOutside(popupRef, () => setPopupDate(null), popupDate !== null)
 
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  const dates = Array.from({ length: displayDays }, (_, i) => {
-    const d = new Date(today)
-    d.setDate(d.getDate() + i)
+  const today = useMemo(() => {
+    const d = new Date()
+    d.setHours(0, 0, 0, 0)
     return d
-  })
+  }, [])
+
+  const dates = useMemo(() => (
+    Array.from({ length: displayDays }, (_, i) => {
+      const d = new Date(today)
+      d.setDate(d.getDate() + i)
+      return d
+    })
+  ), [today, displayDays])
+
+  const tasksByDate = useMemo(() => {
+    const map: Record<string, Task[]> = {}
+    for (const date of dates) {
+      const dateStr = formatDate(date)
+      map[dateStr] = getTasksForDate(tasks, dateStr, settings.showCompletedInCalendar)
+    }
+    return map
+  }, [dates, tasks, settings.showCompletedInCalendar])
 
   useEffect(() => {
     if (displayDays > previousDaysRef.current) {
@@ -61,7 +75,6 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
   }
 
   const handleGoToToday = () => {
-    setDisplayDays(INITIAL_DAYS)
     requestAnimationFrame(() => {
       scrollContainerRef.current?.scrollTo({ left: 0, behavior: "smooth" })
     })
@@ -95,7 +108,7 @@ export function WeeklyCalendarMobile({ tasks }: Props) {
             const dateStr = formatDate(date)
             const isToday = dateStr === formatDate(today)
             const dayOfWeek = date.getDay()
-            const allTasks = getTasksForDate(tasks, dateStr, settings.showCompletedInCalendar)
+            const allTasks = tasksByDate[dateStr] ?? []
             const visibleTasks = allTasks.slice(0, MAX_VISIBLE_TASKS)
             const remainingCount = allTasks.length - MAX_VISIBLE_TASKS
 
