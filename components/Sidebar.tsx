@@ -2,6 +2,7 @@
 
 import { useMemo, useRef, useState } from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { EyeOff, Home, List, LogOut, MoreVertical, PanelLeft, Plus, Settings, Tag } from "lucide-react"
 
 import { useLabels } from "@/contexts/LabelsContext"
@@ -9,20 +10,27 @@ import { useTaskModal } from "@/contexts/TaskModalContext"
 import { useTasks } from "@/contexts/TasksContext"
 import { useToast } from "@/contexts/ToastContext"
 import { useClickOutside } from "@/hooks/useClickOutside"
-import { LogoutDialog } from "./LogoutDialog"
+import { LogoutDialog } from "@/components/LogoutDialog"
 
 type Props = {
   collapsed: boolean
   onToggle: () => void
 }
 
-const ITEM_CLASS = "flex items-center gap-2 pl-4 py-2 text-sm text-gray-600 hover:text-brand-500 transition-colors"
+const BASE_ITEM_CLASS = "flex items-center gap-2 pl-4 py-2 text-sm transition-colors"
+const INACTIVE_CLASS = "text-gray-600 hover:text-brand-500"
+const ACTIVE_CLASS = "text-brand-500 bg-brand-100 font-medium"
+
+function navItemClass(active: boolean): string {
+  return `${BASE_ITEM_CLASS} ${active ? ACTIVE_CLASS : INACTIVE_CLASS}`
+}
 
 export function Sidebar({ collapsed, onToggle }: Props) {
+  const pathname = usePathname()
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
-  const { labels, isLoaded, updateLabel } = useLabels()
+  const { labels, isLoaded: labelsLoaded, updateLabel } = useLabels()
   const { tasks } = useTasks()
   const { showToast } = useToast()
   const { openCreate } = useTaskModal()
@@ -49,6 +57,10 @@ export function Sidebar({ collapsed, onToggle }: Props) {
     showToast("ラベルを非表示にしました", () => updateLabel(labelId, { hidden: false }))
   }
 
+  const isHomeActive = pathname === "/"
+  const isTasksActive = pathname === "/tasks"
+  const isSettingsActive = pathname === "/settings"
+
   return (
     <>
       <aside className={`hidden md:flex flex-col fixed top-0 left-0 z-30 h-screen bg-white border-r border-gray-200 overflow-hidden transition-[width] duration-300 ease-in-out ${collapsed ? "w-13" : "w-64"
@@ -64,20 +76,20 @@ export function Sidebar({ collapsed, onToggle }: Props) {
         </div>
 
         <div className="flex-1">
-          <Link href="/" className={ITEM_CLASS}>
+          <Link href="/" className={navItemClass(isHomeActive)}>
             <Home size={20} className="flex-shrink-0" />
             <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>ホーム</span>
           </Link>
-          <button onClick={() => openCreate()} className={`${ITEM_CLASS} w-full cursor-pointer`}>
+          <button onClick={() => openCreate()} className={`${BASE_ITEM_CLASS} ${INACTIVE_CLASS} w-full cursor-pointer`}>
             <Plus size={20} className="flex-shrink-0" />
             <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>タスクを追加</span>
           </button>
           <div>
-            <Link href="/tasks" className={ITEM_CLASS}>
+            <Link href="/tasks" className={navItemClass(isTasksActive)}>
               <List size={20} className="flex-shrink-0" />
               <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>タスク一覧</span>
             </Link>
-            {!collapsed && isLoaded && visibleLabels.map(label => {
+            {!collapsed && labelsLoaded && visibleLabels.map(label => {
               const count = incompleteCountByLabel[label.id] ?? 0
               const menuOpen = openMenuId === label.id
               return (
@@ -132,13 +144,13 @@ export function Sidebar({ collapsed, onToggle }: Props) {
         </div>
 
         <div className="border-t border-gray-200">
-          <Link href="/settings" className={ITEM_CLASS}>
+          <Link href="/settings" className={navItemClass(isSettingsActive)}>
             <Settings size={20} className="flex-shrink-0" />
             <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>設定</span>
           </Link>
           <button
             onClick={() => setShowLogoutDialog(true)}
-            className={`${ITEM_CLASS} w-full cursor-pointer`}
+            className={`${BASE_ITEM_CLASS} ${INACTIVE_CLASS} w-full cursor-pointer`}
           >
             <LogOut size={20} className="flex-shrink-0" />
             <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>ログアウト</span>

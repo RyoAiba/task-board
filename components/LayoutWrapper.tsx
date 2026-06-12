@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import { usePathname } from "next/navigation"
 
 import { LabelsProvider } from "@/contexts/LabelsContext"
@@ -7,19 +8,30 @@ import { SettingsProvider } from "@/contexts/SettingsContext"
 import { TaskModalProvider } from "@/contexts/TaskModalContext"
 import { TasksProvider } from "@/contexts/TasksContext"
 import { ToastProvider } from "@/contexts/ToastContext"
-import { useLocalStorage } from "@/hooks/useLocalStorage"
 
-import { BottomNav } from "./BottomNav"
-import { Sidebar } from "./Sidebar"
+import { BottomNav } from "@/components/BottomNav"
+import { Sidebar } from "@/components/Sidebar"
 
-const STORAGE_KEY = "sidebar-collapsed"
+const SIDEBAR_COOKIE_KEY = "sidebar-collapsed"
+const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 365 // 1年
 
-export function LayoutWrapper({ children }: { children: React.ReactNode }) {
+type Props = {
+  children: React.ReactNode
+  initialSidebarCollapsed: boolean
+}
+
+export function LayoutWrapper({ children, initialSidebarCollapsed }: Props) {
   const pathname = usePathname()
   const isLoginPage = pathname === "/login"
-  const [collapsed, setCollapsed] = useLocalStorage<boolean>(STORAGE_KEY, false)
+  const [collapsed, setCollapsed] = useState(initialSidebarCollapsed)
 
-  const toggleCollapsed = () => setCollapsed(prev => !prev)
+  const toggleCollapsed = () => {
+    setCollapsed(prev => {
+      const next = !prev
+      document.cookie = `${SIDEBAR_COOKIE_KEY}=${next}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}; samesite=lax`
+      return next
+    })
+  }
 
   return (
     <ToastProvider>
