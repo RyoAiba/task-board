@@ -15,6 +15,7 @@ type TaskAction =
   | { type: "UPDATE_TASK"; payload: { id: string; updates: Partial<Omit<Task, "id" | "createdAt">> } }
   | { type: "DELETE_TASK"; payload: string }
   | { type: "TOGGLE_COMPLETED"; payload: string }
+  | { type: "BULK_UPDATE_LABEL_ID"; payload: { taskIds: string[]; labelId: string } }
 
 function taskReducer(state: Task[], action: TaskAction): Task[] {
   switch (action.type) {
@@ -32,6 +33,12 @@ function taskReducer(state: Task[], action: TaskAction): Task[] {
       return state.map(t =>
         t.id === action.payload ? { ...t, completed: !t.completed } : t
       )
+    case "BULK_UPDATE_LABEL_ID": {
+      const idSet = new Set(action.payload.taskIds)
+      return state.map(t =>
+        idSet.has(t.id) ? { ...t, labelId: action.payload.labelId } : t
+      )
+    }
   }
 }
 
@@ -46,6 +53,7 @@ type TasksContextType = {
   isExiting: (id: string) => boolean
   getTaskById: (id: string) => Task | undefined
   restoreTask: (task: Task) => void
+  bulkUpdateLabelId: (taskIds: string[], labelId: string) => void
 }
 
 const TasksContext = createContext<TasksContextType | null>(null)
@@ -143,6 +151,11 @@ export function TasksProvider({ children }: { children: ReactNode }) {
     return tasks.find(t => t.id === id)
   }
 
+  const bulkUpdateLabelId = (taskIds: string[], labelId: string) => {
+    if (taskIds.length === 0) return
+    dispatch({ type: "BULK_UPDATE_LABEL_ID", payload: { taskIds, labelId } })
+  }
+
   return (
     <TasksContext.Provider value={{
       tasks,
@@ -155,6 +168,7 @@ export function TasksProvider({ children }: { children: ReactNode }) {
       isExiting,
       getTaskById,
       restoreTask,
+      bulkUpdateLabelId,
     }}>
       {children}
     </TasksContext.Provider>

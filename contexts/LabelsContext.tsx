@@ -34,6 +34,7 @@ type LabelsContextType = {
   addLabel: (name: string) => Label
   updateLabel: (id: string, updates: Partial<Pick<Label, "name" | "hidden" | "order">>) => void
   deleteLabel: (id: string) => void
+  restoreLabel: (label: Label) => void
 }
 
 const LabelsContext = createContext<LabelsContextType | null>(null)
@@ -68,8 +69,12 @@ export function LabelsProvider({ children }: { children: ReactNode }) {
     dispatch({ type: "DELETE_LABEL", payload: id })
   }
 
+  const restoreLabel = (label: Label) => {
+    dispatch({ type: "ADD_LABEL", payload: label })
+  }
+
   return (
-    <LabelsContext.Provider value={{ labels: sortedLabels, isLoaded, addLabel, updateLabel, deleteLabel }}>
+    <LabelsContext.Provider value={{ labels: sortedLabels, isLoaded, addLabel, updateLabel, deleteLabel, restoreLabel }}>
       {children}
     </LabelsContext.Provider>
   )
