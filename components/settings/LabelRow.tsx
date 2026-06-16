@@ -33,7 +33,6 @@ export function LabelRow({
 }: Props) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: label.id })
   const [name, setName] = useState(label.name)
-  const [isEditing, setIsEditing] = useState(false)
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -42,7 +41,6 @@ export function LabelRow({
   }
 
   const handleBlur = () => {
-    setIsEditing(false)
     const trimmed = name.trim()
     if (trimmed && trimmed !== label.name) {
       onUpdateName(label.id, trimmed)
@@ -57,7 +55,7 @@ export function LabelRow({
     }
     if (e.key === "Escape") {
       setName(label.name)
-      setIsEditing(false)
+        ; (e.target as HTMLInputElement).blur()
     }
   }
 
@@ -68,7 +66,7 @@ export function LabelRow({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg group"
+      className="flex items-center gap-2 p-3 rounded-lg group md:hover:bg-gray-50 transition-colors"
     >
       {/* ドラッグハンドル（PC） */}
       <button
@@ -102,27 +100,29 @@ export function LabelRow({
         </button>
       </div>
 
-      {/* 名前 */}
-      <div className="flex-1 min-w-0">
+      {/* 名前 + 文字数カウンター */}
+      <div className="flex-1 min-w-0 relative">
         <input
           type="text"
           value={name}
           onChange={e => setName(e.target.value)}
-          onFocus={() => setIsEditing(true)}
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           maxLength={LABEL_NAME_MAX}
-          className={`w-full px-2 py-1 text-sm rounded border transition-colors focus:outline-none focus:border-brand-500 ${isEditing ? "border-gray-300" : "border-transparent hover:border-gray-200"
-            }`}
+          className="peer w-full px-2 py-1 pr-11 text-sm rounded border bg-transparent border-transparent transition-colors focus:outline-none focus:bg-white focus:border-brand-500 hover:bg-white hover:border-gray-200"
         />
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none opacity-0 peer-focus:opacity-100 md:group-hover:opacity-100 transition-opacity">
+          {name.length}/{LABEL_NAME_MAX}
+        </span>
       </div>
 
-      {/* 表示トグル（PCのみ） */}
-      <Toggle
-        checked={!label.hidden}
-        onChange={hidden => onToggleVisible(label.id, !hidden)}
-        className="hidden md:block"
-      />
+      {/* 表示トグル（PCのみ）- ヘッダーの「サイドバーに表示」と中心揃え */}
+      <div className="hidden md:flex md:items-center md:justify-center md:w-24 md:mx-1">
+        <Toggle
+          checked={!label.hidden}
+          onChange={hidden => onToggleVisible(label.id, !hidden)}
+        />
+      </div>
 
       {/* 削除 */}
       <button

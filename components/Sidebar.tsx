@@ -3,11 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { EyeOff, Home, List, LogOut, MoreVertical, PanelLeft, Plus, Settings, Tag, Trash2 } from "lucide-react"
+import { ClipboardPen, EyeOff, Home, List, LogOut, MoreVertical, PanelLeft, Plus, Settings, Tag, Trash2 } from "lucide-react"
 
 import { LabelAddModal } from "@/components/labels/LabelAddModal"
 import { LogoutDialog } from "@/components/LogoutDialog"
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog"
+import { Tooltip } from "@/components/shared/Tooltip"
 import { useLabels } from "@/contexts/LabelsContext"
 import { useTaskModal } from "@/contexts/TaskModalContext"
 import { useTasks } from "@/contexts/TasksContext"
@@ -34,6 +35,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
   const [showAddModal, setShowAddModal] = useState(false)
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
   const [pendingDeleteLabelId, setPendingDeleteLabelId] = useState<string | null>(null)
+  const [labelAddTooltipOpen, setLabelAddTooltipOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
   const scrollTopRef = useRef(0)
@@ -122,7 +124,7 @@ export function Sidebar({ collapsed, onToggle }: Props) {
             <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>ホーム</span>
           </Link>
           <button onClick={() => openCreate()} className={`${BASE_ITEM_CLASS} ${INACTIVE_CLASS} w-full cursor-pointer`}>
-            <Plus size={20} className="flex-shrink-0" />
+            <ClipboardPen size={20} className="flex-shrink-0" />
             <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>タスクを追加</span>
           </button>
 
@@ -133,15 +135,23 @@ export function Sidebar({ collapsed, onToggle }: Props) {
               <span className={`whitespace-nowrap transition-opacity duration-300 ${collapsed ? "opacity-0" : "opacity-100"}`}>タスク一覧</span>
             </Link>
             {!collapsed && (
-              <button
-                type="button"
-                onClick={() => setShowAddModal(true)}
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded text-gray-400 hover:bg-brand-100 hover:text-brand-500 transition-colors cursor-pointer"
-                title="ラベルを追加"
-                aria-label="ラベルを追加"
+              <div
+                className="absolute right-3 top-1/2 -translate-y-1/2"
+                onMouseEnter={() => setLabelAddTooltipOpen(true)}
+                onMouseLeave={() => setLabelAddTooltipOpen(false)}
               >
-                <Plus size={16} />
-              </button>
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(true)}
+                  onFocus={() => setLabelAddTooltipOpen(true)}
+                  onBlur={() => setLabelAddTooltipOpen(false)}
+                  className="p-1 rounded text-gray-400 hover:bg-brand-100 hover:text-brand-500 transition-colors cursor-pointer"
+                  aria-label="ラベルを追加"
+                >
+                  <Plus size={16} />
+                </button>
+                <Tooltip open={labelAddTooltipOpen}>ラベルを追加</Tooltip>
+              </div>
             )}
           </div>
         </div>

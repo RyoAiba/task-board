@@ -8,6 +8,7 @@ import { LabelAddModal } from "@/components/labels/LabelAddModal"
 import { PageContainer } from "@/components/PageContainer"
 import { Pagination } from "@/components/Pagination"
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog"
+import { Tooltip } from "@/components/shared/Tooltip"
 import { Toggle } from "@/components/settings/Toggle"
 import { useLabels } from "@/contexts/LabelsContext"
 import { useSettings } from "@/contexts/SettingsContext"
@@ -70,10 +71,13 @@ export default function SettingsPage() {
 
         <div className="sm:max-w-md">
           {labels.length > 0 && (
-            <div className="flex items-center gap-3 px-3 pb-2 text-xs text-gray-400">
+            <div className="flex items-center gap-2 px-3 pb-2 text-xs text-gray-400">
               <span className="w-[18px] flex-shrink-0" />
-              <span className="flex-1 pl-2">ラベル名（10文字まで）</span>
-              <span className="hidden md:inline">サイドバーに表示</span>
+              <span className="flex-1 pl-2">ラベル名</span>
+              <div className="hidden md:flex md:items-center md:justify-center md:w-24 md:mx-1">
+                <span>サイドバーに表示</span>
+              </div>
+              <span className="hidden md:inline-block md:w-6 md:flex-shrink-0" aria-hidden />
             </div>
           )}
 
@@ -122,8 +126,8 @@ export default function SettingsPage() {
         <section>
           <h2 className="text-section-title mb-4">カレンダー表示</h2>
           <div className="bg-white rounded-lg p-4 sm:max-w-md">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
+            <div className="flex items-center">
+              <div className="flex-1 flex items-center gap-1.5">
                 <p className="text-sm text-gray-600">完了済みタスクを表示</p>
                 <div className="relative">
                   <button
@@ -136,18 +140,17 @@ export default function SettingsPage() {
                   >
                     ?
                   </button>
-                  {tooltipOpen && (
-                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 px-3 py-2 bg-gray-800 text-white text-xs rounded-lg z-10">
-                      オフにすると完了済みタスクをカレンダーに表示しません
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-800" />
-                    </div>
-                  )}
+                  <Tooltip open={tooltipOpen} className="w-48">
+                    オフにすると完了済みタスクをカレンダーに表示しません
+                  </Tooltip>
                 </div>
               </div>
-              <Toggle
-                checked={settings.showCompletedInCalendar}
-                onChange={v => updateSetting("showCompletedInCalendar", v)}
-              />
+              <div className="md:w-24 md:flex md:items-center md:justify-center md:mr-8">
+                <Toggle
+                  checked={settings.showCompletedInCalendar}
+                  onChange={v => updateSetting("showCompletedInCalendar", v)}
+                />
+              </div>
             </div>
           </div>
         </section>

@@ -76,7 +76,7 @@ export default function LabelRowList({ labels, onUpdateLabel, onDeleteLabel }: P
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={labels.map(l => l.id)} strategy={verticalListSortingStrategy}>
-        <div className="space-y-1">
+        <div className="">
           {labels.map((label, i) => (
             <LabelRow
               key={label.id}
